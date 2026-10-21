@@ -24,47 +24,49 @@ const LAWS = [
   {
     num: '01',
     title: 'HAZLO OBVIO',
-    desc: 'Pon la señal visual a la vista',
-    color: '#38BDF8',
-    frameTrigger: 110,
+    desc: 'Pon la señal ambiental a la vista sin fricción',
+    triggerFrame: 115,
   },
   {
     num: '02',
     title: 'HAZLO ATRACTIVO',
-    desc: 'Dispara la anticipación de dopamina',
-    color: '#F59E0B',
-    frameTrigger: 170,
+    desc: 'Anticipa la dopamina agrupando hábitos',
+    triggerFrame: 142,
   },
   {
     num: '03',
     title: 'HAZLO FÁCIL',
-    desc: 'Regla de 2 minutos: empieza en < 120s',
-    color: '#10B981',
-    frameTrigger: 210,
+    desc: 'Regla de los 2 minutos: empieza en menos de 120s',
+    highlightBadge: 'REGLA 2 MIN',
+    triggerFrame: 178,
   },
   {
     num: '04',
     title: 'HAZLO SATISFACTORIO',
-    desc: 'Recompensa inmediata para cerrar el bucle',
-    color: '#EC4899',
-    frameTrigger: 280,
+    desc: 'Recompensa inmediata para sellar el bucle neural',
+    triggerFrame: 248,
   },
 ];
 
 /**
- * Scene 4 — Punto 3: Las 4 Leyes del Cambio de Conducta
- * - 4 tarjetas limpias que se despliegan en cascada al ritmo de la locución.
+ * Scene 4 — Las 4 Leyes del Cambio (Diseño Editorial Papel Cálido + Sincronización Exacta)
+ * Timestamps reales de ElevenLabs (321 frames):
+ * - 0..65: "Para reprogramar tu conducta, aplica las cuatro leyes..." -> Cabecera
+ * - 115: "hazlo obvio" -> Ley 1
+ * - 142: "hazlo atractivo" -> Ley 2
+ * - 178: "hazlo fácil con la regla de dos minutos" -> Ley 3 + Badge
+ * - 248: "hazlo satisfactorio de inmediato" -> Ley 4
  */
 export const Scene4: React.FC<Scene4Props> = ({
   canvasOffsetX = 0,
   canvasOffsetY = 1980,
-  enterFrame = 1133,
+  enterFrame = 1091,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const localFrame = Math.max(0, frame - enterFrame);
 
-  // Cabecera
+  // 1. Cabecera (frame 0)
   const headerEntrance = spring({
     frame: localFrame,
     fps,
@@ -84,89 +86,90 @@ export const Scene4: React.FC<Scene4Props> = ({
         boxSizing: 'border-box',
       }}
     >
-      {/* CABECERA */}
+      {/* 1. Cabecera Editorial */}
       <div
         style={{
           position: 'absolute',
           top: 150,
           left: 96,
           right: 96,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: 12,
           opacity: headerEntrance,
+          transform: `translateY(${(1 - headerEntrance) * -20}px)`,
         }}
       >
         <div
           style={{
             display: 'inline-flex',
-            padding: '6px 20px',
-            borderRadius: 30,
-            backgroundColor: 'rgba(245, 158, 11, 0.18)',
-            border: '1.5px solid #F59E0B',
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: 22,
-            fontWeight: 800,
-            color: '#FBBF24',
-            letterSpacing: '0.1em',
+            alignItems: 'center',
+            gap: 8,
+            padding: '4px 12px',
+            backgroundColor: '#FFFFFF',
+            border: '1.5px solid #D94E34',
+            borderRadius: 6,
+            marginBottom: 12,
           }}
         >
-          PUNTO 03 · PROTOCOLO PRÁCTICO
+          <span
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 14,
+              fontWeight: 700,
+              color: '#D94E34',
+              letterSpacing: 1.5,
+            }}
+          >
+            04 / PLAN ACCIONABLE
+          </span>
         </div>
-
-        <div
+        <h1
           style={{
-            fontFamily: "'IBM Plex Sans', sans-serif",
-            fontSize: 48,
-            fontWeight: 900,
-            color: '#FFFFFF',
-            textAlign: 'center',
+            fontFamily: "'Newsreader', 'Playfair Display', Georgia, serif",
+            fontSize: 56,
+            fontWeight: 800,
+            color: '#141413',
+            margin: 0,
+            lineHeight: 1.1,
             letterSpacing: '-0.02em',
           }}
         >
-          LAS 4 LEYES DEL HÁBITO
-        </div>
+          Las 4 Leyes del Hábito
+        </h1>
       </div>
 
-      {/* 4 TARJETAS DE LAS LEYES */}
+      {/* 2. Cajón de las 4 Fichas Desplegadas en Cascada */}
       <div
         style={{
           position: 'absolute',
+          top: 310,
           left: 96,
           right: 96,
-          top: 360,
           display: 'flex',
           flexDirection: 'column',
-          gap: 22,
+          gap: 16,
         }}
       >
-        {LAWS.map((law, idx) => {
-          const entrance = spring({
-            frame: Math.max(0, localFrame - law.frameTrigger),
+        {LAWS.map((law) => {
+          const lawProgress = spring({
+            frame: Math.max(0, localFrame - law.triggerFrame),
             fps,
             config: SPRING_SNAPPY,
           });
-
-          const isActive =
-            localFrame >= law.frameTrigger &&
-            (idx === LAWS.length - 1 || localFrame < LAWS[idx + 1].frameTrigger);
+          const isTriggered = localFrame >= law.triggerFrame;
 
           return (
             <div
               key={law.num}
               style={{
-                padding: '24px 30px',
-                borderRadius: 20,
-                backgroundColor: isActive
-                  ? 'rgba(24, 24, 28, 0.96)'
-                  : 'rgba(18, 18, 22, 0.85)',
-                border: `2px solid ${isActive ? law.color : 'rgba(255, 255, 255, 0.12)'}`,
-                boxShadow: isActive
-                  ? `0 18px 45px rgba(0, 0, 0, 0.75), 0 0 30px ${law.color}33`
-                  : '0 10px 30px rgba(0, 0, 0, 0.5)',
-                opacity: entrance,
-                transform: `translateX(${interpolate(entrance, [0, 1], [-40, 0], CLAMP_EXTRAPOLATION)}px)`,
+                backgroundColor: '#FFFFFF',
+                border: isTriggered ? '2px solid #D94E34' : '1.5px solid #E5E2DC',
+                borderLeft: isTriggered ? '6px solid #D94E34' : '1.5px solid #E5E2DC',
+                borderRadius: 14,
+                padding: '20px 24px',
+                boxShadow: isTriggered
+                  ? '0 10px 24px rgba(217, 78, 52, 0.08)'
+                  : '0 4px 12px rgba(45, 43, 40, 0.03)',
+                opacity: lawProgress,
+                transform: `translateX(${(1 - lawProgress) * 40}px)`,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
@@ -175,36 +178,32 @@ export const Scene4: React.FC<Scene4Props> = ({
               <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
                 <div
                   style={{
-                    padding: '8px 16px',
-                    borderRadius: 12,
-                    backgroundColor: isActive ? law.color : '#27272A',
-                    color: isActive ? '#0A0A0B' : '#FFFFFF',
-                    fontFamily: "'IBM Plex Mono', monospace",
-                    fontSize: 24,
-                    fontWeight: 900,
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 22,
+                    fontWeight: 800,
+                    color: isTriggered ? '#D94E34' : '#94A3B8',
+                    minWidth: 36,
                   }}
                 >
                   {law.num}
                 </div>
-
                 <div>
                   <div
                     style={{
-                      fontFamily: "'IBM Plex Sans', sans-serif",
-                      fontSize: 30,
-                      fontWeight: 900,
-                      color: isActive ? '#FFFFFF' : '#A1A1AA',
+                      fontFamily: "'Newsreader', serif",
+                      fontSize: 26,
+                      fontWeight: 800,
+                      color: isTriggered ? '#141413' : '#64748B',
                     }}
                   >
                     {law.title}
                   </div>
                   <div
                     style={{
-                      fontFamily: "'IBM Plex Sans', sans-serif",
-                      fontSize: 22,
-                      fontWeight: 600,
-                      color: isActive ? law.color : '#71717A',
-                      marginTop: 4,
+                      fontFamily: "'Inter', sans-serif",
+                      fontSize: 15,
+                      color: '#575550',
+                      marginTop: 3,
                     }}
                   >
                     {law.desc}
@@ -212,16 +211,21 @@ export const Scene4: React.FC<Scene4Props> = ({
                 </div>
               </div>
 
-              {isActive && (
+              {law.highlightBadge && isTriggered && (
                 <div
                   style={{
-                    width: 14,
-                    height: 14,
-                    borderRadius: '50%',
-                    backgroundColor: law.color,
-                    boxShadow: `0 0 16px ${law.color}`,
+                    padding: '6px 12px',
+                    backgroundColor: '#D94E34',
+                    borderRadius: 8,
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 12,
+                    fontWeight: 800,
+                    color: '#FFFFFF',
+                    letterSpacing: 0.5,
                   }}
-                />
+                >
+                  {law.highlightBadge}
+                </div>
               )}
             </div>
           );

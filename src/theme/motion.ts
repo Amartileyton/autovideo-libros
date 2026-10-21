@@ -282,3 +282,20 @@ export const PALETTE = {
   accentWarning: '#B45309',
   border: '#262523',
 } as const;
+
+
+/**
+ * Configuración de Marca Corporativa para el Canal de Resúmenes en 60s
+ */
+export const BRAND_CONFIG = {
+  channelHandle: '@en60segundos',
+  tagline: 'IDEAS CLAVE EN 1 MINUTO',
+  sealText: 'SELECCIÓN EDITORIAL · RECOMENDADO POR @EN60SEGUNDOS',
+  defaultTheme: 'EDITORIAL_PAPER' as BlueprintModeId,
+  showProgressBar: true,
+  progressBarHeight: 6,
+  progressBarColor: '#D94E34',
+  fontSerif: "'Newsreader', 'Playfair Display', Georgia, serif",
+  fontSans: "'Inter', 'IBM Plex Sans', system-ui, sans-serif",
+  fontMono: "'JetBrains Mono', 'IBM Plex Mono', monospace",
+} as const;

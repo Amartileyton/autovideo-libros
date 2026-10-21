@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-20T14:58:17.251Z",
-  "query": "Atomic Habits James Clear",
+  "generatedAt": "2026-10-21T10:22:03.378Z",
+  "query": "Hábitos Atómicos James Clear",
   "slug": "habitos-atomicos",
   "bookMetadata": {
     "title": "Hábitos Atómicos",
@@ -86,7 +86,7 @@
   ],
   "tokenOptimizationStats": {
     "rawScrapedTokensApprox": 8400,
-    "normalizedDossierTokens": 891,
+    "normalizedDossierTokens": 892,
     "savingsPercentage": 89.4
   }
 }

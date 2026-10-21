@@ -27,6 +27,7 @@ import { Scene4 } from './scenes/Scene4';
 import { Scene5 } from './scenes/Scene5';
 import {
   BLUEPRINT_THEMES,
+  BRAND_CONFIG,
   type BlueprintModeId,
   CLAMP_EXTRAPOLATION,
   SAFE_ZONE,
@@ -70,7 +71,7 @@ export function computeSceneTimeline(
 }
 
 export const Video: React.FC<VideoProps> = ({
-  surfaceColor = BLUEPRINT_THEMES.DARK_CAD_XRAY.surface,
+  surfaceColor = BLUEPRINT_THEMES.EDITORIAL_PAPER.surface,
   enableCaptions = true,
   enableBackgroundMusic = false,
 }) => {
@@ -130,21 +131,9 @@ export const Video: React.FC<VideoProps> = ({
   }, [timeline]);
 
   /**
-   * Selección dinámica del modo de superficie @resultaaquee según la escena activa
+   * Modo de superficie editorial constante en todo el vídeo (sin cambios de color de fondo)
    */
-  const activeBlueprintMode: BlueprintModeId = useMemo(() => {
-    let activeIdx = 0;
-    for (let i = 0; i < timeline.length; i++) {
-      if (frame >= timeline[i].from) {
-        activeIdx = i;
-      }
-    }
-    const mode = scenesJson.scenes[activeIdx]?.blueprintMode;
-    if (mode && mode !== 'EDITORIAL_PAPER') {
-      return mode;
-    }
-    return 'DARK_CAD_XRAY';
-  }, [timeline, frame]);
+  const activeBlueprintMode: BlueprintModeId = 'EDITORIAL_PAPER';
 
   /**
    * Curva de Audio Ducking automática para la pista opcional de música de fondo
@@ -171,7 +160,7 @@ export const Video: React.FC<VideoProps> = ({
         blueprintMode={activeBlueprintMode}
         rackFocusBlur={true}
       >
-        {/* Conectores de ingeniería CAD entre los 5 cuadrantes del lienzo continuo */}
+        {/* Conectores de ingeniería editorial entre los 5 cuadrantes del lienzo continuo */}
         <svg
           width={2400}
           height={6000}
@@ -184,30 +173,30 @@ export const Video: React.FC<VideoProps> = ({
         >
           <path
             d="M 984 740 L 1216 740"
-            stroke="rgba(255, 255, 255, 0.16)"
-            strokeWidth={2.5}
-            strokeDasharray="10 10"
+            stroke="rgba(217, 78, 52, 0.25)"
+            strokeWidth={2}
+            strokeDasharray="8 8"
             fill="none"
           />
           <path
             d="M 1660 1520 L 1660 2090"
-            stroke="rgba(255, 255, 255, 0.16)"
-            strokeWidth={2.5}
-            strokeDasharray="10 10"
+            stroke="rgba(217, 78, 52, 0.25)"
+            strokeWidth={2}
+            strokeDasharray="8 8"
             fill="none"
           />
           <path
             d="M 1216 2700 L 984 2700"
-            stroke="rgba(255, 255, 255, 0.16)"
-            strokeWidth={2.5}
-            strokeDasharray="10 10"
+            stroke="rgba(217, 78, 52, 0.25)"
+            strokeWidth={2}
+            strokeDasharray="8 8"
             fill="none"
           />
           <path
             d="M 540 3520 L 1100 4060"
-            stroke="rgba(255, 255, 255, 0.16)"
-            strokeWidth={2.5}
-            strokeDasharray="10 10"
+            stroke="rgba(217, 78, 52, 0.25)"
+            strokeWidth={2}
+            strokeDasharray="8 8"
             fill="none"
           />
         </svg>
@@ -302,13 +291,78 @@ export const Video: React.FC<VideoProps> = ({
         </Sequence>
       ))}
 
+      {/* Barra de progreso de lectura (Top 60s Bar) en Terracota */}
+      {BRAND_CONFIG.showProgressBar && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: `${Math.min(100, Math.max(0, (frame / (useVideoConfig().durationInFrames || 1677)) * 100))}%`,
+            height: BRAND_CONFIG.progressBarHeight,
+            backgroundColor: BRAND_CONFIG.progressBarColor,
+            zIndex: 100,
+            pointerEvents: 'none',
+          }}
+        />
+      )}
+
+      {/* Pastilla de Marca del Canal en la Zona Segura Superior */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 64,
+          left: SAFE_ZONE.horizontalPaddingPx,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 8,
+          padding: '6px 14px',
+          backgroundColor: '#FFFFFF',
+          border: '1.5px solid #D94E34',
+          borderRadius: 24,
+          boxShadow: '0 2px 8px rgba(45, 43, 40, 0.05)',
+          zIndex: 90,
+          pointerEvents: 'none',
+        }}
+      >
+        <div
+          style={{
+            width: 8,
+            height: 8,
+            borderRadius: '50%',
+            backgroundColor: '#D94E34',
+          }}
+        />
+        <span
+          style={{
+            fontFamily: BRAND_CONFIG.fontSans,
+            fontSize: 18,
+            fontWeight: 800,
+            color: '#141413',
+            letterSpacing: 0.3,
+          }}
+        >
+          {BRAND_CONFIG.channelHandle}
+        </span>
+        <span
+          style={{
+            fontFamily: BRAND_CONFIG.fontSans,
+            fontSize: 13,
+            fontWeight: 600,
+            color: '#575550',
+          }}
+        >
+          · 60s
+        </span>
+      </div>
+
       {/* Subtítulos en el tercio inferior para no interferir con titulares ni animaciones */}
       {enableCaptions ? (
         <DynamicCaptions
           wordTimestamps={globalWordTimestamps}
           sceneStartFrame={0}
           wordsPerWindow={5}
-          variant="vector-box"
+          variant="editorial-clean"
           placement="lower"
         />
       ) : null}
@@ -328,7 +382,7 @@ export const Video: React.FC<VideoProps> = ({
           left: SAFE_ZONE.horizontalPaddingPx,
           right: SAFE_ZONE.horizontalPaddingPx,
           top: SAFE_ZONE.maxSafeY,
-          borderTop: '1.5px dashed rgba(255, 255, 255, 0.10)',
+          borderTop: '1.5px dashed rgba(45, 43, 40, 0.12)',
           pointerEvents: 'none',
         }}
       />

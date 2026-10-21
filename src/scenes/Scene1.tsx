@@ -23,11 +23,12 @@ export interface Scene1Props {
 }
 
 /**
- * Scene 1 — Intro Viral de Retención (Inicio Warning + Portada Real + Pop-ups)
- * - 0.0s – 0.8s: Señal de alarma/warning parpadeante con sonido digital.
- * - Entrada limpia y elástica de la portada real del libro dentro de una caja estética moderna.
- * - Pop-up 1: Bestseller mundial (+15M de copias vendidas).
- * - Pop-up 2: Tarjeta oficial con logo de Goodreads + ★ 4.38 (1.9M de reseñas).
+ * Scene 1 — La Trampa de las Metas (Diseño Editorial Papel Cálido + Sincronización Exacta)
+ * Timestamps reales de ElevenLabs:
+ * - 0..38: "El 92% de las personas" -> Entrada de la ficha estadística (92% abandono en enero)
+ * - 180..240: "En Hábitos Atómicos, James Clear" -> Entrada elástica de la portada 2.5D + badge de autor
+ * - 295..315: "no son tus metas" -> Ficha tachada [METAS]
+ * - 327..380: "sino los sistemas" -> Ficha destacada en terracota [SISTEMAS]
  */
 export const Scene1: React.FC<Scene1Props> = ({
   canvasOffsetX = 0,
@@ -39,56 +40,35 @@ export const Scene1: React.FC<Scene1Props> = ({
   const { fps } = useVideoConfig();
   const localFrame = Math.max(0, frame - enterFrame);
 
-  const title = bookMetadata?.title ?? 'Hábitos Atómicos';
-  const author = bookMetadata?.author ?? 'James Clear';
-  const coverSrc =
-    bookMetadata?.coverImage ?? 'assets/books/habitos-atomicos-cover.jpg';
-  const rating = bookMetadata?.rating ?? 4.38;
-  const ratingsCount = bookMetadata?.ratingsCount ?? '1.94M';
-
-  // 1. Fase de alarma (primeros 26 fotogramas ~ 0.8s)
-  const isAlarmPhase = localFrame < 26;
-  const alarmBlink = localFrame % 8 < 4;
-  const alarmFadeOut = interpolate(
-    localFrame,
-    [20, 28],
-    [1, 0],
-    CLAMP_EXTRAPOLATION
-  );
-
-  // 2. Entrada de la portada real del libro
-  const bookEntrance = spring({
-    frame: Math.max(0, localFrame - 22),
+  // 1. Entrada de la cabecera editorial (frame 0)
+  const headerEntrance = spring({
+    frame: localFrame,
     fps,
     config: SPRING_SNAPPY,
   });
 
-  const bookTranslateY = interpolate(
-    bookEntrance,
-    [0, 1],
-    [80, 0],
-    CLAMP_EXTRAPOLATION
-  );
-  const bookScale = interpolate(
-    bookEntrance,
-    [0, 1],
-    [0.9, 1.0],
-    CLAMP_EXTRAPOLATION
-  );
+  // 2. Ficha estadística del gancho 92% (frame 10)
+  const statEntrance = spring({
+    frame: Math.max(0, localFrame - 10),
+    fps,
+    config: SPRING_SNAPPY,
+  });
 
-  // 3. Pop-up de ventas (+15M de copias) — sincronizado a frame 175 ("Más de quince millones...")
-  const salesEntrance = spring({
+  // 3. Portada 2.5D del libro (frame 175 - cuando dice "En Hábitos Atómicos, James Clear")
+  const bookEntrance = spring({
     frame: Math.max(0, localFrame - 175),
     fps,
     config: SPRING_SNAPPY,
   });
 
-  // 4. Pop-up de Goodreads (logo + estrellas) — sincronizado a frame 245 ("...estrellas en Goodreads")
-  const goodreadsEntrance = spring({
-    frame: Math.max(0, localFrame - 245),
+  // 4. Comparativa Metas vs Sistemas (frame 290 - cuando dice "no fueron tus metas...")
+  const compareEntrance = spring({
+    frame: Math.max(0, localFrame - 290),
     fps,
     config: SPRING_SNAPPY,
   });
+
+  const systemsActive = localFrame >= 325; // "sino los sistemas..."
 
   return (
     <div
@@ -99,266 +79,307 @@ export const Scene1: React.FC<Scene1Props> = ({
         width: 1080,
         height: 1920,
         pointerEvents: 'none',
+        padding: '0 96px',
+        boxSizing: 'border-box',
       }}
     >
-      {/* SEÑAL DE WARNING / ALARMA PARPADEANTE (Primer segundo) */}
-      {alarmFadeOut > 0 && (
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            zIndex: 100,
-            opacity: alarmFadeOut,
-            backgroundColor: alarmBlink
-              ? 'rgba(239, 68, 68, 0.22)'
-              : 'transparent',
-          }}
-        >
-          <div
-            style={{
-              padding: '18px 36px',
-              borderRadius: 16,
-              backgroundColor: alarmBlink ? '#EF4444' : '#1C1917',
-              border: '3px solid #EF4444',
-              boxShadow: '0 0 60px rgba(239, 68, 68, 0.8)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 16,
-            }}
-          >
-            <span style={{ fontSize: 44 }}>⚠️</span>
-            <span
-              style={{
-                fontFamily: "'IBM Plex Mono', monospace",
-                fontSize: 34,
-                fontWeight: 900,
-                color: '#FFFFFF',
-                letterSpacing: '0.12em',
-              }}
-            >
-              ALERTA DE LECTURA · 60s
-            </span>
-          </div>
-        </div>
-      )}
-
-      {/* CABECERA DE LA SERIE ("UN LIBRO EN 60 SEGUNDOS") */}
+      {/* 1. Cabecera Editorial */}
       <div
         style={{
           position: 'absolute',
-          top: 140,
+          top: 150,
           left: 96,
           right: 96,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: 12,
-          opacity: bookEntrance,
+          opacity: headerEntrance,
+          transform: `translateY(${(1 - headerEntrance) * -20}px)`,
         }}
       >
         <div
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: 10,
-            padding: '8px 22px',
-            borderRadius: 30,
-            backgroundColor: '#DC2626',
-            boxShadow: '0 8px 24px rgba(220, 38, 38, 0.45)',
+            gap: 8,
+            padding: '4px 12px',
+            backgroundColor: '#FFFFFF',
+            border: '1.5px solid #D94E34',
+            borderRadius: 6,
+            marginBottom: 12,
           }}
         >
           <span
             style={{
-              width: 10,
-              height: 10,
-              borderRadius: '50%',
-              backgroundColor: '#FFFFFF',
-            }}
-          />
-          <span
-            style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: 22,
-              fontWeight: 800,
-              color: '#FFFFFF',
-              letterSpacing: '0.1em',
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 14,
+              fontWeight: 700,
+              color: '#D94E34',
+              letterSpacing: 1.5,
             }}
           >
-            UN LIBRO EN 60 SEGUNDOS
+            01 / ANÁLISIS CONDUCTUAL
           </span>
         </div>
-
-        <div
+        <h1
           style={{
-            fontFamily: "'IBM Plex Sans', sans-serif",
-            fontSize: 48,
-            fontWeight: 900,
-            color: '#FFFFFF',
-            textAlign: 'center',
+            fontFamily: "'Newsreader', 'Playfair Display', Georgia, serif",
+            fontSize: 56,
+            fontWeight: 800,
+            color: '#141413',
+            margin: 0,
+            lineHeight: 1.1,
             letterSpacing: '-0.02em',
           }}
         >
-          {title.toUpperCase()}
-        </div>
-
-        <div
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: 24,
-            fontWeight: 600,
-            color: '#F59E0B',
-            letterSpacing: '0.08em',
-          }}
-        >
-          POR {author.toUpperCase()}
-        </div>
+          ¿Por qué fallan tus metas?
+        </h1>
       </div>
 
-      {/* CAJA ESTÉTICA CON LA PORTADA REAL DEL LIBRO */}
+      {/* 2. Ficha Estadística del Gancho (92% Abandono) */}
       <div
         style={{
           position: 'absolute',
-          left: '50%',
-          top: 510,
-          transform: `translateX(-50%) translateY(${bookTranslateY}px) scale(${bookScale})`,
-          opacity: bookEntrance,
-          width: 460,
-          height: 690,
-          borderRadius: 24,
-          padding: 10,
-          backgroundColor: 'rgba(28, 28, 32, 0.85)',
-          border: '2px solid rgba(255, 255, 255, 0.20)',
-          boxShadow:
-            '0 30px 80px rgba(0, 0, 0, 0.85), 0 0 50px rgba(245, 158, 11, 0.15)',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          overflow: 'hidden',
-        }}
-      >
-        <Img
-          src={staticFile(coverSrc)}
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            borderRadius: 16,
-          }}
-        />
-      </div>
-
-      {/* POP-UP 1: VENTAS (+15M DE COPIAS VENDIDAS) */}
-      <div
-        style={{
-          position: 'absolute',
-          left: 70,
-          top: 980,
-          padding: '16px 26px',
-          borderRadius: 18,
-          backgroundColor: '#1C1917',
-          border: '2px solid #F59E0B',
-          boxShadow: '0 20px 45px rgba(0, 0, 0, 0.75)',
-          opacity: salesEntrance,
-          transform: `scale(${salesEntrance}) rotate(-4deg)`,
+          top: 310,
+          left: 96,
+          right: 96,
+          backgroundColor: '#FFFFFF',
+          border: '1.5px solid #E5E2DC',
+          borderLeft: '5px solid #D94E34',
+          borderRadius: 12,
+          padding: '18px 24px',
+          boxShadow: '0 8px 24px rgba(45, 43, 40, 0.05)',
+          opacity: statEntrance,
+          transform: `scale(${interpolate(statEntrance, [0, 1], [0.94, 1], CLAMP_EXTRAPOLATION)})`,
           display: 'flex',
           alignItems: 'center',
-          gap: 14,
-          zIndex: 40,
+          gap: 20,
         }}
       >
         <div
           style={{
-            width: 48,
-            height: 48,
-            borderRadius: 12,
-            backgroundColor: '#F59E0B',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 26,
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 44,
+            fontWeight: 800,
+            color: '#D94E34',
+            lineHeight: 1,
           }}
         >
-          🔥
+          92%
         </div>
         <div>
           <div
             style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: 26,
-              fontWeight: 900,
-              color: '#FFFFFF',
+              fontFamily: "'Inter', sans-serif",
+              fontSize: 18,
+              fontWeight: 700,
+              color: '#141413',
             }}
           >
-            +15M COPIAS
+            Abandona sus propósitos en enero
           </div>
           <div
             style={{
-              fontFamily: "'IBM Plex Sans', sans-serif",
-              fontSize: 18,
-              fontWeight: 600,
-              color: '#FBBF24',
+              fontFamily: "'Inter', sans-serif",
+              fontSize: 14,
+              color: '#575550',
+              marginTop: 2,
             }}
           >
-            Nº 1 New York Times
+            Fuente: Journal of Clinical Psychology & James Clear
           </div>
         </div>
       </div>
 
-      {/* POP-UP 2: GOODREADS (LOGO OFICIAL + ESTRELLAS Y RESEÑAS) */}
+      {/* 3. Portada 2.5D del Libro con Ficha Goodreads */}
       <div
         style={{
           position: 'absolute',
-          right: 70,
-          top: 1140,
-          padding: '18px 26px',
-          borderRadius: 20,
-          backgroundColor: '#F4F1EA',
-          border: '2.5px solid #382110',
-          boxShadow: '0 22px 50px rgba(0, 0, 0, 0.85)',
-          opacity: goodreadsEntrance,
-          transform: `scale(${goodreadsEntrance}) rotate(3deg)`,
+          top: 450,
+          left: 96,
+          right: 96,
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'flex-start',
-          gap: 8,
-          zIndex: 45,
-          minWidth: 280,
+          alignItems: 'center',
+          opacity: bookEntrance,
+          transform: `translateY(${(1 - bookEntrance) * 30}px)`,
         }}
       >
-        {/* Logo oficial de Goodreads proporcionado por el usuario */}
-        <Img
-          src={staticFile('assets/goodreads-logo.png')}
+        {/* Libro en perspectiva con sombra cálida */}
+        <div
           style={{
-            height: 38,
-            objectFit: 'contain',
+            position: 'relative',
+            width: 380,
+            height: 570,
+            borderRadius: 14,
+            overflow: 'hidden',
+            boxShadow:
+              '0 24px 50px rgba(45, 43, 40, 0.16), 0 4px 12px rgba(45, 43, 40, 0.08)',
+            border: '2px solid rgba(45, 43, 40, 0.12)',
+            backgroundColor: '#FFFFFF',
           }}
-        />
+        >
+          <Img
+            src={staticFile('assets/books/habitos-atomicos-cover.jpg')}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }}
+          />
+        </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        {/* Ficha técnica del libro bajo la portada */}
+        <div
+          style={{
+            marginTop: 20,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 16,
+            padding: '10px 20px',
+            backgroundColor: '#FFFFFF',
+            border: '1.5px solid #E5E2DC',
+            borderRadius: 30,
+            boxShadow: '0 4px 14px rgba(45, 43, 40, 0.04)',
+          }}
+        >
           <span
             style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: 32,
-              fontWeight: 900,
-              color: '#1C1917',
+              fontFamily: "'Inter', sans-serif",
+              fontSize: 16,
+              fontWeight: 800,
+              color: '#141413',
             }}
           >
-            ★ {rating}
+            James Clear
           </span>
+          <span style={{ color: '#E5E2DC' }}>|</span>
           <span
             style={{
-              fontFamily: "'IBM Plex Sans', sans-serif",
-              fontSize: 19,
+              fontFamily: "'Inter', sans-serif",
+              fontSize: 15,
+              fontWeight: 700,
+              color: '#D97706',
+            }}
+          >
+            ★ 4.38 Goodreads
+          </span>
+          <span style={{ color: '#E5E2DC' }}>|</span>
+          <span
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontSize: 14,
+              color: '#575550',
+            }}
+          >
+            +15M lectores
+          </span>
+        </div>
+      </div>
+
+      {/* 4. Comparativa Metas vs Sistemas (frame 290) */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 1140,
+          left: 96,
+          right: 96,
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: 16,
+          opacity: compareEntrance,
+          transform: `translateY(${(1 - compareEntrance) * 20}px)`,
+        }}
+      >
+        {/* Tarjeta METAS */}
+        <div
+          style={{
+            backgroundColor: '#FFFFFF',
+            border: '1.5px solid #E5E2DC',
+            borderRadius: 14,
+            padding: '20px',
+            opacity: systemsActive ? 0.45 : 1,
+          }}
+        >
+          <div
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 13,
+              fontWeight: 700,
+              color: '#DC2626',
+              textDecoration: systemsActive ? 'line-through' : 'none',
+              marginBottom: 6,
+            }}
+          >
+            EL ERROR COMÚN
+          </div>
+          <div
+            style={{
+              fontFamily: "'Newsreader', serif",
+              fontSize: 26,
+              fontWeight: 700,
+              color: '#141413',
+              textDecoration: systemsActive ? 'line-through' : 'none',
+            }}
+          >
+            Las Metas
+          </div>
+          <div
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontSize: 14,
+              color: '#575550',
+              marginTop: 6,
+              lineHeight: 1.3,
+            }}
+          >
+            Ganadores y perdedores tienen los mismos objetivos.
+          </div>
+        </div>
+
+        {/* Tarjeta SISTEMAS */}
+        <div
+          style={{
+            backgroundColor: '#FFFFFF',
+            border: systemsActive ? '2px solid #D94E34' : '1.5px solid #E5E2DC',
+            borderRadius: 14,
+            padding: '20px',
+            boxShadow: systemsActive
+              ? '0 10px 24px rgba(217, 78, 52, 0.12)'
+              : 'none',
+            transform: `scale(${systemsActive ? 1.03 : 1})`,
+          }}
+        >
+          <div
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 13,
+              fontWeight: 700,
+              color: '#D94E34',
+              marginBottom: 6,
+            }}
+          >
+            LA SOLUCIÓN REAL
+          </div>
+          <div
+            style={{
+              fontFamily: "'Newsreader', serif",
+              fontSize: 26,
+              fontWeight: 700,
+              color: '#D94E34',
+            }}
+          >
+            Los Sistemas
+          </div>
+          <div
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontSize: 14,
+              color: '#141413',
+              marginTop: 6,
+              lineHeight: 1.3,
               fontWeight: 600,
-              color: '#57534E',
             }}
           >
-            ({ratingsCount} reseñas)
-          </span>
+            Las micro-decisiones que ejecutas en automático.
+          </div>
         </div>
       </div>
     </div>

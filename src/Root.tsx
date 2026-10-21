@@ -44,8 +44,8 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={{
           title:
             scenesJson.projectTitle ||
-            'Hábitos Atómicos — James Clear (Resumen 65s)',
-          surfaceColor: BLUEPRINT_THEMES.DARK_CAD_XRAY.surface,
+            'Hábitos Atómicos — James Clear (Resumen 60s)',
+          surfaceColor: BLUEPRINT_THEMES.EDITORIAL_PAPER.surface,
           enableCaptions: true,
           enableBackgroundMusic: false,
         }}

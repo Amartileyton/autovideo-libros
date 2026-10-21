@@ -20,48 +20,42 @@ export interface Scene3Props {
   visualData?: BookVisualData;
 }
 
+const LOOP_STEPS = [
+  { num: '01', title: 'SEÑAL', desc: 'Disparador ambiental visual', triggerFrame: 100 },
+  { num: '02', title: 'ANHELO', desc: 'Anticipación de dopamina', triggerFrame: 125 },
+  { num: '03', title: 'RESPUESTA', desc: 'La acción física o mental', triggerFrame: 150 },
+  { num: '04', title: 'RECOMPENSA', desc: 'Satisfacción y cierre neural', triggerFrame: 172 },
+];
+
 /**
- * Scene 3 — Punto 2: La Matemática del 1% Diario (Efecto Compuesto)
- * - Tarjeta matemática moderna: 1.01^365 = 37.78x frente a 0.99^365 = 0.03x.
- * - Contador dinámico sincronizado a la locución "treinta y siete veces mejor".
+ * Scene 3 — El Bucle del Hábito (Diseño Editorial Papel Cálido + Sincronización Exacta)
+ * Timestamps reales de ElevenLabs (376 frames):
+ * - 0..35: "Todo hábito opera en un bucle neuronal..." -> Entrada de cabecera
+ * - 100..200: 4 Fases escalonadas exactas: Señal (100), Anhelo (125), Respuesta (150), Recompensa (172)
+ * - 260..360: "No te elevas al nivel de tus metas..." -> Cita icónica con subrayador terracota
  */
 export const Scene3: React.FC<Scene3Props> = ({
   canvasOffsetX = 1120,
   canvasOffsetY = 1980,
-  enterFrame = 733,
+  enterFrame = 725,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const localFrame = Math.max(0, frame - enterFrame);
 
-  // 1. Cabecera
+  // 1. Cabecera (frame 0)
   const headerEntrance = spring({
     frame: localFrame,
     fps,
     config: SPRING_SNAPPY,
   });
 
-  // 2. Tarjeta de fórmula (+1% diario)
-  const formulaEntrance = spring({
-    frame: Math.max(0, localFrame - 30),
+  // 2. Cita central subrayada (frame 255 - "No te elevas al nivel de tus metas...")
+  const quoteEntrance = spring({
+    frame: Math.max(0, localFrame - 255),
     fps,
     config: SPRING_SNAPPY,
   });
-
-  // 3. Contador exponencial animado entre frames 240 y 365 ("treinta y siete veces mejor")
-  const counterValue = interpolate(
-    localFrame,
-    [240, 365],
-    [1.0, 37.78],
-    CLAMP_EXTRAPOLATION
-  ).toFixed(2);
-
-  const progressPct = interpolate(
-    localFrame,
-    [240, 365],
-    [3, 100],
-    CLAMP_EXTRAPOLATION
-  );
 
   return (
     <div
@@ -76,198 +70,243 @@ export const Scene3: React.FC<Scene3Props> = ({
         boxSizing: 'border-box',
       }}
     >
-      {/* CABECERA */}
+      {/* 1. Cabecera Editorial */}
       <div
         style={{
           position: 'absolute',
           top: 150,
           left: 96,
           right: 96,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: 12,
           opacity: headerEntrance,
+          transform: `translateY(${(1 - headerEntrance) * -20}px)`,
         }}
       >
         <div
           style={{
             display: 'inline-flex',
-            padding: '6px 20px',
-            borderRadius: 30,
-            backgroundColor: 'rgba(56, 189, 248, 0.18)',
-            border: '1.5px solid #38BDF8',
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: 22,
-            fontWeight: 800,
-            color: '#38BDF8',
-            letterSpacing: '0.1em',
+            alignItems: 'center',
+            gap: 8,
+            padding: '4px 12px',
+            backgroundColor: '#FFFFFF',
+            border: '1.5px solid #D94E34',
+            borderRadius: 6,
+            marginBottom: 12,
           }}
         >
-          PUNTO 02 · EFECTO COMPUESTO
+          <span
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 14,
+              fontWeight: 700,
+              color: '#D94E34',
+              letterSpacing: 1.5,
+            }}
+          >
+            03 / NEUROCIENCIA CONDUCTUAL
+          </span>
         </div>
-
-        <div
+        <h1
           style={{
-            fontFamily: "'IBM Plex Sans', sans-serif",
-            fontSize: 48,
-            fontWeight: 900,
-            color: '#FFFFFF',
-            textAlign: 'center',
+            fontFamily: "'Newsreader', 'Playfair Display', Georgia, serif",
+            fontSize: 56,
+            fontWeight: 800,
+            color: '#141413',
+            margin: 0,
+            lineHeight: 1.1,
             letterSpacing: '-0.02em',
           }}
         >
-          LA MATEMÁTICA DEL 1%
-        </div>
+          El Bucle de 4 Fases
+        </h1>
       </div>
 
-      {/* TARJETA PRINCIPAL DE LA FÓRMULA EXPONENCIAL */}
+      {/* 2. Las 4 Fases del Bucle en Cascada */}
       <div
         style={{
           position: 'absolute',
+          top: 320,
           left: 96,
           right: 96,
-          top: 380,
-          padding: '36px 40px',
-          borderRadius: 24,
-          backgroundColor: '#0F1F1D',
-          border: '2.5px solid #10B981',
-          boxShadow: '0 24px 70px rgba(16, 185, 129, 0.25)',
-          opacity: formulaEntrance,
-          transform: `translateY(${interpolate(formulaEntrance, [0, 1], [40, 0], CLAMP_EXTRAPOLATION)}px)`,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 20,
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: 16,
+        }}
+      >
+        {LOOP_STEPS.map((step) => {
+          const stepProgress = spring({
+            frame: Math.max(0, localFrame - step.triggerFrame),
+            fps,
+            config: SPRING_SNAPPY,
+          });
+          const isTriggered = localFrame >= step.triggerFrame;
+
+          return (
+            <div
+              key={step.num}
+              style={{
+                backgroundColor: '#FFFFFF',
+                border: isTriggered ? '2px solid #D94E34' : '1.5px solid #E5E2DC',
+                borderRadius: 16,
+                padding: '24px 20px',
+                boxShadow: isTriggered
+                  ? '0 8px 24px rgba(217, 78, 52, 0.10)'
+                  : '0 4px 12px rgba(45, 43, 40, 0.03)',
+                opacity: stepProgress,
+                transform: `scale(${interpolate(stepProgress, [0, 1], [0.90, 1], CLAMP_EXTRAPOLATION)})`,
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: 8,
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 13,
+                    fontWeight: 800,
+                    color: isTriggered ? '#D94E34' : '#94A3B8',
+                  }}
+                >
+                  FASE {step.num}
+                </span>
+                <div
+                  style={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: '50%',
+                    backgroundColor: isTriggered ? '#D94E34' : '#E5E2DC',
+                  }}
+                />
+              </div>
+
+              <div
+                style={{
+                  fontFamily: "'Newsreader', serif",
+                  fontSize: 28,
+                  fontWeight: 800,
+                  color: isTriggered ? '#141413' : '#64748B',
+                }}
+              >
+                {step.title}
+              </div>
+
+              <div
+                style={{
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: 14,
+                  color: '#575550',
+                  marginTop: 6,
+                  lineHeight: 1.3,
+                }}
+              >
+                {step.desc}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* 3. Tarjeta Cita Célebre Subrayada (frame 255) */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 660,
+          left: 96,
+          right: 96,
+          backgroundColor: '#FFFFFF',
+          border: '2px solid #141413',
+          borderLeft: '8px solid #D94E34',
+          borderRadius: 18,
+          padding: '36px 32px',
+          boxShadow: '0 16px 40px rgba(45, 43, 40, 0.08)',
+          opacity: quoteEntrance,
+          transform: `translateY(${(1 - quoteEntrance) * 25}px)`,
         }}
       >
         <div
           style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 13,
+            fontWeight: 800,
+            color: '#D94E34',
+            letterSpacing: 2,
+            marginBottom: 12,
           }}
         >
-          <span
-            style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: 24,
-              fontWeight: 800,
-              color: '#34D399',
-            }}
-          >
-            +1% CADA DÍA
-          </span>
-          <span
-            style={{
-              padding: '4px 14px',
-              borderRadius: 20,
-              backgroundColor: '#10B981',
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: 20,
-              fontWeight: 800,
-              color: '#06281E',
-            }}
-          >
-            365 DÍAS
-          </span>
+          PASAJES SUBRAYADOS · CAPÍTULO 1
         </div>
 
-        <div
+        <blockquote
           style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: 68,
-            fontWeight: 900,
-            color: '#FFFFFF',
-            textAlign: 'center',
-          }}
-        >
-          {counterValue}x
-        </div>
-
-        <div
-          style={{
-            fontFamily: "'IBM Plex Sans', sans-serif",
-            fontSize: 26,
+            margin: 0,
+            fontFamily: "'Newsreader', Georgia, serif",
+            fontSize: 34,
             fontWeight: 700,
-            color: '#A7F3D0',
-            textAlign: 'center',
+            fontStyle: 'italic',
+            lineHeight: 1.35,
+            color: '#141413',
           }}
         >
-          1.01³⁶⁵ = 37.78 veces mejor en un año
-        </div>
+          «No te elevas al nivel de tus{' '}
+          <span
+            style={{
+              backgroundColor: 'rgba(217, 78, 52, 0.18)',
+              padding: '2px 6px',
+              borderRadius: 4,
+              color: '#D94E34',
+              fontStyle: 'normal',
+            }}
+          >
+            metas
+          </span>
+          , caes al nivel de tus{' '}
+          <span
+            style={{
+              backgroundColor: 'rgba(217, 78, 52, 0.18)',
+              padding: '2px 6px',
+              borderRadius: 4,
+              color: '#D94E34',
+              fontStyle: 'normal',
+            }}
+          >
+            sistemas
+          </span>
+          .»
+        </blockquote>
 
-        {/* Barra de progreso de crecimiento */}
         <div
           style={{
-            width: '100%',
-            height: 14,
-            borderRadius: 7,
-            backgroundColor: 'rgba(255, 255, 255, 0.12)',
-            overflow: 'hidden',
+            marginTop: 20,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 12,
           }}
         >
-          <div
+          <div style={{ width: 32, height: 2, backgroundColor: '#D94E34' }} />
+          <span
             style={{
-              width: `${progressPct}%`,
-              height: '100%',
-              backgroundColor: '#34D399',
-              borderRadius: 7,
-            }}
-          />
-        </div>
-      </div>
-
-      {/* TARJETA COMPARATIVA: EL DECLIVE (-1% DIARIO) */}
-      <div
-        style={{
-          position: 'absolute',
-          left: 96,
-          right: 96,
-          top: 860,
-          padding: '28px 36px',
-          borderRadius: 20,
-          backgroundColor: '#1C1917',
-          border: '2px solid rgba(239, 68, 68, 0.35)',
-          boxShadow: '0 20px 50px rgba(0, 0, 0, 0.65)',
-          opacity: formulaEntrance,
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}
-      >
-        <div>
-          <div
-            style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: 22,
+              fontFamily: "'Inter', sans-serif",
+              fontSize: 16,
               fontWeight: 800,
-              color: '#F87171',
+              color: '#141413',
             }}
           >
-            -1% CADA DÍA
-          </div>
-          <div
+            James Clear
+          </span>
+          <span style={{ color: '#E5E2DC' }}>·</span>
+          <span
             style={{
-              fontFamily: "'IBM Plex Sans', sans-serif",
-              fontSize: 22,
-              fontWeight: 600,
-              color: '#A8A29E',
-              marginTop: 4,
+              fontFamily: "'Inter', sans-serif",
+              fontSize: 14,
+              color: '#575550',
             }}
           >
-            0.99³⁶⁵ = 0.03x (Declive casi total)
-          </div>
-        </div>
-
-        <div
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: 36,
-            fontWeight: 900,
-            color: '#EF4444',
-          }}
-        >
-          0.03x
+            La frase más compartida del libro
+          </span>
         </div>
       </div>
     </div>

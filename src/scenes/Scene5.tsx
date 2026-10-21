@@ -8,7 +8,7 @@ import {
   useVideoConfig,
 } from 'remotion';
 import type { BookMetadata, BookVisualData } from '../data/schema';
-import { CLAMP_EXTRAPOLATION, SPRING_SNAPPY } from '../theme/motion';
+import { BRAND_CONFIG, CLAMP_EXTRAPOLATION, SPRING_SNAPPY } from '../theme/motion';
 
 export interface Scene5Props {
   headline?: string;
@@ -23,39 +23,41 @@ export interface Scene5Props {
 }
 
 /**
- * Scene 5 — Identidad y Llamada a la Acción (CTA Final)
- * - Tarjeta de Identidad: "Cada acción es un voto por tu identidad".
- * - Panel animado de cierre: "¿Quieres más libros en 60 segundos? Síguenos y comenta".
+ * Scene 5 — Identidad y Veredicto Final (Diseño Editorial Papel Cálido + Sincronización Exacta)
+ * Timestamps reales de ElevenLabs (275 frames):
+ * - 0..30: "La regla definitiva..." -> Entrada de cabecera
+ * - 80..130: "cada pequeña acción es un voto por la persona que quieres ser" -> Tarjeta de Identidad
+ * - 165..275: "Un libro imprescindible..." -> Gran Sello Editorial de @en60segundos y Veredicto Final
  */
 export const Scene5: React.FC<Scene5Props> = ({
   canvasOffsetX = 560,
   canvasOffsetY = 3960,
-  enterFrame = 1499,
-  bookMetadata,
+  enterFrame = 1402,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const localFrame = Math.max(0, frame - enterFrame);
 
-  const coverSrc =
-    bookMetadata?.coverImage ?? 'assets/books/habitos-atomicos-cover.jpg';
-
-  // 1. Tarjeta de identidad
-  const identityEntrance = spring({
+  // 1. Cabecera (frame 0)
+  const headerEntrance = spring({
     frame: localFrame,
     fps,
     config: SPRING_SNAPPY,
   });
 
-  // 2. CTA final (sincronizado a frame 145 - "¿Quieres ver más libros...?")
-  const ctaEntrance = spring({
-    frame: Math.max(0, localFrame - 145),
+  // 2. Tarjeta de Identidad (frame 80 - "un voto por la persona que quieres ser")
+  const identityEntrance = spring({
+    frame: Math.max(0, localFrame - 80),
     fps,
     config: SPRING_SNAPPY,
   });
 
-  // Pulso sutil en el botón de seguir
-  const pulse = Math.sin(localFrame * 0.25) * 0.05 + 1.0;
+  // 3. Sello de Veredicto Final (frame 165 - "Un libro imprescindible...")
+  const verdictEntrance = spring({
+    frame: Math.max(0, localFrame - 165),
+    fps,
+    config: SPRING_SNAPPY,
+  });
 
   return (
     <div
@@ -70,205 +72,259 @@ export const Scene5: React.FC<Scene5Props> = ({
         boxSizing: 'border-box',
       }}
     >
-      {/* CABECERA */}
+      {/* 1. Cabecera Editorial */}
       <div
         style={{
           position: 'absolute',
           top: 150,
           left: 96,
           right: 96,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: 12,
-          opacity: identityEntrance,
+          opacity: headerEntrance,
+          transform: `translateY(${(1 - headerEntrance) * -20}px)`,
         }}
       >
         <div
           style={{
             display: 'inline-flex',
-            padding: '6px 20px',
-            borderRadius: 30,
-            backgroundColor: 'rgba(34, 197, 94, 0.18)',
-            border: '1.5px solid #22C55E',
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: 22,
-            fontWeight: 800,
-            color: '#4ADE80',
-            letterSpacing: '0.1em',
+            alignItems: 'center',
+            gap: 8,
+            padding: '4px 12px',
+            backgroundColor: '#FFFFFF',
+            border: '1.5px solid #D94E34',
+            borderRadius: 6,
+            marginBottom: 12,
           }}
         >
-          LA REGLA DE ORO
+          <span
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 14,
+              fontWeight: 700,
+              color: '#D94E34',
+              letterSpacing: 1.5,
+            }}
+          >
+            05 / VEREDICTO FINAL
+          </span>
         </div>
-
-        <div
+        <h1
           style={{
-            fontFamily: "'IBM Plex Sans', sans-serif",
-            fontSize: 48,
-            fontWeight: 900,
-            color: '#FFFFFF',
-            textAlign: 'center',
+            fontFamily: "'Newsreader', 'Playfair Display', Georgia, serif",
+            fontSize: 56,
+            fontWeight: 800,
+            color: '#141413',
+            margin: 0,
+            lineHeight: 1.1,
             letterSpacing: '-0.02em',
           }}
         >
-          CAMBIO DE IDENTIDAD
-        </div>
+          Cambio de Identidad
+        </h1>
       </div>
 
-      {/* TARJETA 1: LA FRASE DE IDENTIDAD */}
+      {/* 2. Tarjeta de Identidad (frame 80) */}
       <div
         style={{
           position: 'absolute',
+          top: 320,
           left: 96,
           right: 96,
-          top: 360,
-          padding: '36px 40px',
-          borderRadius: 24,
-          backgroundColor: '#18181B',
-          border: '2px solid rgba(34, 197, 94, 0.45)',
-          boxShadow: '0 24px 60px rgba(0, 0, 0, 0.75)',
+          backgroundColor: '#FFFFFF',
+          border: '2px solid #141413',
+          borderTop: '6px solid #D94E34',
+          borderRadius: 18,
+          padding: '32px 32px',
+          boxShadow: '0 12px 36px rgba(45, 43, 40, 0.08)',
           opacity: identityEntrance,
-          transform: `translateY(${interpolate(identityEntrance, [0, 1], [30, 0], CLAMP_EXTRAPOLATION)}px)`,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 14,
+          transform: `translateY(${(1 - identityEntrance) * 20}px)`,
         }}
       >
         <div
           style={{
-            fontFamily: "Georgia, 'Times New Roman', serif",
-            fontStyle: 'italic',
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 13,
+            fontWeight: 800,
+            color: '#D94E34',
+            letterSpacing: 1.5,
+            marginBottom: 10,
+          }}
+        >
+          LA TESIS DEFINITIVA
+        </div>
+
+        <blockquote
+          style={{
+            margin: 0,
+            fontFamily: "'Newsreader', Georgia, serif",
             fontSize: 34,
-            lineHeight: 1.4,
-            color: '#FFFFFF',
-            textAlign: 'center',
+            fontWeight: 700,
+            fontStyle: 'italic',
+            lineHeight: 1.35,
+            color: '#141413',
           }}
         >
-          «Cada pequeña acción es un voto por la persona que quieres llegar a ser.»
-        </div>
-        <div
-          style={{
-            fontFamily: "'IBM Plex Sans', sans-serif",
-            fontSize: 22,
-            fontWeight: 600,
-            color: '#4ADE80',
-            textAlign: 'center',
-          }}
-        >
-          Tus hábitos no solo cambian tus resultados; cambian quién eres.
-        </div>
-      </div>
-
-      {/* PANEL DE CIERRE / CTA FINAL */}
-      <div
-        style={{
-          position: 'absolute',
-          left: 96,
-          right: 96,
-          top: 690,
-          padding: '40px 36px',
-          borderRadius: 26,
-          backgroundColor: '#0F172A',
-          border: '2.5px solid #38BDF8',
-          boxShadow: '0 30px 80px rgba(0, 0, 0, 0.85), 0 0 50px rgba(56, 189, 248, 0.25)',
-          opacity: ctaEntrance,
-          transform: `scale(${ctaEntrance})`,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: 24,
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 20,
-          }}
-        >
-          <div
-            style={{
-              width: 80,
-              height: 120,
-              borderRadius: 10,
-              overflow: 'hidden',
-              boxShadow: '0 10px 25px rgba(0,0,0,0.6)',
-              border: '1.5px solid rgba(255,255,255,0.2)',
-            }}
-          >
-            <Img
-              src={staticFile(coverSrc)}
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            />
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-            <span
-              style={{
-                fontFamily: "'IBM Plex Mono', monospace",
-                fontSize: 20,
-                fontWeight: 800,
-                color: '#38BDF8',
-                letterSpacing: '0.08em',
-              }}
-            >
-              ¿QUIERES MÁS LIBROS EN 60s?
-            </span>
-            <span
-              style={{
-                fontFamily: "'IBM Plex Sans', sans-serif",
-                fontSize: 32,
-                fontWeight: 900,
-                color: '#FFFFFF',
-              }}
-            >
-              ¡SÍGUENOS Y COMENTA!
-            </span>
-          </div>
-        </div>
-
-        {/* Botón interactivo de Seguir */}
-        <div
-          style={{
-            padding: '16px 42px',
-            borderRadius: 30,
-            backgroundColor: '#DC2626',
-            boxShadow: '0 12px 30px rgba(220, 38, 38, 0.5)',
-            transform: `scale(${pulse})`,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 12,
-          }}
-        >
-          <span style={{ fontSize: 26 }}>🔔</span>
+          «Cada pequeña acción es un{' '}
           <span
             style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: 26,
-              fontWeight: 900,
-              color: '#FFFFFF',
-              letterSpacing: '0.08em',
+              backgroundColor: 'rgba(217, 78, 52, 0.18)',
+              padding: '2px 8px',
+              borderRadius: 4,
+              color: '#D94E34',
+              fontStyle: 'normal',
             }}
           >
-            SEGUIR CANAL
-          </span>
-        </div>
+            voto
+          </span>{' '}
+          por la persona que quieres ser.»
+        </blockquote>
 
-        {/* Sugerencia de comentario */}
-        <div
+        <p
           style={{
-            padding: '14px 24px',
-            borderRadius: 14,
-            backgroundColor: 'rgba(255, 255, 255, 0.08)',
-            border: '1px solid rgba(255, 255, 255, 0.15)',
-            fontFamily: "'IBM Plex Sans', sans-serif",
-            fontSize: 22,
-            fontWeight: 600,
-            color: '#E2E8F0',
-            textAlign: 'center',
+            fontFamily: "'Inter', sans-serif",
+            fontSize: 16,
+            color: '#575550',
+            marginTop: 16,
+            marginBottom: 0,
           }}
         >
-          💬 ¿Qué libro quieres ver en el próximo vídeo?
+          No buscas leer un libro, buscas convertirte en un lector.
+        </p>
+      </div>
+
+      {/* 3. Gran Ficha de Veredicto y Sello del Canal (frame 165) */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 640,
+          left: 96,
+          right: 96,
+          backgroundColor: '#FFFFFF',
+          border: '2px solid #D94E34',
+          borderRadius: 20,
+          padding: '36px 32px',
+          boxShadow: '0 20px 50px rgba(217, 78, 52, 0.12)',
+          textAlign: 'center',
+          opacity: verdictEntrance,
+          transform: `scale(${interpolate(verdictEntrance, [0, 1], [0.90, 1], CLAMP_EXTRAPOLATION)})`,
+        }}
+      >
+        {/* Sello Circular del Canal */}
+        <div
+          style={{
+            width: 80,
+            height: 80,
+            borderRadius: '50%',
+            backgroundColor: '#D94E34',
+            color: '#FFFFFF',
+            margin: '0 auto 16px auto',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 32,
+            fontWeight: 900,
+            boxShadow: '0 6px 16px rgba(217, 78, 52, 0.35)',
+          }}
+        >
+          ✓
+        </div>
+
+        <div
+          style={{
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 14,
+            fontWeight: 800,
+            color: '#D94E34',
+            letterSpacing: 2,
+            marginBottom: 6,
+          }}
+        >
+          {BRAND_CONFIG.sealText}
+        </div>
+
+        <div
+          style={{
+            fontFamily: "'Newsreader', serif",
+            fontSize: 42,
+            fontWeight: 800,
+            color: '#141413',
+            letterSpacing: '-0.02em',
+          }}
+        >
+          Lectura Imprescindible
+        </div>
+
+        <div
+          style={{
+            marginTop: 18,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: 24,
+            padding: '12px 20px',
+            backgroundColor: '#F8F7F4',
+            borderRadius: 12,
+            border: '1px solid #E5E2DC',
+          }}
+        >
+          <div>
+            <div
+              style={{
+                fontFamily: "'Newsreader', serif",
+                fontSize: 28,
+                fontWeight: 800,
+                color: '#D97706',
+              }}
+            >
+              ★ 4.38
+            </div>
+            <div
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontSize: 12,
+                color: '#575550',
+              }}
+            >
+              1.94M en Goodreads
+            </div>
+          </div>
+
+          <div style={{ width: 1, height: 36, backgroundColor: '#E5E2DC' }} />
+
+          <div>
+            <div
+              style={{
+                fontFamily: "'Newsreader', serif",
+                fontSize: 28,
+                fontWeight: 800,
+                color: '#141413',
+              }}
+            >
+              4.2h
+            </div>
+            <div
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontSize: 12,
+                color: '#575550',
+              }}
+            >
+              Lectura completa
+            </div>
+          </div>
+        </div>
+
+        <div
+          style={{
+            marginTop: 20,
+            fontFamily: "'Inter', sans-serif",
+            fontSize: 16,
+            fontWeight: 700,
+            color: '#D94E34',
+            letterSpacing: 0.5,
+          }}
+        >
+          Síguenos en {BRAND_CONFIG.channelHandle} para más libros en 60s
         </div>
       </div>
     </div>
