@@ -1,6 +1,7 @@
 node_modules/
 dist/
-out/
+out/*
+!out/video.mp4
 build/
 .remotion/
 .env
