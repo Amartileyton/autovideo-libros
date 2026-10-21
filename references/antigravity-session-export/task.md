@@ -1,0 +1,30 @@
+# Task List: Estudio de Vídeo Programático (Remotion + ElevenLabs)
+
+- [x] **FASE 1: Nivel 0 — Unificación de Directorios Globales/Locales y MCP**
+  - [x] Crear `~/.agents/skills` y enlazar `~/.gemini/antigravity/skills`
+  - [x] Crear `.agent/skills/` local
+  - [x] Crear `.agents/mcp_config.json` (`@ahmeterdempmk/mcp-motion` en `localhost:3030`)
+  - [x] Inicializar `references/LESSONS.md` con plantilla de memoria persistente
+- [x] **FASE 2: Nivel 1 — Escalado No Interactivo y Descarga de Skills**
+  - [x] Crear `package.json`, `tsconfig.json` y `remotion.config.ts` sin asistentes interactivos
+  - [x] Instalar dependencias Core, Vectores y ElevenLabs (`remotion`, `@remotion/cli`, `@remotion/transitions`, `@remotion/shapes`, `lucide-react`, `roughjs`, `zod`, `dotenv`, `@remotion/captions`, `@remotion/elevenlabs`)
+  - [x] Instalar skills oficiales de Remotion (`npx skills add remotion-dev/skills -y`)
+  - [x] Instalar skills de Dirección de Arte y Cámara (`npx skills add liamrjohnston/remotion-motion-graphics-skill -y`)
+  - [x] Descargar skill `remotion-video-director` en `.agent/skills/remotion-video-director/SKILL.md`
+  - [x] Descargar skill `elevenlabs-remotion` en `.agent/skills/elevenlabs-remotion/SKILL.md`
+- [x] **FASE 3: Nivel 2 — Arquitectura de Directorios y Sistema de Movimiento**
+  - [x] Crear jerarquía completa de directorios (`public/audio`, `public/assets`, `scripts`, `src/components`, `src/data`, `src/scenes`, `src/theme`)
+  - [x] Crear `.agent/skills.config.yaml` y `scripts/resolve_config.py`
+  - [x] Crear `src/theme/motion.ts` con `SPRING_SNAPPY`, `SPRING_CAMERA`, paleta Zero-Neon y constantes de Zona Segura Vertical (9:16)
+  - [x] Crear componentes base (`CameraRig.tsx`, `RoughCard.tsx`, `DynamicCaptions.tsx`), esquema Zod (`src/data/schema.ts`), `src/data/scenes.json` y escenas de diagnóstico (`Scene1.tsx`, `Scene2.tsx`)
+- [x] **FASE 4: Motor Exclusivo ElevenLabs y Sincronización Audio-First**
+  - [x] Programar `scripts/elevenlabs-sync.mjs` con soporte de presets, endpoint `/with-timestamps`, Request Stitching, conversión a `wordTimestamps`, auditoría `ffprobe` y escritura de `public/audio/info.json`
+  - [x] Programar `scripts/promptible-gate.mjs` para control de calidad y Critic Gate
+  - [x] Configurar `src/Root.tsx` y `src/Video.tsx` sincronizados matemáticamente con `public/audio/info.json`, transiciones cross-dissolve y audio ducking
+- [x] **FASE 5: Nivel 3 y 4 — Protocolo Multiagente (5 Slots) en `AGENTS.md`**
+  - [x] Redactar `AGENTS.md` con las reglas del Sistema de Movimiento Cerrado, Zona Segura 9:16, Política Zero-Neon, Regla de Locución y Protocolo Multiagente de 5 Slots
+- [x] **FASE 6: Verificación y Arranque en Espera**
+  - [x] Verificar encabezados YAML de todas las skills en `.agent/skills/` y `~/.gemini/antigravity/skills/`
+  - [x] Crear `.env.example` con `ELEVENLABS_API_KEY` y `ELEVENLABS_VOICE_ID`
+  - [x] Verificar compilación TypeScript (0 errores) y arranque de Remotion Studio (`npm run dev`) en `http://localhost:3000`
+  - [x] Presentar resumen de verificación final

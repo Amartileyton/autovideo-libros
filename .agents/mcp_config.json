@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "mcp-motion": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@ahmeterdempmk/mcp-motion"
+      ],
+      "env": {
+        "PORT": "3030",
+        "HOST": "localhost"
+      },
+      "url": "http://localhost:3030"
+    }
+  }
+}

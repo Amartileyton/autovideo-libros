@@ -1,0 +1,145 @@
+{
+  "projectTitle": "Un libro en 60 segundos — Hábitos Atómicos",
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "crossDissolveFrames": 10,
+  "bookMetadata": {
+    "title": "Hábitos Atómicos",
+    "originalTitle": "Atomic Habits",
+    "author": "James Clear",
+    "publishYear": 2018,
+    "pages": 320,
+    "readingTimeHours": 4.2,
+    "rating": 4.38,
+    "ratingsCount": "1.94M",
+    "salesCopies": "+15M",
+    "coverImage": "assets/books/habitos-atomicos-cover.jpg",
+    "categoryTag": "DESARROLLO PERSONAL · SISTEMAS",
+    "goodreadsUrl": "https://www.goodreads.com/book/show/40121378-atomic-habits"
+  },
+  "scenes": [
+    {
+      "id": "scene-1",
+      "title": "UN LIBRO EN 60 SEGUNDOS",
+      "text": "¡Un libro en sesenta segundos! [PAUSA 0.4s] Hoy: Hábitos Atómicos, de James Clear. [PAUSA 0.4s] Más de quince millones de copias vendidas y cuatro coma cuatro estrellas en Goodreads.",
+      "characterPreset": "dramatic",
+      "blueprintMode": "DARK_CAD_XRAY",
+      "visualCue": "Alarma de advertencia parpadeante en el inicio, portada real del libro dentro de marco elegante y pop-ups flotantes de Goodreads y ventas.",
+      "cameraTarget": {
+        "x": 0,
+        "y": 0,
+        "zoom": 1,
+        "rotateDeg": 0
+      },
+      "metrics": {
+        "label": "RATING GOODREADS",
+        "numericValue": 4.38,
+        "unit": "★"
+      },
+      "bookVisualData": {
+        "badgeVentas": "+15M COPIAS",
+        "goodreadsRating": "★ 4.38",
+        "goodreadsReviews": "1.9M reseñas"
+      }
+    },
+    {
+      "id": "scene-2",
+      "title": "PUNTO 1: METAS VS SISTEMAS",
+      "text": "La primera gran idea: olvídate de las metas. [PAUSA 0.3s] Ganadores y perdedores tienen exactamente los mismos objetivos. La verdadera diferencia nunca es la meta, sino el sistema diario que construyes.",
+      "characterPreset": "narrator",
+      "blueprintMode": "DARK_CAD_XRAY",
+      "visualCue": "Tarjeta comparativa limpia entre Metas y Sistemas con cita central de James Clear.",
+      "cameraTarget": {
+        "x": 1120,
+        "y": 0,
+        "zoom": 1,
+        "rotateDeg": 0
+      },
+      "metrics": {
+        "label": "FOCO CONDUCTUAL",
+        "numericValue": 100,
+        "unit": "% SISTEMA"
+      },
+      "bookVisualData": {
+        "mythLabel": "METAS",
+        "realityLabel": "SISTEMAS",
+        "quote": "No te elevas al nivel de tus metas, caes al nivel de tus sistemas."
+      }
+    },
+    {
+      "id": "scene-3",
+      "title": "PUNTO 2: EL 1% DIARIO",
+      "text": "Segunda idea: la matemática del uno por ciento. [PAUSA 0.3s] Mejorar apenas un uno por ciento cada día parece invisible al principio, pero al cabo de un año, el efecto compuesto te hace treinta y siete veces mejor.",
+      "characterPreset": "expert",
+      "blueprintMode": "DARK_CAD_XRAY",
+      "visualCue": "Tarjeta de fórmula matemática animada: 1.01^365 = 37.78x frente a 0.99^365 = 0.03x.",
+      "cameraTarget": {
+        "x": 1120,
+        "y": 1980,
+        "zoom": 1,
+        "rotateDeg": 0
+      },
+      "metrics": {
+        "label": "MULTIPLICADOR ANUAL",
+        "numericValue": 37.78,
+        "unit": "x"
+      },
+      "bookVisualData": {
+        "formulaLabel": "1.01³⁶⁵ = 37.78x",
+        "compareLabel": "0.99³⁶⁵ = 0.03x"
+      }
+    },
+    {
+      "id": "scene-4",
+      "title": "PUNTO 3: LAS 4 LEYES DEL HÁBITO",
+      "text": "Tercera idea: las cuatro leyes del hábito. [PAUSA 0.3s] Para crear un hábito: hazlo obvio, hazlo atractivo, hazlo fácil con la regla de dos minutos, y hazlo satisfactorio para sellar tu dopamina.",
+      "characterPreset": "narrator",
+      "blueprintMode": "DARK_CAD_XRAY",
+      "visualCue": "Cajón de 4 tarjetas limpias que se despliegan en orden: Obvio, Atractivo, Fácil (< 2 min) y Satisfactorio.",
+      "cameraTarget": {
+        "x": 0,
+        "y": 1980,
+        "zoom": 1,
+        "rotateDeg": 0
+      },
+      "metrics": {
+        "label": "UMBRAL DE ACCIÓN",
+        "numericValue": 2,
+        "unit": "MIN"
+      },
+      "bookVisualData": {
+        "laws": [
+          { "num": "01", "name": "HAZLO OBVIO", "desc": "Señal visual a la vista" },
+          { "num": "02", "name": "HAZLO ATRACTIVO", "desc": "Anticipación de dopamina" },
+          { "num": "03", "name": "HAZLO FÁCIL", "desc": "Regla de los 2 minutos" },
+          { "num": "04", "name": "HAZLO SATISFACTORIO", "desc": "Recompensa inmediata" }
+        ]
+      }
+    },
+    {
+      "id": "scene-5",
+      "title": "PUNTO 4: IDENTIDAD Y CIERRE",
+      "text": "Y la regla de oro: cada pequeña acción es un voto por la persona que quieres ser. [PAUSA 0.4s] ¿Quieres ver más libros en sesenta segundos? [PAUSA 0.3s] ¡Síguenos y comenta qué te ha parecido el libro!",
+      "characterPreset": "salesperson",
+      "blueprintMode": "DARK_CAD_XRAY",
+      "visualCue": "Tarjeta central de identidad y panel animado de CTA: síguenos, comenta y comparte.",
+      "cameraTarget": {
+        "x": 560,
+        "y": 3960,
+        "zoom": 1,
+        "rotateDeg": 0
+      },
+      "metrics": {
+        "label": "SERIE RECURRENT",
+        "numericValue": 60,
+        "unit": "SEG"
+      },
+      "bookVisualData": {
+        "identityPhrase": "Cada hábito es un voto por tu identidad.",
+        "ctaMain": "¿Quieres más libros en 60 segundos?",
+        "ctaSub": "¡Síguenos y comenta tu opinión!"
+      }
+    }
+  ]
+}

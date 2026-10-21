@@ -1,0 +1,68 @@
+# Configuración Centralizada de Agent Skills (Patrón Configurable Agent Skills)
+# Permite sobrescribir parámetros globales sin bifurcar los archivos SKILL.md individuales.
+
+version: "1.1"
+studio:
+  name: "Antigravity Vector Video Studio"
+  fps: 30
+  width: 1080
+  height: 1920
+  aspect_ratio: "9:16"
+  cross_dissolve_frames: 10
+
+theme:
+  surface: "#F8F7F4"
+  ink_primary: "#141413"
+  ink_secondary: "#575550"
+  accent_primary: "#D94E34"
+  accent_secondary: "#2563EB"
+  grid_line: "#E6E4DD"
+  zero_neon_policy: true
+
+captions:
+  words_per_window: 3
+  hold_tolerance_ms: 450
+  backgroundless: true
+  font_family: "'IBM Plex Sans', 'Inter', 'Helvetica Neue', system-ui, sans-serif"
+  font_size_px: 48
+  font_weight: 700
+
+safe_zone:
+  top_percent: 85
+  bottom_reserved_px: 288
+  horizontal_padding_px: 96
+  min_headline_px: 64
+  max_headline_words: 7
+  min_label_px: 28
+  max_label_words: 20
+
+motion:
+  forbid_css_transitions: true
+  forbid_css_keyframes: true
+  require_extrapolate_clamp: true
+  springs:
+    SPRING_SNAPPY:
+      damping: 20
+      stiffness: 200
+      mass: 0.8
+    SPRING_CAMERA:
+      damping: 30
+      stiffness: 90
+      mass: 1.2
+
+elevenlabs:
+  voice_id: "RwzBDEn5f6FIgpAjH9YN"
+  voice_name: "Gabriel Blanco (Voz Canónica de Leo)"
+  model_id: "eleven_multilingual_v2"
+  output_format: "mp3_44100_128"
+  apply_text_normalization: "on"
+  canonical_settings:
+    stability: 0.70
+    similarity_boost: 0.75
+    style: 0.05
+    use_speaker_boost: true
+  audit:
+    min_words_per_sec: 2.0
+    max_words_per_sec: 4.5
+    max_leading_silence_ms: 200
+    max_trailing_silence_ms: 500

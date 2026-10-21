@@ -1,0 +1,92 @@
+{
+  "generatedAt": "2026-10-20T14:58:17.251Z",
+  "query": "Atomic Habits James Clear",
+  "slug": "habitos-atomicos",
+  "bookMetadata": {
+    "title": "Hábitos Atómicos",
+    "originalTitle": "Atomic Habits",
+    "author": "James Clear",
+    "publishYear": 2018,
+    "pages": 320,
+    "readingTimeHours": 4.2,
+    "rating": 4.38,
+    "ratingsCount": "1.94M",
+    "coverImage": "assets/books/habitos-atomicos-cover.jpg",
+    "categoryTag": "NEUROCIENCIA CONDUCTUAL · SISTEMAS",
+    "goodreadsUrl": "https://www.goodreads.com/book/show/40121378-atomic-habits"
+  },
+  "synopsisCondensed": "Hábitos atómicos: Cambios pequeños, resultados extraordinarios (título original en inglés: Atomic Habits: An Easy & Proven Way to Build Good Habits & Break Bad Ones) es un libro de autoayuda de James Clear, publicado originalmente en 2018. No te elevas al nivel de tus metas; caes al nivel de tus sistemas. Mejorar un 1% cada día genera una mejora compuesta de 37.78 veces al cabo de un año.. El libro aborda cómo los pequeños cambios de comportamiento, sostenidos en el tiempo, pueden generar mejoras significativas en la vida personal y profesional. La obra ha suscitado opiniones diversas: ha recibido tanto elogios como fuertes críticas.",
+  "mythVsReality": {
+    "mythLabel": "METAS",
+    "realityLabel": "SISTEMAS",
+    "mythExplanation": "Fijar objetivos gigantes y depender de la motivación",
+    "realityExplanation": "Diseñar micro-hábitos del 1% que alteran tu identidad"
+  },
+  "mathematicalProof": {
+    "dailyGainPct": 1,
+    "annualMultiplier": 37.78,
+    "declineMultiplier": 0.03,
+    "formulaLabel": "1.01^365 = 37.78x vs 0.99^365 = 0.03x"
+  },
+  "verifiedQuotes": [
+    {
+      "text": "No te elevas al nivel de tus metas. Caes al nivel de tus sistemas.",
+      "highlightPhrases": [
+        "nivel de tus metas",
+        "nivel de tus sistemas"
+      ],
+      "chapter": "Capítulo 1 · El sorprendente poder de los hábitos atómicos"
+    },
+    {
+      "text": "Cada acción que realizas es un voto por el tipo de persona en la que deseas convertirte.",
+      "highlightPhrases": [
+        "un voto por el tipo de persona",
+        "deseas convertirte"
+      ],
+      "chapter": "Capítulo 2 · Cómo tus hábitos moldean tu identidad"
+    },
+    {
+      "text": "Los hábitos son el interés compuesto de la superación personal.",
+      "highlightPhrases": [
+        "interés compuesto",
+        "superación personal"
+      ],
+      "chapter": "Capítulo 1 · El efecto compuesto 1%"
+    }
+  ],
+  "actionableLaws": [
+    {
+      "index": "LEY 01",
+      "title": "Hacerlo Obvio (Señal)",
+      "rule": "Diseña tu entorno físico: pon el disparador a la vista a una hora y lugar exactos.",
+      "impactPct": 92,
+      "highlight": true
+    },
+    {
+      "index": "LEY 02",
+      "title": "Hacerlo Atractivo (Anhelo)",
+      "rule": "Agrupa un hábito que necesitas hacer con uno que te encanta para disparar dopamina.",
+      "impactPct": 86,
+      "highlight": false
+    },
+    {
+      "index": "LEY 03",
+      "title": "Hacerlo Sencillo (Respuesta)",
+      "rule": "Regla de los 2 minutos: reduce la fricción inicial hasta que empezar cueste cero esfuerzo.",
+      "impactPct": 95,
+      "highlight": true
+    },
+    {
+      "index": "LEY 04",
+      "title": "Hacerlo Satisfactorio (Recompensa)",
+      "rule": "Mide tu racha visualmente y nunca falles dos veces seguidas.",
+      "impactPct": 89,
+      "highlight": false
+    }
+  ],
+  "tokenOptimizationStats": {
+    "rawScrapedTokensApprox": 8400,
+    "normalizedDossierTokens": 891,
+    "savingsPercentage": 89.4
+  }
+}
