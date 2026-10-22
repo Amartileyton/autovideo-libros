@@ -7,6 +7,11 @@ import {
 } from 'remotion';
 import type { BookMetadata, BookVisualData } from '../data/schema';
 import { CLAMP_EXTRAPOLATION, SPRING_SNAPPY } from '../theme/motion';
+import {
+  ExponentialGrowthChart,
+  KineticCard,
+  LiveCounter,
+} from '../components/kinetic';
 
 export interface Scene2Props {
   headline?: string;
@@ -21,12 +26,11 @@ export interface Scene2Props {
 }
 
 /**
- * Scene 2 — La Matemática del 1% (Diseño Editorial Papel Cálido + Sincronización Exacta)
- * Timestamps reales de ElevenLabs (342 frames):
- * - 0..26: "La matemática del uno por ciento" -> Entrada de la cabecera
- * - 26..60: "uno por ciento" -> Tarjeta con la fórmula 1.01³⁶⁵ = 37.78x
- * - 97..140: "cada día parece invisible..." -> Tarjeta de contraste 0.99³⁶⁵ = 0.03x
- * - 260..300: "treinta y siete veces mejor" -> Gran badge central "37.78x" con explosión elástica
+ * Scene 2 — La Matemática del 1% (Kinetic UI + Exponential Growth Chart)
+ * Requisitos del usuario:
+ * 1. Eliminadas las dos primeras cajas estáticas.
+ * 2. Integrada la tarjeta hero con LiveCounter (1.00 -> 37.78x) y tipografía Plus Jakarta Sans.
+ * 3. Gráfico vectorial animado de crecimiento exponencial por debajo, sincronizado con el audio de Leo.
  */
 export const Scene2: React.FC<Scene2Props> = ({
   canvasOffsetX = 1120,
@@ -44,25 +48,12 @@ export const Scene2: React.FC<Scene2Props> = ({
     config: SPRING_SNAPPY,
   });
 
-  // 2. Tarjeta de la Fórmula Principal 1.01³⁶⁵ (frame 24)
-  const formulaEntrance = spring({
-    frame: Math.max(0, localFrame - 24),
+  // 2. Progreso de llenado de la barra del 37.78x
+  const fillProgress = spring({
+    frame: Math.max(0, localFrame - 240),
     fps,
-    config: SPRING_SNAPPY,
-  });
-
-  // 3. Tarjeta de Contraste 0.99³⁶⁵ (frame 95)
-  const contrastEntrance = spring({
-    frame: Math.max(0, localFrame - 95),
-    fps,
-    config: SPRING_SNAPPY,
-  });
-
-  // 4. Gran Contador Multiplicador 37.78x (frame 255 - "treinta y siete veces mejor")
-  const multiplierEntrance = spring({
-    frame: Math.max(0, localFrame - 255),
-    fps,
-    config: SPRING_SNAPPY,
+    config: { damping: 22, stiffness: 100, mass: 0.9 },
+    durationInFrames: 50,
   });
 
   return (
@@ -78,7 +69,7 @@ export const Scene2: React.FC<Scene2Props> = ({
         boxSizing: 'border-box',
       }}
     >
-      {/* 1. Cabecera Editorial */}
+      {/* 1. Cabecera con tipografía de alta visibilidad */}
       <div
         style={{
           position: 'absolute',
@@ -99,13 +90,14 @@ export const Scene2: React.FC<Scene2Props> = ({
             border: '1.5px solid #D94E34',
             borderRadius: 6,
             marginBottom: 12,
+            boxShadow: '0 2px 6px rgba(217, 78, 52, 0.10)',
           }}
         >
           <span
             style={{
               fontFamily: "'JetBrains Mono', monospace",
               fontSize: 14,
-              fontWeight: 700,
+              fontWeight: 800,
               color: '#D94E34',
               letterSpacing: 1.5,
             }}
@@ -115,230 +107,110 @@ export const Scene2: React.FC<Scene2Props> = ({
         </div>
         <h1
           style={{
-            fontFamily: "'Newsreader', 'Playfair Display', Georgia, serif",
+            fontFamily: "'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif",
             fontSize: 56,
-            fontWeight: 800,
+            fontWeight: 900,
             color: '#141413',
             margin: 0,
-            lineHeight: 1.1,
-            letterSpacing: '-0.02em',
+            lineHeight: 1.08,
+            letterSpacing: '-0.035em',
           }}
         >
           La Regla del 1% Diario
         </h1>
       </div>
 
-      {/* 2. Tarjeta Editorial de la Fórmula 1.01³⁶⁵ */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 320,
-          left: 96,
-          right: 96,
-          backgroundColor: '#FFFFFF',
-          border: '2px solid #D94E34',
-          borderRadius: 16,
-          padding: '28px 32px',
-          boxShadow: '0 12px 36px rgba(217, 78, 52, 0.08)',
-          opacity: formulaEntrance,
-          transform: `scale(${interpolate(formulaEntrance, [0, 1], [0.92, 1], CLAMP_EXTRAPOLATION)})`,
-        }}
-      >
-        <div
+      {/* 2. Tarjeta Hero Integrada con LiveCounter (1.00 -> 37.78x) */}
+      <div style={{ position: 'absolute', top: 300, left: 96, right: 96 }}>
+        <KineticCard
+          enterFrame={10}
+          accentBorderColor="#141413"
+          badgeText="POTENCIA COMPUESTA"
+          badgeColor="#141413"
+          padding="28px 36px"
           style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: 16,
+            borderTop: '6px solid #D94E34',
+            textAlign: 'center',
           }}
         >
-          <span
-            style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 14,
-              fontWeight: 700,
-              color: '#D94E34',
-              letterSpacing: 1,
-            }}
-          >
-            FÓRMULA CONDUCTUAL DE JAMES CLEAR
-          </span>
-          <span
-            style={{
-              padding: '4px 10px',
-              backgroundColor: 'rgba(217, 78, 52, 0.10)',
-              borderRadius: 6,
-              fontFamily: "'Inter', sans-serif",
-              fontSize: 13,
-              fontWeight: 700,
-              color: '#D94E34',
-            }}
-          >
-            365 DÍAS
-          </span>
-        </div>
-
-        <div
-          style={{
-            fontFamily: "'Newsreader', serif",
-            fontSize: 48,
-            fontWeight: 800,
-            color: '#141413',
-            letterSpacing: '-0.02em',
-          }}
-        >
-          1.01³⁶⁵ = <span style={{ color: '#D94E34' }}>37.78x</span>
-        </div>
-
-        <p
-          style={{
-            fontFamily: "'Inter', sans-serif",
-            fontSize: 18,
-            color: '#575550',
-            marginTop: 12,
-            marginBottom: 0,
-            lineHeight: 1.4,
-          }}
-        >
-          Mejorar solo un 1% cada día te convierte en 37 veces mejor al cabo de un año.
-        </p>
-      </div>
-
-      {/* 3. Tarjeta de Contraste Negativo (0.99³⁶⁵) */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 560,
-          left: 96,
-          right: 96,
-          backgroundColor: '#FFFFFF',
-          border: '1.5px solid #E5E2DC',
-          borderRadius: 16,
-          padding: '24px 32px',
-          boxShadow: '0 6px 20px rgba(45, 43, 40, 0.04)',
-          opacity: contrastEntrance,
-          transform: `translateY(${(1 - contrastEntrance) * 20}px)`,
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: 12,
-          }}
-        >
-          <span
+          <div
             style={{
               fontFamily: "'JetBrains Mono', monospace",
               fontSize: 13,
-              fontWeight: 700,
-              color: '#64748B',
+              fontWeight: 800,
+              color: '#D94E34',
+              letterSpacing: 2,
+              marginBottom: 8,
             }}
           >
-            EL EFECTO CONTRARIO (DECLIVE)
-          </span>
-          <span
-            style={{
-              padding: '3px 8px',
-              backgroundColor: '#F1F5F9',
-              borderRadius: 6,
-              fontFamily: "'Inter', sans-serif",
-              fontSize: 12,
-              fontWeight: 600,
-              color: '#64748B',
-            }}
-          >
-            -1% DIARIO
-          </span>
-        </div>
+            CAPACIDAD FINAL MULTIPLICADA
+          </div>
 
-        <div
-          style={{
-            fontFamily: "'Newsreader', serif",
-            fontSize: 34,
-            fontWeight: 700,
-            color: '#64748B',
-          }}
-        >
-          0.99³⁶⁵ = 0.03x
-        </div>
-        <p
-          style={{
-            fontFamily: "'Inter', sans-serif",
-            fontSize: 15,
-            color: '#94A3B8',
-            marginTop: 6,
-            marginBottom: 0,
-          }}
-        >
-          Empeorar un 1% diario reduce tu habilidad casi a cero absoluto.
-        </p>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'baseline',
+              lineHeight: 1,
+            }}
+          >
+            <LiveCounter
+              from={1.0}
+              to={37.78}
+              startFrame={235}
+              durationFrames={45}
+              decimals={2}
+              suffix="x"
+              fontSize={104}
+              color="#141413"
+              fontFamily="'Plus Jakarta Sans', 'Inter', sans-serif"
+            />
+          </div>
+
+          <div
+            style={{
+              fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
+              fontSize: 22,
+              fontWeight: 800,
+              color: '#141413',
+              marginTop: 14,
+              letterSpacing: '-0.02em',
+            }}
+          >
+            Mejor al final de un año
+          </div>
+
+          {/* Barra reactiva estilo @eldatomanda */}
+          <div
+            style={{
+              marginTop: 16,
+              width: '100%',
+              height: 10,
+              backgroundColor: 'rgba(217, 78, 52, 0.12)',
+              borderRadius: 5,
+              overflow: 'hidden',
+            }}
+          >
+            <div
+              style={{
+                width: `${interpolate(fillProgress, [0, 1], [3, 100], CLAMP_EXTRAPOLATION)}%`,
+                height: '100%',
+                backgroundColor: '#D94E34',
+                borderRadius: 5,
+              }}
+            />
+          </div>
+        </KineticCard>
       </div>
 
-      {/* 4. Gran Tarjeta de Síntesis del Multiplicador 37.78x (frame 255) */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 760,
-          left: 96,
-          right: 96,
-          backgroundColor: '#FFFFFF',
-          border: '2px solid #141413',
-          borderTop: '6px solid #D94E34',
-          borderRadius: 20,
-          padding: '40px 32px',
-          boxShadow: '0 20px 50px rgba(45, 43, 40, 0.12)',
-          textAlign: 'center',
-          opacity: multiplierEntrance,
-          transform: `scale(${interpolate(multiplierEntrance, [0, 1], [0.85, 1], CLAMP_EXTRAPOLATION)})`,
-        }}
-      >
-        <div
-          style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 16,
-            fontWeight: 800,
-            color: '#D94E34',
-            letterSpacing: 2,
-            marginBottom: 8,
-          }}
-        >
-          POTENCIA ACUMULADA
-        </div>
-        <div
-          style={{
-            fontFamily: "'Newsreader', serif",
-            fontSize: 110,
-            fontWeight: 900,
-            color: '#141413',
-            lineHeight: 1,
-            letterSpacing: '-0.04em',
-          }}
-        >
-          37.78<span style={{ color: '#D94E34', fontSize: 60 }}>x</span>
-        </div>
-        <div
-          style={{
-            fontFamily: "'Inter', sans-serif",
-            fontSize: 22,
-            fontWeight: 700,
-            color: '#141413',
-            marginTop: 16,
-          }}
-        >
-          Más competente al final del año
-        </div>
-        <div
-          style={{
-            fontFamily: "'Inter', sans-serif",
-            fontSize: 15,
-            color: '#575550',
-            marginTop: 4,
-          }}
-        >
-          «Los hábitos son el interés compuesto de la superación personal»
-        </div>
+      {/* 3. Gráfico de Crecimiento Exponencial Animado (y = 1.01³⁶⁵) debajo de la tarjeta */}
+      <div style={{ position: 'absolute', top: 660, left: 96, right: 96 }}>
+        <ExponentialGrowthChart
+          startFrame={enterFrame}
+          width={888}
+          height={500}
+          accentColor="#D94E34"
+        />
       </div>
     </div>
   );

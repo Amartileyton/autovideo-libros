@@ -288,14 +288,15 @@ export const PALETTE = {
  * Configuración de Marca Corporativa para el Canal de Resúmenes en 60s
  */
 export const BRAND_CONFIG = {
-  channelHandle: '@en60segundos',
+  channelHandle: '@en1minuto.es',
   tagline: 'IDEAS CLAVE EN 1 MINUTO',
-  sealText: 'SELECCIÓN EDITORIAL · RECOMENDADO POR @EN60SEGUNDOS',
+  sealText: 'SELECCIÓN EDITORIAL · RECOMENDADO POR @EN1MINUTO.ES',
   defaultTheme: 'EDITORIAL_PAPER' as BlueprintModeId,
   showProgressBar: true,
   progressBarHeight: 6,
   progressBarColor: '#D94E34',
-  fontSerif: "'Newsreader', 'Playfair Display', Georgia, serif",
-  fontSans: "'Inter', 'IBM Plex Sans', system-ui, sans-serif",
+  fontDisplay: "'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif",
+  fontSerif: "'Plus Jakarta Sans', 'Inter', Georgia, serif",
+  fontSans: "'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif",
   fontMono: "'JetBrains Mono', 'IBM Plex Mono', monospace",
 } as const;

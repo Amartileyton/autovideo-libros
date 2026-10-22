@@ -128,7 +128,7 @@
       "text": "La regla definitiva: cada pequeña acción es un voto por la persona que quieres ser. [PAUSA 0.4s] Un libro imprescindible para transformar tu vida este año.",
       "characterPreset": "salesperson",
       "blueprintMode": "EDITORIAL_PAPER",
-      "visualCue": "Ficha final de veredicto con sello editorial de recomendación de @en60segundos y datos consolidados.",
+      "visualCue": "Ficha final de veredicto con sello editorial de recomendación de @en1minuto.es y datos consolidados.",
       "cameraTarget": {
         "x": 560,
         "y": 3960,
@@ -143,7 +143,7 @@
       "bookVisualData": {
         "identityPhrase": "Cada hábito es un voto por la persona que quieres ser.",
         "verdictTitle": "SELECCIÓN EDITORIAL",
-        "verdictSubtitle": "RECOMENDADO POR @EN60SEGUNDOS",
+        "verdictSubtitle": "RECOMENDADO POR @EN1MINUTO.ES",
         "readingTime": "4.2 HORAS DE LECTURA"
       }
     }

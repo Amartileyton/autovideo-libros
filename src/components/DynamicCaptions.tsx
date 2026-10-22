@@ -93,23 +93,45 @@ export const DynamicCaptions: React.FC<DynamicCaptionsProps> = ({
   const currentSec = localFrame / fps;
   const currentMs = currentSec * 1000;
 
+  // Normalizar y desinfectar timestamps para evitar tokens que sean exclusivamente signos de puntuación aislados
+  const sanitizedTimestamps = React.useMemo(() => {
+    const list: WordTimestamp[] = [];
+    for (const item of wordTimestamps) {
+      const isOnlyPunctuation = /^[.,;:¡!¿?«»"'\-–—\s]+$/.test(item.word.trim());
+      if (isOnlyPunctuation) {
+        if (list.length > 0) {
+          // Fusionar signo de puntuación con la palabra previa para evitar palabra huérfana
+          list[list.length - 1] = {
+            ...list[list.length - 1],
+            word: `${list[list.length - 1].word}${item.word.trim()}`,
+            endMs: Math.max(list[list.length - 1].endMs, item.endMs),
+            endFrame: Math.max(list[list.length - 1].endFrame, item.endFrame),
+          };
+        }
+      } else {
+        list.push({ ...item });
+      }
+    }
+    return list;
+  }, [wordTimestamps]);
+
   const effectiveWindowSize =
     wordsPerWindow ??
     (variant === 'vector-box' || variant === 'ochre-blueprint' ? 5 : 3);
 
   // Localizar palabra activa con margen de tolerancia de 450ms (0.45s)
   let activeWordIdx = -1;
-  if (wordTimestamps.length > 0) {
-    const exact = wordTimestamps.findIndex(
+  if (sanitizedTimestamps.length > 0) {
+    const exact = sanitizedTimestamps.findIndex(
       (w) => currentMs >= w.startMs && currentMs < w.endMs
     );
     if (exact !== -1) {
       activeWordIdx = exact;
     } else {
-      for (let i = wordTimestamps.length - 1; i >= 0; i--) {
+      for (let i = sanitizedTimestamps.length - 1; i >= 0; i--) {
         if (
-          currentMs >= wordTimestamps[i].endMs &&
-          currentMs < wordTimestamps[i].endMs + 450
+          currentMs >= sanitizedTimestamps[i].endMs &&
+          currentMs < sanitizedTimestamps[i].endMs + 450
         ) {
           activeWordIdx = i;
           break;
@@ -118,17 +140,17 @@ export const DynamicCaptions: React.FC<DynamicCaptionsProps> = ({
     }
   }
 
-  if (wordTimestamps.length === 0 || activeWordIdx === -1) {
+  if (sanitizedTimestamps.length === 0 || activeWordIdx === -1) {
     return null;
   }
 
   const windowStart =
     Math.floor(activeWordIdx / effectiveWindowSize) * effectiveWindowSize;
   const windowEnd = Math.min(
-    wordTimestamps.length,
+    sanitizedTimestamps.length,
     windowStart + effectiveWindowSize
   );
-  const currentChunk = wordTimestamps.slice(windowStart, windowEnd);
+  const currentChunk = sanitizedTimestamps.slice(windowStart, windowEnd);
 
   const chunkStartMs = currentChunk[0]?.startMs ?? 0;
   const chunkFadeIn = interpolate(

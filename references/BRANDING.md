@@ -1,4 +1,4 @@
-# BRANDING.md — Manual de Identidad Visual Corporativa (Canal @en60segundos)
+# BRANDING.md — Manual de Identidad Visual Corporativa (Canal @en1minuto.es)
 
 > **Constitución Visual del Canal**: Este documento define las directrices estéticas, paleta cromática, tipografías y componentes fijos acordados para todos los vídeos generados por AutoVideo Studio.
 
@@ -49,7 +49,7 @@
 1. **Barra de Progreso de Lectura (Top Bar)**:
    - Línea horizontal de 4px en la parte superior activa (`#D94E34`), que avanza progresivamente de 0% a 100% a lo largo de los 60–65 segundos.
 2. **Pastilla de Canal (Top Left Header)**:
-   - Handle: `@en60segundos` (configurable desde `src/theme/motion.ts` y `scenes.json`).
+   - Handle: `@en1minuto.es` (configurable desde `src/theme/motion.ts` y `scenes.json`).
    - Lema / Badge: `IDEAS CLAVE EN 1 MINUTO`.
 3. **Sello de Veredicto (Outro / Escena 5)**:
-   - Insignia circular en terracota con la leyenda: `SELECCIÓN EDITORIAL · RECOMENDADO POR @EN60SEGUNDOS`.
+   - Insignia circular en terracota con la leyenda: `SELECCIÓN EDITORIAL · RECOMENDADO POR @EN1MINUTO.ES`.

@@ -1,10 +1,16 @@
 import React from 'react';
 import { Composition } from 'remotion';
+import { loadFont as loadPlusJakartaSans } from '@remotion/google-fonts/PlusJakartaSans';
+import { loadFont as loadInter } from '@remotion/google-fonts/Inter';
 import audioManifestJson from '../public/audio/info.json';
 import scenesJson from './data/scenes.json';
 import { VideoPropsSchema, type AudioManifest } from './data/schema';
 import { BLUEPRINT_THEMES, VIDEO_CONFIG } from './theme/motion';
 import { Video } from './Video';
+
+// Cargar fuentes oficiales de alta legibilidad para el estudio cinético
+loadPlusJakartaSans();
+loadInter();
 
 const manifest = audioManifestJson as AudioManifest;
 

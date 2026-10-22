@@ -9,6 +9,7 @@ import {
 } from 'remotion';
 import type { BookMetadata, BookVisualData } from '../data/schema';
 import { CLAMP_EXTRAPOLATION, SPRING_SNAPPY } from '../theme/motion';
+import { ComparisonBattle, LiveCounter } from '../components/kinetic';
 
 export interface Scene1Props {
   headline?: string;
@@ -23,12 +24,11 @@ export interface Scene1Props {
 }
 
 /**
- * Scene 1 — La Trampa de las Metas (Diseño Editorial Papel Cálido + Sincronización Exacta)
- * Timestamps reales de ElevenLabs:
- * - 0..38: "El 92% de las personas" -> Entrada de la ficha estadística (92% abandono en enero)
- * - 180..240: "En Hábitos Atómicos, James Clear" -> Entrada elástica de la portada 2.5D + badge de autor
- * - 295..315: "no son tus metas" -> Ficha tachada [METAS]
- * - 327..380: "sino los sistemas" -> Ficha destacada en terracota [SISTEMAS]
+ * Scene 1 — La Trampa de las Metas (Kinetic UI + @eldatomanda Style)
+ * Timestamps reales de ElevenLabs (403 frames):
+ * - 0..38: "El 92% de las personas" -> LiveCounter cuenta de 0 a 92%
+ * - 175..240: "En Hábitos Atómicos, James Clear" -> Portada 2.5D con rebote elástico
+ * - 285..340: "no fueron tus metas, sino los sistemas" -> ComparisonBattle en vivo
  */
 export const Scene1: React.FC<Scene1Props> = ({
   canvasOffsetX = 0,
@@ -40,16 +40,16 @@ export const Scene1: React.FC<Scene1Props> = ({
   const { fps } = useVideoConfig();
   const localFrame = Math.max(0, frame - enterFrame);
 
-  // 1. Entrada de la cabecera editorial (frame 0)
+  // 1. Cabecera editorial (frame 0)
   const headerEntrance = spring({
     frame: localFrame,
     fps,
     config: SPRING_SNAPPY,
   });
 
-  // 2. Ficha estadística del gancho 92% (frame 10)
+  // 2. Ficha estadística del gancho 92% (frame 6)
   const statEntrance = spring({
-    frame: Math.max(0, localFrame - 10),
+    frame: Math.max(0, localFrame - 6),
     fps,
     config: SPRING_SNAPPY,
   });
@@ -61,14 +61,13 @@ export const Scene1: React.FC<Scene1Props> = ({
     config: SPRING_SNAPPY,
   });
 
-  // 4. Comparativa Metas vs Sistemas (frame 290 - cuando dice "no fueron tus metas...")
-  const compareEntrance = spring({
-    frame: Math.max(0, localFrame - 290),
-    fps,
-    config: SPRING_SNAPPY,
-  });
-
-  const systemsActive = localFrame >= 325; // "sino los sistemas..."
+  // Inclinación 2.5D sutil del libro
+  const bookTilt = interpolate(
+    localFrame,
+    [175, 230, 350],
+    [-4, 3, 0],
+    CLAMP_EXTRAPOLATION
+  );
 
   return (
     <div
@@ -104,36 +103,37 @@ export const Scene1: React.FC<Scene1Props> = ({
             border: '1.5px solid #D94E34',
             borderRadius: 6,
             marginBottom: 12,
+            boxShadow: '0 2px 6px rgba(217, 78, 52, 0.10)',
           }}
         >
           <span
             style={{
               fontFamily: "'JetBrains Mono', monospace",
               fontSize: 14,
-              fontWeight: 700,
+              fontWeight: 800,
               color: '#D94E34',
               letterSpacing: 1.5,
             }}
           >
-            01 / ANÁLISIS CONDUCTUAL
+            01 / PARADOJA DEL ÉXITO
           </span>
         </div>
         <h1
           style={{
-            fontFamily: "'Newsreader', 'Playfair Display', Georgia, serif",
+            fontFamily: "'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif",
             fontSize: 56,
-            fontWeight: 800,
+            fontWeight: 900,
             color: '#141413',
             margin: 0,
-            lineHeight: 1.1,
-            letterSpacing: '-0.02em',
+            lineHeight: 1.08,
+            letterSpacing: '-0.035em',
           }}
         >
           ¿Por qué fallan tus metas?
         </h1>
       </div>
 
-      {/* 2. Ficha Estadística del Gancho (92% Abandono) */}
+      {/* 2. Ficha Estadística con LiveCounter (92% Abandono) */}
       <div
         style={{
           position: 'absolute',
@@ -142,53 +142,53 @@ export const Scene1: React.FC<Scene1Props> = ({
           right: 96,
           backgroundColor: '#FFFFFF',
           border: '1.5px solid #E5E2DC',
-          borderLeft: '5px solid #D94E34',
-          borderRadius: 12,
-          padding: '18px 24px',
-          boxShadow: '0 8px 24px rgba(45, 43, 40, 0.05)',
+          borderLeft: '6px solid #D94E34',
+          borderRadius: 16,
+          padding: '20px 28px',
+          boxShadow: '0 10px 30px rgba(45, 43, 40, 0.06)',
           opacity: statEntrance,
           transform: `scale(${interpolate(statEntrance, [0, 1], [0.94, 1], CLAMP_EXTRAPOLATION)})`,
           display: 'flex',
           alignItems: 'center',
-          gap: 20,
+          gap: 24,
         }}
       >
-        <div
-          style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 44,
-            fontWeight: 800,
-            color: '#D94E34',
-            lineHeight: 1,
-          }}
-        >
-          92%
+        <div style={{ minWidth: 140 }}>
+          <LiveCounter
+            from={0}
+            to={92}
+            startFrame={6}
+            durationFrames={28}
+            suffix="%"
+            fontSize={52}
+            color="#D94E34"
+          />
         </div>
         <div>
           <div
             style={{
               fontFamily: "'Inter', sans-serif",
-              fontSize: 18,
-              fontWeight: 700,
+              fontSize: 20,
+              fontWeight: 800,
               color: '#141413',
             }}
           >
-            Abandona sus propósitos en enero
+            Abandona sus metas en enero
           </div>
           <div
             style={{
               fontFamily: "'Inter', sans-serif",
               fontSize: 14,
               color: '#575550',
-              marginTop: 2,
+              marginTop: 3,
             }}
           >
-            Fuente: Journal of Clinical Psychology & James Clear
+            Datos confirmados por la investigación de James Clear
           </div>
         </div>
       </div>
 
-      {/* 3. Portada 2.5D del Libro con Ficha Goodreads */}
+      {/* 3. Portada 2.5D del Libro con Rebote e Inclinación */}
       <div
         style={{
           position: 'absolute',
@@ -199,19 +199,18 @@ export const Scene1: React.FC<Scene1Props> = ({
           flexDirection: 'column',
           alignItems: 'center',
           opacity: bookEntrance,
-          transform: `translateY(${(1 - bookEntrance) * 30}px)`,
+          transform: `translateY(${(1 - bookEntrance) * 35}px) perspective(1200px) rotateY(${bookTilt}deg)`,
         }}
       >
-        {/* Libro en perspectiva con sombra cálida */}
         <div
           style={{
             position: 'relative',
-            width: 380,
-            height: 570,
-            borderRadius: 14,
+            width: 360,
+            height: 540,
+            borderRadius: 16,
             overflow: 'hidden',
             boxShadow:
-              '0 24px 50px rgba(45, 43, 40, 0.16), 0 4px 12px rgba(45, 43, 40, 0.08)',
+              '0 30px 60px rgba(45, 43, 40, 0.18), 0 6px 16px rgba(45, 43, 40, 0.08)',
             border: '2px solid rgba(45, 43, 40, 0.12)',
             backgroundColor: '#FFFFFF',
           }}
@@ -226,18 +225,18 @@ export const Scene1: React.FC<Scene1Props> = ({
           />
         </div>
 
-        {/* Ficha técnica del libro bajo la portada */}
+        {/* Ficha técnica tipo badge debajo del libro */}
         <div
           style={{
-            marginTop: 20,
+            marginTop: 18,
             display: 'flex',
             alignItems: 'center',
             gap: 16,
-            padding: '10px 20px',
+            padding: '10px 22px',
             backgroundColor: '#FFFFFF',
             border: '1.5px solid #E5E2DC',
             borderRadius: 30,
-            boxShadow: '0 4px 14px rgba(45, 43, 40, 0.04)',
+            boxShadow: '0 4px 16px rgba(45, 43, 40, 0.05)',
           }}
         >
           <span
@@ -250,18 +249,18 @@ export const Scene1: React.FC<Scene1Props> = ({
           >
             James Clear
           </span>
-          <span style={{ color: '#E5E2DC' }}>|</span>
+          <span style={{ color: '#CBD5E1' }}>|</span>
           <span
             style={{
               fontFamily: "'Inter', sans-serif",
               fontSize: 15,
-              fontWeight: 700,
+              fontWeight: 800,
               color: '#D97706',
             }}
           >
             ★ 4.38 Goodreads
           </span>
-          <span style={{ color: '#E5E2DC' }}>|</span>
+          <span style={{ color: '#CBD5E1' }}>|</span>
           <span
             style={{
               fontFamily: "'Inter', sans-serif",
@@ -274,113 +273,28 @@ export const Scene1: React.FC<Scene1Props> = ({
         </div>
       </div>
 
-      {/* 4. Comparativa Metas vs Sistemas (frame 290) */}
+      {/* 4. Confrontación Cinética: Metas vs Sistemas (ComparisonBattle) */}
       <div
         style={{
           position: 'absolute',
-          top: 1140,
+          top: 1130,
           left: 96,
           right: 96,
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: 16,
-          opacity: compareEntrance,
-          transform: `translateY(${(1 - compareEntrance) * 20}px)`,
         }}
       >
-        {/* Tarjeta METAS */}
-        <div
-          style={{
-            backgroundColor: '#FFFFFF',
-            border: '1.5px solid #E5E2DC',
-            borderRadius: 14,
-            padding: '20px',
-            opacity: systemsActive ? 0.45 : 1,
-          }}
-        >
-          <div
-            style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 13,
-              fontWeight: 700,
-              color: '#DC2626',
-              textDecoration: systemsActive ? 'line-through' : 'none',
-              marginBottom: 6,
-            }}
-          >
-            EL ERROR COMÚN
-          </div>
-          <div
-            style={{
-              fontFamily: "'Newsreader', serif",
-              fontSize: 26,
-              fontWeight: 700,
-              color: '#141413',
-              textDecoration: systemsActive ? 'line-through' : 'none',
-            }}
-          >
-            Las Metas
-          </div>
-          <div
-            style={{
-              fontFamily: "'Inter', sans-serif",
-              fontSize: 14,
-              color: '#575550',
-              marginTop: 6,
-              lineHeight: 1.3,
-            }}
-          >
-            Ganadores y perdedores tienen los mismos objetivos.
-          </div>
-        </div>
-
-        {/* Tarjeta SISTEMAS */}
-        <div
-          style={{
-            backgroundColor: '#FFFFFF',
-            border: systemsActive ? '2px solid #D94E34' : '1.5px solid #E5E2DC',
-            borderRadius: 14,
-            padding: '20px',
-            boxShadow: systemsActive
-              ? '0 10px 24px rgba(217, 78, 52, 0.12)'
-              : 'none',
-            transform: `scale(${systemsActive ? 1.03 : 1})`,
-          }}
-        >
-          <div
-            style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 13,
-              fontWeight: 700,
-              color: '#D94E34',
-              marginBottom: 6,
-            }}
-          >
-            LA SOLUCIÓN REAL
-          </div>
-          <div
-            style={{
-              fontFamily: "'Newsreader', serif",
-              fontSize: 26,
-              fontWeight: 700,
-              color: '#D94E34',
-            }}
-          >
-            Los Sistemas
-          </div>
-          <div
-            style={{
-              fontFamily: "'Inter', sans-serif",
-              fontSize: 14,
-              color: '#141413',
-              marginTop: 6,
-              lineHeight: 1.3,
-              fontWeight: 600,
-            }}
-          >
-            Las micro-decisiones que ejecutas en automático.
-          </div>
-        </div>
+        <ComparisonBattle
+          titleA="Las Metas"
+          subtitleA="Ganadores y perdedores tienen los mismos objetivos"
+          tagA="ENFOQUE TRADICIONAL"
+          titleB="Los Sistemas"
+          subtitleB="Las micro-decisiones que ejecutas a diario"
+          tagB="ENFOQUE DE ALTO RENDIMIENTO"
+          metricB={{ value: 100, suffix: '% IMPACTO' }}
+          enterFrameA={285}
+          enterFrameB={310}
+          battleFrame={325}
+          accentColor="#D94E34"
+        />
       </div>
     </div>
   );

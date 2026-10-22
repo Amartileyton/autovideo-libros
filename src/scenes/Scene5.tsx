@@ -1,14 +1,12 @@
 import React from 'react';
 import {
-  Img,
-  interpolate,
   spring,
-  staticFile,
   useCurrentFrame,
   useVideoConfig,
 } from 'remotion';
 import type { BookMetadata, BookVisualData } from '../data/schema';
-import { BRAND_CONFIG, CLAMP_EXTRAPOLATION, SPRING_SNAPPY } from '../theme/motion';
+import { BRAND_CONFIG, SPRING_SNAPPY } from '../theme/motion';
+import { CtaEndCard, KineticCard } from '../components/kinetic';
 
 export interface Scene5Props {
   headline?: string;
@@ -23,11 +21,11 @@ export interface Scene5Props {
 }
 
 /**
- * Scene 5 — Identidad y Veredicto Final (Diseño Editorial Papel Cálido + Sincronización Exacta)
+ * Scene 5 — Identidad y Call To Action Final (Kinetic UI + CTA Conversion)
  * Timestamps reales de ElevenLabs (275 frames):
  * - 0..30: "La regla definitiva..." -> Entrada de cabecera
- * - 80..130: "cada pequeña acción es un voto por la persona que quieres ser" -> Tarjeta de Identidad
- * - 165..275: "Un libro imprescindible..." -> Gran Sello Editorial de @en60segundos y Veredicto Final
+ * - 40..130: "cada pequeña acción es un voto por la persona que quieres ser" -> KineticCard de Identidad
+ * - 160..275: "Un libro imprescindible para transformar tu vida..." -> Gran CtaEndCard con llamada a la acción
  */
 export const Scene5: React.FC<Scene5Props> = ({
   canvasOffsetX = 560,
@@ -45,20 +43,6 @@ export const Scene5: React.FC<Scene5Props> = ({
     config: SPRING_SNAPPY,
   });
 
-  // 2. Tarjeta de Identidad (frame 80 - "un voto por la persona que quieres ser")
-  const identityEntrance = spring({
-    frame: Math.max(0, localFrame - 80),
-    fps,
-    config: SPRING_SNAPPY,
-  });
-
-  // 3. Sello de Veredicto Final (frame 165 - "Un libro imprescindible...")
-  const verdictEntrance = spring({
-    frame: Math.max(0, localFrame - 165),
-    fps,
-    config: SPRING_SNAPPY,
-  });
-
   return (
     <div
       style={{
@@ -72,7 +56,7 @@ export const Scene5: React.FC<Scene5Props> = ({
         boxSizing: 'border-box',
       }}
     >
-      {/* 1. Cabecera Editorial */}
+      {/* 1. Cabecera Editorial con tipografía moderna de alta visibilidad */}
       <div
         style={{
           position: 'absolute',
@@ -93,13 +77,14 @@ export const Scene5: React.FC<Scene5Props> = ({
             border: '1.5px solid #D94E34',
             borderRadius: 6,
             marginBottom: 12,
+            boxShadow: '0 2px 6px rgba(217, 78, 52, 0.10)',
           }}
         >
           <span
             style={{
               fontFamily: "'JetBrains Mono', monospace",
               fontSize: 14,
-              fontWeight: 700,
+              fontWeight: 800,
               color: '#D94E34',
               letterSpacing: 1.5,
             }}
@@ -109,223 +94,92 @@ export const Scene5: React.FC<Scene5Props> = ({
         </div>
         <h1
           style={{
-            fontFamily: "'Newsreader', 'Playfair Display', Georgia, serif",
+            fontFamily: "'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif",
             fontSize: 56,
-            fontWeight: 800,
+            fontWeight: 900,
             color: '#141413',
             margin: 0,
-            lineHeight: 1.1,
-            letterSpacing: '-0.02em',
+            lineHeight: 1.08,
+            letterSpacing: '-0.035em',
           }}
         >
           Cambio de Identidad
         </h1>
       </div>
 
-      {/* 2. Tarjeta de Identidad (frame 80) */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 320,
-          left: 96,
-          right: 96,
-          backgroundColor: '#FFFFFF',
-          border: '2px solid #141413',
-          borderTop: '6px solid #D94E34',
-          borderRadius: 18,
-          padding: '32px 32px',
-          boxShadow: '0 12px 36px rgba(45, 43, 40, 0.08)',
-          opacity: identityEntrance,
-          transform: `translateY(${(1 - identityEntrance) * 20}px)`,
-        }}
-      >
-        <div
+      {/* 2. Tarjeta de Identidad en KineticCard (frame 40) */}
+      <div style={{ position: 'absolute', top: 310, left: 96, right: 96 }}>
+        <KineticCard
+          enterFrame={40}
+          accentBorderColor="#141413"
+          badgeText="EL SECRETO DEFINITIVO"
+          badgeColor="#D94E34"
+          padding="32px 36px"
           style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 13,
-            fontWeight: 800,
-            color: '#D94E34',
-            letterSpacing: 1.5,
-            marginBottom: 10,
+            borderTop: '6px solid #D94E34',
           }}
         >
-          LA TESIS DEFINITIVA
-        </div>
-
-        <blockquote
-          style={{
-            margin: 0,
-            fontFamily: "'Newsreader', Georgia, serif",
-            fontSize: 34,
-            fontWeight: 700,
-            fontStyle: 'italic',
-            lineHeight: 1.35,
-            color: '#141413',
-          }}
-        >
-          «Cada pequeña acción es un{' '}
-          <span
+          <div
             style={{
-              backgroundColor: 'rgba(217, 78, 52, 0.18)',
-              padding: '2px 8px',
-              borderRadius: 4,
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 13,
+              fontWeight: 800,
               color: '#D94E34',
-              fontStyle: 'normal',
+              letterSpacing: 1.5,
+              marginBottom: 10,
             }}
           >
-            voto
-          </span>{' '}
-          por la persona que quieres ser.»
-        </blockquote>
+            LA TESIS DE JAMES CLEAR
+          </div>
 
-        <p
-          style={{
-            fontFamily: "'Inter', sans-serif",
-            fontSize: 16,
-            color: '#575550',
-            marginTop: 16,
-            marginBottom: 0,
-          }}
-        >
-          No buscas leer un libro, buscas convertirte en un lector.
-        </p>
+          <blockquote
+            style={{
+              margin: 0,
+              fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
+              fontSize: 32,
+              fontWeight: 800,
+              fontStyle: 'normal',
+              lineHeight: 1.3,
+              color: '#141413',
+              letterSpacing: '-0.02em',
+            }}
+          >
+            «Cada pequeña acción es un{' '}
+            <span
+              style={{
+                backgroundColor: 'rgba(217, 78, 52, 0.18)',
+                padding: '2px 8px',
+                borderRadius: 6,
+                color: '#D94E34',
+                fontWeight: 900,
+              }}
+            >
+              voto
+            </span>{' '}
+            por la persona que quieres ser.»
+          </blockquote>
+
+          <p
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontSize: 16,
+              color: '#575550',
+              marginTop: 14,
+              marginBottom: 0,
+              fontWeight: 500,
+            }}
+          >
+            El verdadero cambio no es de resultado, sino de identidad.
+          </p>
+        </KineticCard>
       </div>
 
-      {/* 3. Gran Ficha de Veredicto y Sello del Canal (frame 165) */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 640,
-          left: 96,
-          right: 96,
-          backgroundColor: '#FFFFFF',
-          border: '2px solid #D94E34',
-          borderRadius: 20,
-          padding: '36px 32px',
-          boxShadow: '0 20px 50px rgba(217, 78, 52, 0.12)',
-          textAlign: 'center',
-          opacity: verdictEntrance,
-          transform: `scale(${interpolate(verdictEntrance, [0, 1], [0.90, 1], CLAMP_EXTRAPOLATION)})`,
-        }}
-      >
-        {/* Sello Circular del Canal */}
-        <div
-          style={{
-            width: 80,
-            height: 80,
-            borderRadius: '50%',
-            backgroundColor: '#D94E34',
-            color: '#FFFFFF',
-            margin: '0 auto 16px auto',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 32,
-            fontWeight: 900,
-            boxShadow: '0 6px 16px rgba(217, 78, 52, 0.35)',
-          }}
-        >
-          ✓
-        </div>
-
-        <div
-          style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 14,
-            fontWeight: 800,
-            color: '#D94E34',
-            letterSpacing: 2,
-            marginBottom: 6,
-          }}
-        >
-          {BRAND_CONFIG.sealText}
-        </div>
-
-        <div
-          style={{
-            fontFamily: "'Newsreader', serif",
-            fontSize: 42,
-            fontWeight: 800,
-            color: '#141413',
-            letterSpacing: '-0.02em',
-          }}
-        >
-          Lectura Imprescindible
-        </div>
-
-        <div
-          style={{
-            marginTop: 18,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: 24,
-            padding: '12px 20px',
-            backgroundColor: '#F8F7F4',
-            borderRadius: 12,
-            border: '1px solid #E5E2DC',
-          }}
-        >
-          <div>
-            <div
-              style={{
-                fontFamily: "'Newsreader', serif",
-                fontSize: 28,
-                fontWeight: 800,
-                color: '#D97706',
-              }}
-            >
-              ★ 4.38
-            </div>
-            <div
-              style={{
-                fontFamily: "'Inter', sans-serif",
-                fontSize: 12,
-                color: '#575550',
-              }}
-            >
-              1.94M en Goodreads
-            </div>
-          </div>
-
-          <div style={{ width: 1, height: 36, backgroundColor: '#E5E2DC' }} />
-
-          <div>
-            <div
-              style={{
-                fontFamily: "'Newsreader', serif",
-                fontSize: 28,
-                fontWeight: 800,
-                color: '#141413',
-              }}
-            >
-              4.2h
-            </div>
-            <div
-              style={{
-                fontFamily: "'Inter', sans-serif",
-                fontSize: 12,
-                color: '#575550',
-              }}
-            >
-              Lectura completa
-            </div>
-          </div>
-        </div>
-
-        <div
-          style={{
-            marginTop: 20,
-            fontFamily: "'Inter', sans-serif",
-            fontSize: 16,
-            fontWeight: 700,
-            color: '#D94E34',
-            letterSpacing: 0.5,
-          }}
-        >
-          Síguenos en {BRAND_CONFIG.channelHandle} para más libros en 60s
-        </div>
+      {/* 3. Tarjeta Final de Call To Action (CTA) de Alto Rendimiento (frame 155) */}
+      <div style={{ position: 'absolute', top: 620, left: 96, right: 96 }}>
+        <CtaEndCard
+          enterFrame={155}
+          handle={BRAND_CONFIG.channelHandle}
+        />
       </div>
     </div>
   );
