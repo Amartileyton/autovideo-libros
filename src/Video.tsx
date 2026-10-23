@@ -20,6 +20,7 @@ import type {
 } from './data/schema';
 import { CameraRig, type CameraKeyframe } from './components/CameraRig';
 import { DynamicCaptions } from './components/DynamicCaptions';
+import { OneMinuteStopwatch } from './components/OneMinuteStopwatch';
 import { Scene1 } from './scenes/Scene1';
 import { Scene2 } from './scenes/Scene2';
 import { Scene3 } from './scenes/Scene3';
@@ -76,7 +77,7 @@ export const Video: React.FC<VideoProps> = ({
   enableBackgroundMusic = false,
 }) => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
+  const { fps, durationInFrames: totalDurationFrames } = useVideoConfig();
   const timeline = useMemo(() => computeSceneTimeline(manifest), []);
   const bookMetadata = scenesJson.bookMetadata as BookMetadata | undefined;
 
@@ -307,54 +308,69 @@ export const Video: React.FC<VideoProps> = ({
         />
       )}
 
-      {/* Pastilla de Marca del Canal en la Zona Segura Superior */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 64,
-          left: SAFE_ZONE.horizontalPaddingPx,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 8,
-          padding: '6px 14px',
-          backgroundColor: '#FFFFFF',
-          border: '1.5px solid #D94E34',
-          borderRadius: 24,
-          boxShadow: '0 2px 8px rgba(45, 43, 40, 0.05)',
-          zIndex: 90,
-          pointerEvents: 'none',
-        }}
-      >
-        <div
-          style={{
-            width: 8,
-            height: 8,
-            borderRadius: '50%',
-            backgroundColor: '#D94E34',
-          }}
-        />
-        <span
-          style={{
-            fontFamily: BRAND_CONFIG.fontSans,
-            fontSize: 18,
-            fontWeight: 800,
-            color: '#141413',
-            letterSpacing: 0.3,
-          }}
-        >
-          {BRAND_CONFIG.channelHandle}
-        </span>
-        <span
-          style={{
-            fontFamily: BRAND_CONFIG.fontSans,
-            fontSize: 13,
-            fontWeight: 600,
-            color: '#575550',
-          }}
-        >
-          · 60s
-        </span>
-      </div>
+      {/* Logotipo Cronómetro Dinámico y Pastilla de Marca en la Zona Segura Superior */}
+      {(() => {
+        const ctaCardFrame = (timeline[4]?.from ?? 1400) + 155;
+        const headerOpacity = interpolate(
+          frame,
+          [ctaCardFrame - 20, ctaCardFrame],
+          [1, 0],
+          CLAMP_EXTRAPOLATION
+        );
+        return (
+          <div
+            style={{
+              position: 'absolute',
+              top: 60,
+              left: SAFE_ZONE.horizontalPaddingPx,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 12,
+              padding: '6px 18px 6px 8px',
+              backgroundColor: '#FFFFFF',
+              border: '2px solid #141413',
+              borderRadius: 32,
+              boxShadow: '0 4px 16px rgba(20, 20, 19, 0.08)',
+              zIndex: 90,
+              pointerEvents: 'none',
+              opacity: headerOpacity,
+              transform: `translateY(${(1 - headerOpacity) * -15}px)`,
+            }}
+          >
+            <OneMinuteStopwatch
+              size={48}
+              currentFrame={frame}
+              totalDurationInFrames={totalDurationFrames}
+              mode="header"
+            />
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <span
+                style={{
+                  fontFamily: BRAND_CONFIG.fontSans,
+                  fontSize: 18,
+                  fontWeight: 900,
+                  color: '#141413',
+                  letterSpacing: -0.3,
+                  lineHeight: 1.1,
+                }}
+              >
+                {BRAND_CONFIG.channelHandle}
+              </span>
+              <span
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 10,
+                  fontWeight: 800,
+                  color: '#D94E34',
+                  letterSpacing: 1.2,
+                }}
+              >
+                1 MINUTO · DESTILADO
+              </span>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Subtítulos en el tercio inferior para no interferir con titulares ni animaciones */}
       {enableCaptions ? (

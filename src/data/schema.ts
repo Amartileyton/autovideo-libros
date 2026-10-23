@@ -79,6 +79,8 @@ export const BookVisualDataSchema = z
     actionableLaws: z.array(BookActionableLawSchema).optional(),
     identityQuote: z.string().optional(),
     verdictBadge: z.string().optional(),
+    ctaPrompt: z.string().optional(),
+    ctaHandle: z.string().optional(),
     callouts: z
       .array(
         z.object({

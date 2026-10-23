@@ -125,10 +125,10 @@
     {
       "id": "scene-5",
       "title": "IDENTIDAD Y VEREDICTO",
-      "text": "La regla definitiva: cada pequeña acción es un voto por la persona que quieres ser. [PAUSA 0.4s] Un libro imprescindible para transformar tu vida este año.",
+      "text": "La regla definitiva: cada pequeña acción es un voto por la persona que quieres ser. [PAUSA 0.4s] Síguenos en En un minuto punto es y dime en comentarios: ¿cuál es el primer hábito que vas a construir hoy?",
       "characterPreset": "salesperson",
       "blueprintMode": "EDITORIAL_PAPER",
-      "visualCue": "Ficha final de veredicto con sello editorial de recomendación de @en1minuto.es y datos consolidados.",
+      "visualCue": "Ficha final con cronómetro dinámico expandido de @en1minuto.es, llamada a la acción interactiva y debate en comentarios.",
       "cameraTarget": {
         "x": 560,
         "y": 3960,
@@ -144,7 +144,9 @@
         "identityPhrase": "Cada hábito es un voto por la persona que quieres ser.",
         "verdictTitle": "SELECCIÓN EDITORIAL",
         "verdictSubtitle": "RECOMENDADO POR @EN1MINUTO.ES",
-        "readingTime": "4.2 HORAS DE LECTURA"
+        "readingTime": "4.2 HORAS DE LECTURA",
+        "ctaPrompt": "¿Cuál es tu primer hábito hoy? Comenta abajo",
+        "ctaHandle": "@en1minuto.es"
       }
     }
   ]

@@ -523,6 +523,19 @@ async function main() {
     return;
   }
 
+  const sceneArgIdx = process.argv.indexOf('--scene');
+  const targetSceneArg =
+    sceneArgIdx !== -1 && process.argv[sceneArgIdx + 1]
+      ? process.argv[sceneArgIdx + 1]
+      : null;
+
+  let existingManifest = null;
+  if (fs.existsSync(INFO_JSON_PATH)) {
+    try {
+      existingManifest = JSON.parse(fs.readFileSync(INFO_JSON_PATH, 'utf-8'));
+    } catch {}
+  }
+
   const previousRequestIds = [];
   const manifestScenes = [];
 
@@ -540,6 +553,28 @@ async function main() {
 
     const mp3Filename = `${scene.id}.mp3`;
     const mp3Path = path.join(AUDIO_DIR, mp3Filename);
+    const existingScene = existingManifest?.scenes?.find(
+      (s) => s.id === scene.id
+    );
+
+    const shouldSynthesize =
+      !targetSceneArg ||
+      scene.id === targetSceneArg ||
+      !fs.existsSync(mp3Path) ||
+      !existingScene;
+
+    if (!shouldSynthesize && existingScene) {
+      console.log(
+        `⏩ [${i + 1}/${scenes.length}] Reutilizando audio y alignment existente para "${scene.id}"...`
+      );
+      manifestScenes.push({
+        ...existingScene,
+      });
+      const sceneAdvanceSec =
+        Math.max(1, existingScene.durationInFrames - crossDissolveFrames) / fps;
+      globalTimeCursorSec += sceneAdvanceSec;
+      continue;
+    }
 
     console.log(
       `🎙️ [${i + 1}/${scenes.length}] Sintetizando "${scene.id}" (preset: ${scene.characterPreset}, voice: ${voiceId})...`

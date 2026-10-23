@@ -1,19 +1,26 @@
 import React from 'react';
 import { interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
 import { CLAMP_EXTRAPOLATION, SPRING_SNAPPY } from '../../theme/motion';
+import { OneMinuteStopwatch } from '../OneMinuteStopwatch';
 
 export interface CtaEndCardProps {
   enterFrame?: number;
   handle?: string;
+  questionText?: string;
 }
 
 /**
- * CtaEndCard — Tarjeta Final de Llamada a la Acción (Call To Action)
- * Diseñada para máxima conversión de seguidores y guardados en Reels/TikTok/Shorts.
+ * CtaEndCard — Tarjeta Final de Llamada a la Acción y Comunidad (@en1minuto.es)
+ *
+ * Incluye:
+ * 1. Logotipo Cronómetro Hero que se hace grande al llegar al CTA.
+ * 2. Invitación a seguir a @en1minuto.es con botón de alto contraste y pulso.
+ * 3. Caja de debate que incita a comentar sobre el libro para viralizar el algoritmo.
  */
 export const CtaEndCard: React.FC<CtaEndCardProps> = ({
   enterFrame = 0,
-  handle = '@en60segundos',
+  handle = '@en1minuto.es',
+  questionText = '¿Cuál es el primer hábito que vas a construir hoy?',
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -31,9 +38,16 @@ export const CtaEndCard: React.FC<CtaEndCardProps> = ({
   const pulseScale = interpolate(
     pulseLoop,
     [0, 0.5, 1],
-    [1.0, 1.04, 1.0],
+    [1.0, 1.03, 1.0],
     CLAMP_EXTRAPOLATION
   );
+
+  // 3. Efecto de aparición del cronómetro central
+  const stopwatchEntrance = spring({
+    frame: Math.max(0, localFrame - 8),
+    fps,
+    config: SPRING_SNAPPY,
+  });
 
   return (
     <div
@@ -43,14 +57,40 @@ export const CtaEndCard: React.FC<CtaEndCardProps> = ({
         backgroundColor: '#FFFFFF',
         border: '2px solid #D94E34',
         borderRadius: 24,
-        padding: '36px 36px 32px',
-        boxShadow: '0 20px 50px rgba(217, 78, 52, 0.15), 0 4px 12px rgba(0,0,0,0.03)',
+        padding: '32px 36px 28px',
+        boxShadow:
+          '0 24px 60px rgba(217, 78, 52, 0.16), 0 4px 14px rgba(0,0,0,0.04)',
         boxSizing: 'border-box',
         textAlign: 'center',
         opacity: cardSpring,
-        transform: `translateY(${(1 - cardSpring) * 35}px) scale(${interpolate(cardSpring, [0, 1], [0.92, 1.0], CLAMP_EXTRAPOLATION)})`,
+        transform: `translateY(${(1 - cardSpring) * 35}px) scale(${interpolate(
+          cardSpring,
+          [0, 1],
+          [0.92, 1.0],
+          CLAMP_EXTRAPOLATION
+        )})`,
       }}
     >
+      {/* 1. Cronómetro de 1 Minuto Central Hero (Se hace grande aquí) */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginBottom: 16,
+          transform: `scale(${stopwatchEntrance})`,
+        }}
+      >
+        <OneMinuteStopwatch
+          size={110}
+          mode="hero"
+          currentFrame={localFrame}
+          style={{
+            filter: 'drop-shadow(0 8px 20px rgba(217, 78, 52, 0.25))',
+          }}
+        />
+      </div>
+
       {/* Badge superior */}
       <div
         style={{
@@ -60,7 +100,7 @@ export const CtaEndCard: React.FC<CtaEndCardProps> = ({
           padding: '4px 14px',
           backgroundColor: 'rgba(217, 78, 52, 0.10)',
           borderRadius: 20,
-          marginBottom: 16,
+          marginBottom: 12,
         }}
       >
         <div
@@ -80,7 +120,7 @@ export const CtaEndCard: React.FC<CtaEndCardProps> = ({
             letterSpacing: 1.2,
           }}
         >
-          COMUNIDAD DE APRENDIZAJE ACELERADO
+          TIEMPO CUMPLIDO · 1 MINUTO DESTILADO
         </span>
       </div>
 
@@ -88,31 +128,18 @@ export const CtaEndCard: React.FC<CtaEndCardProps> = ({
       <h3
         style={{
           fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
-          fontSize: 38,
+          fontSize: 34,
           fontWeight: 900,
           color: '#141413',
-          margin: '0 0 10px 0',
+          margin: '0 0 8px 0',
           letterSpacing: '-0.03em',
           lineHeight: 1.15,
         }}
       >
-        ¿Quieres dominar 1 libro al día?
+        Aprende 1 libro al día en 60 segundos
       </h3>
 
-      <p
-        style={{
-          fontFamily: "'Inter', sans-serif",
-          fontSize: 17,
-          color: '#575550',
-          margin: '0 auto 24px',
-          maxWidth: 680,
-          lineHeight: 1.4,
-        }}
-      >
-        Publicamos cada día las ideas más potentes de no ficción explicadas visualmente en 60 segundos.
-      </p>
-
-      {/* Botón Principal de Seguir con Pulso */}
+      {/* Botón Principal de Seguir a @en1minuto.es con Pulso */}
       <div
         style={{
           display: 'inline-flex',
@@ -121,12 +148,12 @@ export const CtaEndCard: React.FC<CtaEndCardProps> = ({
           gap: 12,
           backgroundColor: '#D94E34',
           color: '#FFFFFF',
-          padding: '16px 36px',
+          padding: '14px 34px',
           borderRadius: 16,
           boxShadow: '0 8px 24px rgba(217, 78, 52, 0.35)',
           transform: `scale(${pulseScale})`,
           transformOrigin: 'center center',
-          marginBottom: 20,
+          margin: '12px auto 18px',
         }}
       >
         <span style={{ fontSize: 20 }}>🔔</span>
@@ -142,6 +169,48 @@ export const CtaEndCard: React.FC<CtaEndCardProps> = ({
         </span>
       </div>
 
+      {/* Caja Interactiva de Pregunta para Comentarios */}
+      <div
+        style={{
+          backgroundColor: '#F8F7F4',
+          border: '1.5px dashed rgba(217, 78, 52, 0.40)',
+          borderRadius: 14,
+          padding: '12px 18px',
+          marginBottom: 16,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 12,
+          textAlign: 'left',
+        }}
+      >
+        <span style={{ fontSize: 26, flexShrink: 0 }}>💬</span>
+        <div style={{ flex: 1 }}>
+          <div
+            style={{
+              fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
+              fontSize: 13,
+              fontWeight: 800,
+              color: '#D94E34',
+              letterSpacing: 0.5,
+              textTransform: 'uppercase',
+            }}
+          >
+            Pregunta a la comunidad
+          </div>
+          <div
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontSize: 15,
+              fontWeight: 700,
+              color: '#141413',
+              lineHeight: 1.25,
+            }}
+          >
+            {questionText}
+          </div>
+        </div>
+      </div>
+
       {/* Fila de Micro-acciones (Guardar y Compartir) */}
       <div
         style={{
@@ -149,7 +218,7 @@ export const CtaEndCard: React.FC<CtaEndCardProps> = ({
           justifyContent: 'center',
           gap: 16,
           borderTop: '1px solid #E5E2DC',
-          paddingTop: 16,
+          paddingTop: 14,
         }}
       >
         <div

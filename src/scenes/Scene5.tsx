@@ -31,6 +31,7 @@ export const Scene5: React.FC<Scene5Props> = ({
   canvasOffsetX = 560,
   canvasOffsetY = 3960,
   enterFrame = 1402,
+  visualData,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -179,6 +180,10 @@ export const Scene5: React.FC<Scene5Props> = ({
         <CtaEndCard
           enterFrame={155}
           handle={BRAND_CONFIG.channelHandle}
+          questionText={
+            visualData?.ctaPrompt ??
+            '¿Cuál es el primer hábito que vas a construir hoy?'
+          }
         />
       </div>
     </div>
