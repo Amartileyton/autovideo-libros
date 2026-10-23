@@ -308,65 +308,126 @@ export const Video: React.FC<VideoProps> = ({
         />
       )}
 
-      {/* Logotipo Cronómetro Dinámico y Pastilla de Marca en la Zona Segura Superior */}
+      {/* Barra / Pill de Marca @en1minuto.es en la Parte Inferior (Centrada y Ocupando Todo el Bajo) */}
       {(() => {
         const ctaCardFrame = (timeline[4]?.from ?? 1400) + 155;
-        const headerOpacity = interpolate(
+        const bottomBarOpacity = interpolate(
           frame,
           [ctaCardFrame - 20, ctaCardFrame],
           [1, 0],
           CLAMP_EXTRAPOLATION
         );
+
+        // Barra de progreso sincronizada en la parte superior del dock inferior
+        const progressPct = Math.min(
+          100,
+          Math.max(0, (frame / (totalDurationFrames || 1765)) * 100)
+        );
+
         return (
           <div
             style={{
               position: 'absolute',
-              top: 60,
-              left: SAFE_ZONE.horizontalPaddingPx,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 12,
-              padding: '6px 18px 6px 8px',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              width: '100%',
+              height: 140,
               backgroundColor: '#FFFFFF',
-              border: '2px solid #141413',
-              borderRadius: 32,
-              boxShadow: '0 4px 16px rgba(20, 20, 19, 0.08)',
-              zIndex: 90,
+              borderTop: '2px solid #141413',
+              boxShadow: '0 -8px 28px rgba(20, 20, 19, 0.08)',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              zIndex: 95,
               pointerEvents: 'none',
-              opacity: headerOpacity,
-              transform: `translateY(${(1 - headerOpacity) * -15}px)`,
+              opacity: bottomBarOpacity,
+              transform: `translateY(${(1 - bottomBarOpacity) * 30}px)`,
+              boxSizing: 'border-box',
             }}
           >
-            <OneMinuteStopwatch
-              size={48}
-              currentFrame={frame}
-              totalDurationInFrames={totalDurationFrames}
-              mode="header"
+            {/* Línea de progreso de lectura terracota sobre el borde superior de la barra */}
+            <div
+              style={{
+                position: 'absolute',
+                top: -2,
+                left: 0,
+                width: `${progressPct}%`,
+                height: 4,
+                backgroundColor: '#D94E34',
+                zIndex: 2,
+              }}
             />
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <span
+
+            {/* Contenido centrado: Reloj Opción 1 sin pitorrillo con área interior + Handle @en1minuto.es */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 16,
+              }}
+            >
+              <OneMinuteStopwatch
+                size={56}
+                currentFrame={frame}
+                totalDurationInFrames={totalDurationFrames}
+                mode="header"
+              />
+
+              <div
                 style={{
-                  fontFamily: BRAND_CONFIG.fontSans,
-                  fontSize: 18,
-                  fontWeight: 900,
-                  color: '#141413',
-                  letterSpacing: -0.3,
-                  lineHeight: 1.1,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'flex-start',
                 }}
               >
-                {BRAND_CONFIG.channelHandle}
-              </span>
-              <span
-                style={{
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: 10,
-                  fontWeight: 800,
-                  color: '#D94E34',
-                  letterSpacing: 1.2,
-                }}
-              >
-                1 MINUTO · DESTILADO
-              </span>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'baseline',
+                    gap: 10,
+                  }}
+                >
+                  <span
+                    style={{
+                      fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
+                      fontSize: 26,
+                      fontWeight: 900,
+                      color: '#141413',
+                      letterSpacing: -0.5,
+                      lineHeight: 1.1,
+                    }}
+                  >
+                    {BRAND_CONFIG.channelHandle}
+                  </span>
+                  <span
+                    style={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 13,
+                      fontWeight: 800,
+                      color: '#D94E34',
+                      letterSpacing: 1.2,
+                    }}
+                  >
+                    1 MINUTO
+                  </span>
+                </div>
+
+                <span
+                  style={{
+                    fontFamily: "'Nunito', 'Outfit', sans-serif",
+                    fontSize: 14,
+                    fontWeight: 700,
+                    color: '#575550',
+                    letterSpacing: 0.3,
+                    marginTop: 2,
+                  }}
+                >
+                  Ideas clave de libros explicadas en 60 segundos
+                </span>
+              </div>
             </div>
           </div>
         );

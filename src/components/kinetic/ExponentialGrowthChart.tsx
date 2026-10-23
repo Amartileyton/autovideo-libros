@@ -37,24 +37,15 @@ export const ExponentialGrowthChart: React.FC<ExponentialGrowthChartProps> = ({
     config: SPRING_SNAPPY,
   });
 
-  // 2. Progreso de dibujo de la curva sincronizado con los timestamps de la locución
-  // - 0..50: 0%
-  // - 50..170: 0% -> 40% (avance lento, casi plano)
-  // - 170..240: 40% -> 70% (inflexión)
-  // - 240..295: 70% -> 100% (despegue vertical hasta 37.78x)
-  const drawSpring = spring({
-    frame: Math.max(0, localFrame - 45),
-    fps,
-    config: { damping: 24, stiffness: 85, mass: 1 },
-    durationInFrames: 240,
-  });
-
-  const curveProgress = interpolate(
+  // 2. Progreso continuo y ultra-suave de la curva (ampliado a 280 frames para máxima fluidez)
+  const rawProgress = interpolate(
     localFrame,
-    [45, 140, 220, 285],
-    [0, 0.38, 0.68, 1.0],
+    [35, 305],
+    [0, 1],
     CLAMP_EXTRAPOLATION
   );
+  // Curva de aceleración continua suave (sin saltos lineales bruscos ni parpadeos)
+  const curveProgress = Math.pow(rawProgress, 1.45);
 
   // Coordenadas internas del área del gráfico (con márgenes técnicos)
   const padLeft = 80;
@@ -65,15 +56,13 @@ export const ExponentialGrowthChart: React.FC<ExponentialGrowthChartProps> = ({
   const plotWidth = width - padLeft - padRight;
   const plotHeight = height - padTop - padBottom;
 
-  // Generar los puntos matemáticos exactos de y = 1.01^(365 * t)
-  // t va de 0 a 1 (Día 0 a Día 365)
-  // Min y = 1.0, Max y = 37.78
-  const sampleCount = 60;
+  // 3. Generar trayectoria matemática continua de alta resolución (200 muestras)
+  const sampleCount = 200;
   const points: { x: number; y: number; val: number; day: number }[] = [];
 
   for (let i = 0; i <= sampleCount; i++) {
     const t = i / sampleCount;
-    const day = Math.round(t * 365);
+    const day = t * 365;
     const multiplier = Math.pow(1.01, day); // 1.0 -> 37.78
     const normY = (multiplier - 1.0) / (37.78 - 1.0); // 0 -> 1
 
@@ -90,12 +79,17 @@ export const ExponentialGrowthChart: React.FC<ExponentialGrowthChartProps> = ({
   // Evolución del trazo con evolvePath
   const evolved = evolvePath(curveProgress, pathD);
 
-  // Calcular la posición actual del puntero/spark en la cabeza de la curva
-  const activeIndex = Math.min(
-    sampleCount,
-    Math.max(0, Math.floor(curveProgress * sampleCount))
-  );
-  const currentPt = points[activeIndex] || points[0];
+  // 4. Posición EXACTA continua del círculo/spark (sin Math.floor ni saltos escalonados)
+  const currentT = curveProgress;
+  const currentDay = currentT * 365;
+  const currentMultiplier = Math.pow(1.01, currentDay);
+  const currentNormY = (currentMultiplier - 1.0) / (37.78 - 1.0);
+  const currentPt = {
+    x: padLeft + currentT * plotWidth,
+    y: padTop + plotHeight - currentNormY * plotHeight,
+    val: currentMultiplier,
+    day: Math.round(currentDay),
+  };
 
   // Área sombreada bajo la curva (gradiente)
   const areaD = `${pathD} L ${padLeft + plotWidth} ${padTop + plotHeight} L ${padLeft} ${padTop + plotHeight} Z`;

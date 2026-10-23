@@ -160,22 +160,21 @@ export const DynamicCaptions: React.FC<DynamicCaptionsProps> = ({
     CLAMP_EXTRAPOLATION
   );
 
-  // Posición vertical según placement (siempre dentro de SAFE_ZONE 85% superior)
-  const topPosition =
-    placement === 'upper'
-      ? SAFE_ZONE.upperThirdCaptionY
-      : placement === 'middle'
-        ? 1140
-        : SAFE_ZONE.maxSafeY - 180;
-
   return (
     <div
       style={{
         position: 'absolute',
         left: SAFE_ZONE.horizontalPaddingPx,
         right: SAFE_ZONE.horizontalPaddingPx,
-        top: topPosition,
-        minHeight: 132,
+        ...(placement === 'lower'
+          ? { bottom: 165 }
+          : {
+              top:
+                placement === 'upper'
+                  ? SAFE_ZONE.upperThirdCaptionY
+                  : 1140,
+            }),
+        minHeight: 110,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -320,10 +319,10 @@ export const DynamicCaptions: React.FC<DynamicCaptionsProps> = ({
               key={`${globalIdx}-${item.word}-${item.startMs}`}
               style={{
                 fontFamily:
-                  "'IBM Plex Sans', 'Inter', 'Helvetica Neue', -apple-system, system-ui, sans-serif",
-                fontSize: 50,
-                fontWeight: 700,
-                letterSpacing: '-0.015em',
+                  "'Nunito', 'Outfit', 'Poppins', -apple-system, system-ui, sans-serif",
+                fontSize: 52,
+                fontWeight: 800,
+                letterSpacing: '-0.01em',
                 lineHeight: 1.16,
                 color: isActive ? PALETTE.accentPrimary : PALETTE.ink,
                 backgroundColor: 'transparent',
@@ -332,7 +331,7 @@ export const DynamicCaptions: React.FC<DynamicCaptionsProps> = ({
                 transform: `scale(${activeScale})`,
                 transformOrigin: 'center center',
                 display: 'inline-block',
-                margin: '0 3px',
+                margin: '0 4px',
               }}
             >
               {item.word}

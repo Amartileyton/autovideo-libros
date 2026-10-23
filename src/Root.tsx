@@ -2,15 +2,17 @@ import React from 'react';
 import { Composition } from 'remotion';
 import { loadFont as loadPlusJakartaSans } from '@remotion/google-fonts/PlusJakartaSans';
 import { loadFont as loadInter } from '@remotion/google-fonts/Inter';
+import { loadFont as loadNunito } from '@remotion/google-fonts/Nunito';
 import audioManifestJson from '../public/audio/info.json';
 import scenesJson from './data/scenes.json';
 import { VideoPropsSchema, type AudioManifest } from './data/schema';
 import { BLUEPRINT_THEMES, VIDEO_CONFIG } from './theme/motion';
 import { Video } from './Video';
 
-// Cargar fuentes oficiales de alta legibilidad para el estudio cinético
+// Cargar fuentes oficiales (subtítulos con Nunito sin aristas agudas)
 loadPlusJakartaSans();
 loadInter();
+loadNunito();
 
 const manifest = audioManifestJson as AudioManifest;
 
