@@ -1,31 +1,31 @@
 {
-  "projectTitle": "Hábitos Atómicos — James Clear (Resumen 60s)",
+  "projectTitle": "El poder de los hábitos — Charles Duhigg (Resumen 65s)",
   "fps": 30,
   "width": 1080,
   "height": 1920,
   "crossDissolveFrames": 10,
   "bookMetadata": {
-    "title": "Hábitos Atómicos",
-    "originalTitle": "Atomic Habits",
-    "author": "James Clear",
-    "publishYear": 2018,
-    "pages": 320,
-    "readingTimeHours": 4.2,
-    "rating": 4.38,
-    "ratingsCount": "1.94M",
-    "salesCopies": "+15M",
-    "coverImage": "assets/books/habitos-atomicos-cover.jpg",
-    "categoryTag": "DESARROLLO CONDUCTUAL · SISTEMAS",
-    "goodreadsUrl": "https://www.goodreads.com/book/show/40121378-atomic-habits"
+    "title": "El poder de los hábitos",
+    "originalTitle": "The Power of Habit: Why We Do What We Do in Life and Business",
+    "author": "Charles Duhigg",
+    "publishYear": 2012,
+    "pages": 375,
+    "readingTimeHours": 4.8,
+    "rating": 4.13,
+    "ratingsCount": "585K",
+    "salesCopies": "+5M",
+    "coverImage": "assets/books/el-poder-de-los-habitos.jpg",
+    "categoryTag": "NEUROCIENCIA CONDUCTUAL · MIT LABS",
+    "goodreadsUrl": "https://www.goodreads.com/book/show/12609433-the-power-of-habit?ref=rae_9"
   },
   "scenes": [
     {
       "id": "scene-1",
-      "title": "LA TRAMPA DE LAS METAS",
-      "text": "El noventa y dos por ciento de las personas abandona sus metas en enero. [PAUSA 0.4s] En Hábitos Atómicos, James Clear revela la causa: el problema nunca fueron tus metas, sino los sistemas diarios que ejecutas.",
+      "title": "EL PILOTO AUTOMÁTICO",
+      "text": "¿Crees que controlas tus decisiones diarias? [PAUSA 0.4s] Un estudio de la Universidad de Duke demostró que más del cuarenta por ciento de lo que haces cada día no son elecciones reales, sino hábitos automáticos grabados en tus ganglios basales.",
       "characterPreset": "dramatic",
       "blueprintMode": "EDITORIAL_PAPER",
-      "visualCue": "Portada editorial 2.5D de Hábitos Atómicos sobre papel cálido, contraste entre Metas y Sistemas con ficha bibliográfica de Goodreads.",
+      "visualCue": "Portada editorial 2.5D de El poder de los hábitos de Charles Duhigg, contador LiveCounter subiendo al 40% y contraste entre Decisión Consciente y Piloto Automático.",
       "cameraTarget": {
         "x": 0,
         "y": 0,
@@ -33,26 +33,27 @@
         "rotateDeg": 0
       },
       "metrics": {
-        "label": "RATING GOODREADS",
-        "numericValue": 4.38,
+        "label": "VALORACIÓN GOODREADS",
+        "numericValue": 4.13,
         "unit": "★"
       },
       "bookVisualData": {
-        "hookStat": "92%",
-        "hookLabel": "ABANDONO EN ENERO",
-        "mythLabel": "METAS",
-        "realityLabel": "SISTEMAS",
-        "goodreadsRating": "★ 4.38",
-        "goodreadsReviews": "1.94M reseñas"
+        "hookStat": "40%",
+        "hookLabel": "ACCIONES AUTOMATIZADAS",
+        "mythLabel": "VOLUNTAD",
+        "realityLabel": "AUTOMATISMO",
+        "goodreadsRating": "★ 4.13",
+        "goodreadsReviews": "585K valoraciones",
+        "rulerLabel": "375 PÁGINAS · 585K LECTORES EN GOODREADS"
       }
     },
     {
       "id": "scene-2",
-      "title": "LA MATEMÁTICA DEL 1%",
-      "text": "La matemática del uno por ciento: [PAUSA 0.4s] mejorar apenas un uno por ciento cada día parece invisible, pero al cabo de un año, el interés compuesto te hace treinta y siete veces mejor.",
+      "title": "EL BUCLE DEL MIT",
+      "text": "En los laboratorios del MIT descubrieron cómo el cerebro ahorra energía: [PAUSA 0.4s] todo hábito opera en un bucle de tres fases. [PAUSA 0.4s] Una señal que lo activa, una rutina automática y una recompensa química que libera dopamina.",
       "characterPreset": "narrator",
       "blueprintMode": "EDITORIAL_PAPER",
-      "visualCue": "Ficha editorial matemática con la curva de crecimiento compuesto frente al declive diario.",
+      "visualCue": "Circuito vectorial de 3 fases con partícula de dopamina: Señal ambiental, Rutina física o mental y Recompensa biológica, impulsado por el Anhelo.",
       "cameraTarget": {
         "x": 1120,
         "y": 0,
@@ -60,24 +61,30 @@
         "rotateDeg": 0
       },
       "metrics": {
-        "label": "MULTIPLICADOR ANUAL",
-        "numericValue": 37.78,
-        "unit": "x"
+        "label": "FASES DEL BUCLE",
+        "numericValue": 3,
+        "unit": "PASOS"
       },
       "bookVisualData": {
-        "formula": "1.01³⁶⁵ = 37.78x",
-        "contrastFormula": "0.99³⁶⁵ = 0.03x",
-        "growthLabel": "+1% DIARIO · MEJORA EXPONENCIAL",
-        "decayLabel": "-1% DIARIO · DECLIVE INVISIBLE"
+        "loopSteps": [
+          "SEÑAL",
+          "RUTINA",
+          "RECOMPENSA"
+        ],
+        "centralQuote": "El cerebro transforma rutinas en hábitos automáticos para liberar espacio cognitivo.",
+        "highlightWords": [
+          "rutinas",
+          "hábitos automáticos"
+        ]
       }
     },
     {
       "id": "scene-3",
-      "title": "EL BUCLE DEL HÁBITO",
-      "text": "Todo hábito opera en un bucle neuronal de cuatro fases: [PAUSA 0.4s] señal, anhelo, respuesta y recompensa. [PAUSA 0.4s] No te elevas al nivel de tus metas, caes al nivel de tus sistemas.",
+      "title": "LA REGLA DE ORO",
+      "text": "Aquí reside la gran revelación de Charles Duhigg: [PAUSA 0.4s] no puedes destruir un mal hábito, solo puedes sustituirlo. [PAUSA 0.4s] Debes conservar la misma señal y la misma recompensa, cambiando únicamente la rutina que ejecutas.",
       "characterPreset": "expert",
       "blueprintMode": "EDITORIAL_PAPER",
-      "visualCue": "Esquema editorial circular del bucle conductual y pasaje subrayado con rotulador terracota.",
+      "visualCue": "Reprogramación neuroconductual en vivo: misma señal y recompensa, reemplazando la rutina dañina por una constructiva.",
       "cameraTarget": {
         "x": 1120,
         "y": 1980,
@@ -85,23 +92,25 @@
         "rotateDeg": 0
       },
       "metrics": {
-        "label": "FASES NEURONALES",
-        "numericValue": 4,
-        "unit": "PASOS"
+        "label": "REGLA DE ORO",
+        "numericValue": 1,
+        "unit": "LEY"
       },
       "bookVisualData": {
-        "centralQuote": "No te elevas al nivel de tus metas, caes al nivel de tus sistemas.",
-        "highlightWords": ["metas", "sistemas"],
-        "loopSteps": ["SEÑAL", "ANHELO", "RESPUESTA", "RECOMPENSA"]
+        "centralQuote": "No puedes extinguir un mal hábito; la regla de oro consiste en transformar la rutina.",
+        "highlightWords": [
+          "no puedes extinguir",
+          "transformar la rutina"
+        ]
       }
     },
     {
       "id": "scene-4",
-      "title": "LAS 4 LEYES DEL CAMBIO",
-      "text": "Para reprogramar tu conducta, aplica las cuatro leyes: [PAUSA 0.4s] hazlo obvio, hazlo atractivo, hazlo fácil con la regla de dos minutos, y hazlo satisfactorio de inmediato.",
+      "title": "HÁBITOS ANGULARES",
+      "text": "No todas las conductas pesan lo mismo. [PAUSA 0.4s] Duhigg demuestra que existen hábitos angulares: [PAUSA 0.4s] una sola pequeña victoria, como el ejercicio diario o la seguridad laboral, desata un efecto dominó que transforma todas tus demás rutinas.",
       "characterPreset": "narrator",
       "blueprintMode": "EDITORIAL_PAPER",
-      "visualCue": "Cajón de 4 fichas de biblioteca en cascada con las leyes prácticas de James Clear.",
+      "visualCue": "Efecto dominó de victorias tempranas: cómo un hábito angular desencadena mejoras en cadena sobre finanzas, salud y disciplina.",
       "cameraTarget": {
         "x": 0,
         "y": 1980,
@@ -109,26 +118,50 @@
         "rotateDeg": 0
       },
       "metrics": {
-        "label": "REGLA DE INICIO",
-        "numericValue": 2,
-        "unit": "MIN"
+        "label": "EFECTO DOMINÓ",
+        "numericValue": 1,
+        "unit": "HÁBITO"
       },
       "bookVisualData": {
-        "laws": [
-          { "num": "01", "name": "HAZLO OBVIO", "desc": "Pon la señal visual a la vista" },
-          { "num": "02", "name": "HAZLO ATRACTIVO", "desc": "Anticipa la dopamina con recompensas" },
-          { "num": "03", "name": "HAZLO FÁCIL", "desc": "Regla de 2 minutos: empieza en menos de 120 segundos" },
-          { "num": "04", "name": "HAZLO SATISFACTORIO", "desc": "Recompensa inmediata para sellar el bucle" }
+        "actionableLaws": [
+          {
+            "index": "PASO 01",
+            "title": "Aislar la Señal",
+            "rule": "Identifica el disparador exacto: lugar, hora o emoción.",
+            "impactPct": 92,
+            "highlight": true
+          },
+          {
+            "index": "PASO 02",
+            "title": "Elegir la Recompensa",
+            "rule": "Descubre qué anhelo real estás buscando satisfacer.",
+            "impactPct": 88,
+            "highlight": false
+          },
+          {
+            "index": "PASO 03",
+            "title": "Reescribir la Rutina",
+            "rule": "Inserta la nueva conducta que entregue el mismo alivio.",
+            "impactPct": 96,
+            "highlight": true
+          },
+          {
+            "index": "PASO 04",
+            "title": "Hábito Angular",
+            "rule": "Empieza por una sola victoria que altere todo el sistema.",
+            "impactPct": 94,
+            "highlight": true
+          }
         ]
       }
     },
     {
       "id": "scene-5",
-      "title": "IDENTIDAD Y VEREDICTO",
-      "text": "La regla definitiva: cada pequeña acción es un voto por la persona que quieres ser. [PAUSA 0.4s] Síguenos en En un minuto punto es y dime en comentarios: ¿cuál es el primer hábito que vas a construir hoy?",
-      "characterPreset": "salesperson",
+      "title": "EL PODER DE ELEGIR",
+      "text": "Una vez que entiendes que los hábitos se pueden rediseñar, tienes la libertad y la responsabilidad de transformarlos. [PAUSA 0.5s] El poder de los hábitos, de Charles Duhigg. [PAUSA 0.4s] Guarda este resumen y empieza hoy mismo.",
+      "characterPreset": "conversational",
       "blueprintMode": "EDITORIAL_PAPER",
-      "visualCue": "Ficha final con cronómetro dinámico expandido de @en1minuto.es, llamada a la acción interactiva y debate en comentarios.",
+      "visualCue": "Tarjeta final de conversión con cronómetro oficial @en1minuto.es, portada de Charles Duhigg y pregunta de interacción.",
       "cameraTarget": {
         "x": 560,
         "y": 3960,
@@ -136,17 +169,15 @@
         "rotateDeg": 0
       },
       "metrics": {
-        "label": "TIEMPO ESTIMADO",
-        "numericValue": 4.2,
-        "unit": "HORAS"
+        "label": "VALORACIÓN",
+        "numericValue": 4.13,
+        "unit": "★"
       },
       "bookVisualData": {
-        "identityPhrase": "Cada hábito es un voto por la persona que quieres ser.",
-        "verdictTitle": "SELECCIÓN EDITORIAL",
-        "verdictSubtitle": "RECOMENDADO POR @EN1MINUTO.ES",
-        "readingTime": "4.2 HORAS DE LECTURA",
-        "ctaPrompt": "¿Cuál es tu primer hábito hoy? Comenta abajo",
-        "ctaHandle": "@en1minuto.es"
+        "identityQuote": "Una vez que entiendes que los hábitos se pueden moldear, tienes la libertad y la responsabilidad de transformarlos.",
+        "ctaPrompt": "¿Cuál es el mal hábito que vas a sustituir esta semana?",
+        "ctaHandle": "@en1minuto.es",
+        "verdictBadge": "OBRA MAESTRA · NEUROCIENCIA APLICADA"
       }
     }
   ]

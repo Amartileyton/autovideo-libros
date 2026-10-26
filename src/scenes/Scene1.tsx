@@ -24,39 +24,32 @@ export interface Scene1Props {
 }
 
 /**
- * Scene 1 — La Trampa de las Metas (Kinetic UI + @eldatomanda Style)
- * Timestamps reales de ElevenLabs (403 frames):
- * - 0..38: "El 92% de las personas" -> LiveCounter cuenta de 0 a 92%
- * - 175..240: "En Hábitos Atómicos, James Clear" -> Portada 2.5D con rebote elástico
- * - 285..340: "no fueron tus metas, sino los sistemas" -> ComparisonBattle en vivo
+ * Scene 1 — El Piloto Automático Cerebral (Kinetic UI + Charles Duhigg Book Profile)
+ * Timestamps reales de ElevenLabs (438 frames):
+ * - 0..72: "¿Crees que controlas tus decisiones diarias?" -> Ficha estadística y portada
+ * - 91..160: "Un estudio de la Universidad de Duke demostró"
+ * - 160..235: "más del cuarenta por ciento..." -> LiveCounter sube de 0 a 40%
+ * - 240..425: "no son elecciones reales, sino hábitos automáticos" -> ComparisonBattle en directo
  */
 export const Scene1: React.FC<Scene1Props> = ({
   canvasOffsetX = 0,
   canvasOffsetY = 0,
   enterFrame = 0,
-  bookMetadata,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const localFrame = Math.max(0, frame - enterFrame);
 
-  // 1. Cabecera editorial (frame 0)
-  const headerEntrance = spring({
-    frame: localFrame,
-    fps,
-    config: SPRING_SNAPPY,
-  });
-
-  // 2. Ficha estadística del gancho 92% (frame 6)
+  // 1. Ficha estadística del gancho 40% (frame 20)
   const statEntrance = spring({
-    frame: Math.max(0, localFrame - 6),
+    frame: Math.max(0, localFrame - 20),
     fps,
     config: SPRING_SNAPPY,
   });
 
-  // 3. Portada 2.5D del libro (frame 175 - cuando dice "En Hábitos Atómicos, James Clear")
+  // 2. Portada 2.5D del libro (frame 60)
   const bookEntrance = spring({
-    frame: Math.max(0, localFrame - 175),
+    frame: Math.max(0, localFrame - 60),
     fps,
     config: SPRING_SNAPPY,
   });
@@ -64,7 +57,7 @@ export const Scene1: React.FC<Scene1Props> = ({
   // Inclinación 2.5D sutil del libro
   const bookTilt = interpolate(
     localFrame,
-    [175, 230, 350],
+    [60, 160, 320],
     [-4, 3, 0],
     CLAMP_EXTRAPOLATION
   );
@@ -82,70 +75,19 @@ export const Scene1: React.FC<Scene1Props> = ({
         boxSizing: 'border-box',
       }}
     >
-      {/* 1. Cabecera Editorial */}
+      {/* 1. Ficha Estadística en Amarillo Pálido con LiveCounter (40% de hábitos automáticos) */}
       <div
         style={{
           position: 'absolute',
           top: 150,
           left: 96,
           right: 96,
-          opacity: headerEntrance,
-          transform: `translateY(${(1 - headerEntrance) * -20}px)`,
-        }}
-      >
-        <div
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 8,
-            padding: '4px 12px',
-            backgroundColor: '#FFFFFF',
-            border: '1.5px solid #D94E34',
-            borderRadius: 6,
-            marginBottom: 12,
-            boxShadow: '0 2px 6px rgba(217, 78, 52, 0.10)',
-          }}
-        >
-          <span
-            style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 14,
-              fontWeight: 800,
-              color: '#D94E34',
-              letterSpacing: 1.5,
-            }}
-          >
-            01 / PARADOJA DEL ÉXITO
-          </span>
-        </div>
-        <h1
-          style={{
-            fontFamily: "'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif",
-            fontSize: 56,
-            fontWeight: 900,
-            color: '#141413',
-            margin: 0,
-            lineHeight: 1.08,
-            letterSpacing: '-0.035em',
-          }}
-        >
-          ¿Por qué fallan tus metas?
-        </h1>
-      </div>
-
-      {/* 2. Ficha Estadística con LiveCounter (92% Abandono) */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 310,
-          left: 96,
-          right: 96,
-          backgroundColor: '#FFFFFF',
-          border: '1.5px solid #E5E2DC',
+          backgroundColor: '#FEF9C3',
+          border: '2px solid #141413',
           borderLeft: '6px solid #D94E34',
           borderRadius: 16,
           padding: '20px 28px',
-          boxShadow: '0 10px 30px rgba(45, 43, 40, 0.06)',
+          boxShadow: '0 10px 30px rgba(20, 20, 19, 0.06)',
           opacity: statEntrance,
           transform: `scale(${interpolate(statEntrance, [0, 1], [0.94, 1], CLAMP_EXTRAPOLATION)})`,
           display: 'flex',
@@ -156,9 +98,9 @@ export const Scene1: React.FC<Scene1Props> = ({
         <div style={{ minWidth: 140 }}>
           <LiveCounter
             from={0}
-            to={92}
-            startFrame={6}
-            durationFrames={28}
+            to={40}
+            startFrame={160}
+            durationFrames={35}
             suffix="%"
             fontSize={52}
             color="#D94E34"
@@ -167,13 +109,13 @@ export const Scene1: React.FC<Scene1Props> = ({
         <div>
           <div
             style={{
-              fontFamily: "'Inter', sans-serif",
-              fontSize: 20,
+              fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
+              fontSize: 22,
               fontWeight: 800,
               color: '#141413',
             }}
           >
-            Abandona sus metas en enero
+            De tus acciones son hábitos automáticos
           </div>
           <div
             style={{
@@ -183,16 +125,16 @@ export const Scene1: React.FC<Scene1Props> = ({
               marginTop: 3,
             }}
           >
-            Datos confirmados por la investigación de James Clear
+            Estudio de la Universidad de Duke
           </div>
         </div>
       </div>
 
-      {/* 3. Portada 2.5D del Libro con Rebote e Inclinación */}
+      {/* 2. Portada 2.5D del Libro con Rebote e Inclinación */}
       <div
         style={{
           position: 'absolute',
-          top: 450,
+          top: 290,
           left: 96,
           right: 96,
           display: 'flex',
@@ -205,18 +147,18 @@ export const Scene1: React.FC<Scene1Props> = ({
         <div
           style={{
             position: 'relative',
-            width: 360,
-            height: 540,
+            width: 340,
+            height: 510,
             borderRadius: 16,
             overflow: 'hidden',
             boxShadow:
-              '0 30px 60px rgba(45, 43, 40, 0.18), 0 6px 16px rgba(45, 43, 40, 0.08)',
-            border: '2px solid rgba(45, 43, 40, 0.12)',
-            backgroundColor: '#FFFFFF',
+              '0 30px 60px rgba(20, 20, 19, 0.18), 0 6px 16px rgba(20, 20, 19, 0.08)',
+            border: '2px solid #141413',
+            backgroundColor: '#FEF9C3',
           }}
         >
           <Img
-            src={staticFile('assets/books/habitos-atomicos-cover.jpg')}
+            src={staticFile('assets/books/el-poder-de-los-habitos.jpg')}
             style={{
               width: '100%',
               height: '100%',
@@ -225,18 +167,18 @@ export const Scene1: React.FC<Scene1Props> = ({
           />
         </div>
 
-        {/* Ficha técnica tipo badge debajo del libro */}
+        {/* Ficha técnica debajo del libro en amarillo pálido */}
         <div
           style={{
-            marginTop: 18,
+            marginTop: 16,
             display: 'flex',
             alignItems: 'center',
             gap: 16,
             padding: '10px 22px',
-            backgroundColor: '#FFFFFF',
-            border: '1.5px solid #E5E2DC',
+            backgroundColor: '#FEF9C3',
+            border: '2px solid #141413',
             borderRadius: 30,
-            boxShadow: '0 4px 16px rgba(45, 43, 40, 0.05)',
+            boxShadow: '0 4px 16px rgba(20, 20, 19, 0.05)',
           }}
         >
           <span
@@ -247,7 +189,7 @@ export const Scene1: React.FC<Scene1Props> = ({
               color: '#141413',
             }}
           >
-            James Clear
+            Charles Duhigg
           </span>
           <span style={{ color: '#CBD5E1' }}>|</span>
           <span
@@ -258,7 +200,7 @@ export const Scene1: React.FC<Scene1Props> = ({
               color: '#D97706',
             }}
           >
-            ★ 4.38 Goodreads
+            ★ 4.13 Goodreads
           </span>
           <span style={{ color: '#CBD5E1' }}>|</span>
           <span
@@ -268,31 +210,31 @@ export const Scene1: React.FC<Scene1Props> = ({
               color: '#575550',
             }}
           >
-            +15M lectores
+            +585K lectores
           </span>
         </div>
       </div>
 
-      {/* 4. Confrontación Cinética: Metas vs Sistemas (ComparisonBattle) */}
+      {/* 3. Confrontación Cinética: Elección Consciente vs Piloto Automático */}
       <div
         style={{
           position: 'absolute',
-          top: 1130,
+          top: 920,
           left: 96,
           right: 96,
         }}
       >
         <ComparisonBattle
-          titleA="Las Metas"
-          subtitleA="Ganadores y perdedores tienen los mismos objetivos"
-          tagA="ENFOQUE TRADICIONAL"
-          titleB="Los Sistemas"
-          subtitleB="Las micro-decisiones que ejecutas a diario"
-          tagB="ENFOQUE DE ALTO RENDIMIENTO"
-          metricB={{ value: 100, suffix: '% IMPACTO' }}
-          enterFrameA={285}
-          enterFrameB={310}
-          battleFrame={325}
+          titleA="Elección Consciente"
+          subtitleA="Creemos que decidimos cada acción con la mente"
+          tagA="ILUSIÓN DE CONTROL"
+          titleB="Piloto Automático"
+          subtitleB="Los ganglios basales ejecutan la conducta sin pensar"
+          tagB="REALIDAD NEUROLÓGICA (40%)"
+          metricB={{ value: 40, suffix: '% DÍA' }}
+          enterFrameA={220}
+          enterFrameB={260}
+          battleFrame={290}
           accentColor="#D94E34"
         />
       </div>

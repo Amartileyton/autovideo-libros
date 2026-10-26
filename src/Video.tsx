@@ -223,7 +223,7 @@ export const Video: React.FC<VideoProps> = ({
           metricLabel={scenesJson.scenes[1]?.metrics?.label}
           canvasOffsetX={scenesJson.scenes[1]?.cameraTarget?.x ?? 1120}
           canvasOffsetY={scenesJson.scenes[1]?.cameraTarget?.y ?? 0}
-          enterFrame={timeline[1]?.from ?? 340}
+          enterFrame={timeline[1]?.from ?? 428}
           bookMetadata={bookMetadata}
           visualData={
             scenesJson.scenes[1]?.bookVisualData as BookVisualData | undefined
@@ -237,7 +237,7 @@ export const Video: React.FC<VideoProps> = ({
           metricLabel={scenesJson.scenes[2]?.metrics?.label}
           canvasOffsetX={scenesJson.scenes[2]?.cameraTarget?.x ?? 1120}
           canvasOffsetY={scenesJson.scenes[2]?.cameraTarget?.y ?? 1980}
-          enterFrame={timeline[2]?.from ?? 700}
+          enterFrame={timeline[2]?.from ?? 824}
           bookMetadata={bookMetadata}
           visualData={
             scenesJson.scenes[2]?.bookVisualData as BookVisualData | undefined
@@ -251,7 +251,7 @@ export const Video: React.FC<VideoProps> = ({
           metricLabel={scenesJson.scenes[3]?.metrics?.label}
           canvasOffsetX={scenesJson.scenes[3]?.cameraTarget?.x ?? 0}
           canvasOffsetY={scenesJson.scenes[3]?.cameraTarget?.y ?? 1980}
-          enterFrame={timeline[3]?.from ?? 1080}
+          enterFrame={timeline[3]?.from ?? 1231}
           bookMetadata={bookMetadata}
           visualData={
             scenesJson.scenes[3]?.bookVisualData as BookVisualData | undefined
@@ -265,7 +265,7 @@ export const Video: React.FC<VideoProps> = ({
           metricLabel={scenesJson.scenes[4]?.metrics?.label}
           canvasOffsetX={scenesJson.scenes[4]?.cameraTarget?.x ?? 560}
           canvasOffsetY={scenesJson.scenes[4]?.cameraTarget?.y ?? 3960}
-          enterFrame={timeline[4]?.from ?? 1480}
+          enterFrame={timeline[4]?.from ?? 1655}
           bookMetadata={bookMetadata}
           visualData={
             scenesJson.scenes[4]?.bookVisualData as BookVisualData | undefined
@@ -308,127 +308,44 @@ export const Video: React.FC<VideoProps> = ({
         />
       )}
 
-      {/* Barra / Pill de Marca @en1minuto.es en la Parte Inferior (Centrada y Ocupando Todo el Bajo) */}
+      {/* Reloj de 1 Minuto corriendo en solitario con animación ligera (SIN banner inferior) */}
       {(() => {
-        const ctaCardFrame = (timeline[4]?.from ?? 1400) + 155;
-        const bottomBarOpacity = interpolate(
+        const ctaCardFrame = (timeline[4]?.from ?? 1655) + 260;
+        const clockOpacity = interpolate(
           frame,
           [ctaCardFrame - 20, ctaCardFrame],
           [1, 0],
           CLAMP_EXTRAPOLATION
         );
-
-        // Barra de progreso sincronizada en la parte superior del dock inferior
-        const progressPct = Math.min(
-          100,
-          Math.max(0, (frame / (totalDurationFrames || 1765)) * 100)
+        const clockScale = interpolate(
+          frame,
+          [ctaCardFrame - 20, ctaCardFrame],
+          [1, 0.5],
+          CLAMP_EXTRAPOLATION
         );
 
         return (
           <div
             style={{
               position: 'absolute',
-              bottom: 0,
+              bottom: 48,
               left: 0,
               right: 0,
-              width: '100%',
-              height: 140,
-              backgroundColor: '#FFFFFF',
-              borderTop: '2px solid #141413',
-              boxShadow: '0 -8px 28px rgba(20, 20, 19, 0.08)',
               display: 'flex',
-              flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
               zIndex: 95,
               pointerEvents: 'none',
-              opacity: bottomBarOpacity,
-              transform: `translateY(${(1 - bottomBarOpacity) * 30}px)`,
-              boxSizing: 'border-box',
+              opacity: clockOpacity,
+              transform: `scale(${clockScale})`,
             }}
           >
-            {/* Línea de progreso de lectura terracota sobre el borde superior de la barra */}
-            <div
-              style={{
-                position: 'absolute',
-                top: -2,
-                left: 0,
-                width: `${progressPct}%`,
-                height: 4,
-                backgroundColor: '#D94E34',
-                zIndex: 2,
-              }}
+            <OneMinuteStopwatch
+              size={84}
+              currentFrame={frame}
+              totalDurationInFrames={totalDurationFrames}
+              mode="header"
             />
-
-            {/* Contenido centrado: Reloj Opción 1 sin pitorrillo con área interior + Handle @en1minuto.es */}
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 16,
-              }}
-            >
-              <OneMinuteStopwatch
-                size={56}
-                currentFrame={frame}
-                totalDurationInFrames={totalDurationFrames}
-                mode="header"
-              />
-
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                }}
-              >
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'baseline',
-                    gap: 10,
-                  }}
-                >
-                  <span
-                    style={{
-                      fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
-                      fontSize: 26,
-                      fontWeight: 900,
-                      color: '#141413',
-                      letterSpacing: -0.5,
-                      lineHeight: 1.1,
-                    }}
-                  >
-                    {BRAND_CONFIG.channelHandle}
-                  </span>
-                  <span
-                    style={{
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 13,
-                      fontWeight: 800,
-                      color: '#D94E34',
-                      letterSpacing: 1.2,
-                    }}
-                  >
-                    1 MINUTO
-                  </span>
-                </div>
-
-                <span
-                  style={{
-                    fontFamily: "'Nunito', 'Outfit', sans-serif",
-                    fontSize: 14,
-                    fontWeight: 700,
-                    color: '#575550',
-                    letterSpacing: 0.3,
-                    marginTop: 2,
-                  }}
-                >
-                  Ideas clave de libros explicadas en 60 segundos
-                </span>
-              </div>
-            </div>
           </div>
         );
       })()}

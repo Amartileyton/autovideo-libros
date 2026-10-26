@@ -51,6 +51,10 @@ export const OneMinuteStopwatch: React.FC<OneMinuteStopwatchProps> = ({
     config: SPRING_SNAPPY,
   });
 
+  // 1b. Animación ligera continua de latido y balanceo orgánico mientras corre el reloj
+  const gentlePulse = mode === 'header' ? 1 + 0.035 * Math.sin(frame * 0.22) : 1;
+  const gentleSwayDeg = mode === 'header' ? 2.2 * Math.sin(frame * 0.14) : 0;
+
   // 2. Ángulo del área interior terracota (sweepDeg)
   // - En reposo/logo base: 60° (marca de las 2:00).
   // - Frames 0..25: Calibración rápida (salto de 60° a 360° y reset a 60° con flash).
@@ -106,7 +110,7 @@ export const OneMinuteStopwatch: React.FC<OneMinuteStopwatchProps> = ({
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
-        transform: `scale(${entrance})`,
+        transform: `scale(${entrance * gentlePulse}) rotate(${gentleSwayDeg}deg)`,
         transformOrigin: 'center center',
         flexShrink: 0,
         ...style,

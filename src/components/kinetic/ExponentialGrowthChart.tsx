@@ -107,24 +107,24 @@ export const ExponentialGrowthChart: React.FC<ExponentialGrowthChartProps> = ({
         position: 'relative',
         width,
         height,
-        backgroundColor: '#FFFFFF',
-        border: '1.5px solid rgba(45, 43, 40, 0.12)',
+        backgroundColor: '#FEF9C3',
+        border: '2px solid #141413',
         borderRadius: 24,
         padding: '20px 24px',
-        boxShadow: '0 16px 44px rgba(45, 43, 40, 0.06)',
+        boxShadow: '0 16px 44px rgba(20, 20, 19, 0.06)',
         boxSizing: 'border-box',
         overflow: 'hidden',
         opacity: containerEntrance,
         transform: `translateY(${(1 - containerEntrance) * 20}px)`,
       }}
     >
-      {/* 1. Barra técnica superior */}
+      {/* 1. Barra de título limpio de la tarjeta */}
       <div
         style={{
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          borderBottom: '1px solid #E5E2DC',
+          borderBottom: '1.5px solid rgba(20, 20, 19, 0.12)',
           paddingBottom: 12,
           marginBottom: 8,
         }}
@@ -141,13 +141,13 @@ export const ExponentialGrowthChart: React.FC<ExponentialGrowthChartProps> = ({
           <span
             style={{
               fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
-              fontSize: 13,
+              fontSize: 17,
               fontWeight: 800,
               color: '#141413',
-              letterSpacing: 1.2,
+              letterSpacing: '-0.01em',
             }}
           >
-            CRECIMIENTO EXPONENCIAL · 1.01³⁶⁵
+            Crecimiento Exponencial (1.01³⁶⁵)
           </span>
         </div>
 

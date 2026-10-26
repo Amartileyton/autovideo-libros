@@ -9,10 +9,22 @@ import { VideoPropsSchema, type AudioManifest } from './data/schema';
 import { BLUEPRINT_THEMES, VIDEO_CONFIG } from './theme/motion';
 import { Video } from './Video';
 
-// Cargar fuentes oficiales (subtítulos con Nunito sin aristas agudas)
-loadPlusJakartaSans();
-loadInter();
-loadNunito();
+// Cargar fuentes oficiales con pesos optimizados
+loadPlusJakartaSans('normal', {
+  weights: ['700', '800'],
+  subsets: ['latin'],
+  ignoreTooManyRequestsWarning: true,
+});
+loadInter('normal', {
+  weights: ['500', '700', '800'],
+  subsets: ['latin'],
+  ignoreTooManyRequestsWarning: true,
+});
+loadNunito('normal', {
+  weights: ['700', '800'],
+  subsets: ['latin'],
+  ignoreTooManyRequestsWarning: true,
+});
 
 const manifest = audioManifestJson as AudioManifest;
 
@@ -52,7 +64,7 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={{
           title:
             scenesJson.projectTitle ||
-            'Hábitos Atómicos — James Clear (Resumen 60s)',
+            'El poder de los hábitos — Charles Duhigg (Resumen 65s)',
           surfaceColor: BLUEPRINT_THEMES.EDITORIAL_PAPER.surface,
           enableCaptions: true,
           enableBackgroundMusic: false,

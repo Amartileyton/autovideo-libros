@@ -1,6 +1,72 @@
-# AGENTS.md — Constitución Técnica y Protocolo Multiagente (Niveles 0 a 4)
+# AGENTS.md — Constitución Técnica, Manual Director de Libros `@en1minuto.es` y Protocolo Multiagente (Niveles 0 a 4)
 
-> **Carga Obligatoria en Cada Sesión**: Este documento define las reglas inquebrantables de diseño, física de movimiento, sincronización Audio-First con ElevenLabs, el sistema de Blueprints `@resultaaquee` y el protocolo de aislamiento de escritura de 5 Slots para la Manager View (`invoke_subagent`) en Google Antigravity.
+> **Carga Obligatoria en Cada Sesión**: Este documento define el **Workflow Principal de Creación de Vídeos de Libros para `@en1minuto.es`** (con bloqueo obligatorio de cuestionario visual interactivo por diapositiva), las reglas de identidad visual consolidadas (tarjetas en amarillo pálido `#FEF9C3`, títulos de tarjeta limpios, reloj animado en solitario sin banner inferior), la física de movimiento cerrada, sincronización Audio-First con ElevenLabs y el protocolo de 5 Slots.
+
+---
+
+## 0. Manual Director del Workflow Principal de Libros (`@en1minuto.es`) — BLOQUEO DE CUESTIONARIO VISUAL OBLIGATORIO
+
+> [!IMPORTANT]
+> **REGLA DE ORO DEL WORKFLOW DE LIBROS (PROHIBIDO SALTARSE EL CUESTIONARIO)**:
+> Cuando el usuario solicite crear un vídeo de un libro (enviando el **título del libro y/o su enlace de Goodreads** `https://www.goodreads.com/book/show/...`), está **TERMINANTEMENTE PROHIBIDO** pasar directamente a programar las escenas (`Scene1..5.tsx`) o renderizar el MP4 sin antes ejecutar el **Cuestionario Visual Interactivo (`ask_question`)** para decidir con el usuario qué gráficos y componentes visuales integrar en cada diapositiva.
+
+### 0.1 Las 5 Fases Secuenciales Obligatorias del Pipeline de Libros
+Todo vídeo de resumen de libro debe seguir estrictamente este orden secuencial:
+
+1. **FASE 1 — Ingesta Automática desde Goodreads (`scripts/book-ingest.mjs`)**:
+   - Ejecutar:
+     ```bash
+     node scripts/book-ingest.mjs --query "<Título del Libro>" --url "<URL_Goodreads>"
+     ```
+   - Esto extrae metadatos verificados (autor, rating, número de votos, páginas), descarga la portada real a `public/assets/books/<slug>-cover.jpg` y genera el dossier base en `src/data/book-dossier.json`.
+   - Redactar el borrador de las 5 diapositivas/escenas del guion (60–65 segundos totales, ~140–160 palabras) con todos los números escritos en letra en el campo `text`.
+
+2. **FASE 2 — BLOQUEO INTERACTIVO OBLIGATORIO: Cuestionario de Gráficos por Diapositiva (`ask_question`)**:
+   - **ANTES de sintetizar el audio en ElevenLabs o escribir código en `src/scenes/Scene1.tsx`–`Scene5.tsx`**, el agente **DEBE** invocar la herramienta `ask_question` presentando al usuario la propuesta de las 5 diapositivas y preguntándole qué componente gráfico desea integrar en cada escena (`Escena 1` a `Escena 5`).
+   - **Catálogo de Gráficos Disponibles para ofrecer en el cuestionario (`ask_question`)**:
+     - **Diapositiva / Escena 1 (El Gancho + Portada)**:
+       - `(Recommended) Portada 2.5D + LiveCounter + ComparisonBattle (Mito vs Realidad)`
+       - `Portada 2.5D + Tarjeta Estadística de Impacto (KineticCard + LiveCounter)`
+       - `Portada 2.5D + Pregunta Provocadora Subrayada Editorial`
+     - **Diapositiva / Escena 2 (La Tesis / El Mecanismo Científico)**:
+       - `(Recommended) VectorLoopCircuit (Circuito vectorial de 4 fases con sombreado activo sincronizado a la voz) + KineticCard`
+       - `ExponentialGrowthChart (Curva matemática animada en vivo con evolvePath) + LiveCounter`
+       - `ComparisonBattle (Confrontación A vs B con tachado dinámico y métrica ganadora)`
+     - **Diapositiva / Escena 3 (La Regla de Oro / Evidencia Central)**:
+       - `(Recommended) Tarjeta de Cita Subrayada (KineticCard) + Diagrama de Sustitución (Rutina Vieja Tachada vs Nueva Rutina)`
+       - `VectorLoopCircuit (Circuito interactivo de transformación) + Cita Editorial`
+       - `ExponentialGrowthChart (Gráfico de progresión temporal) + Tarjeta de Evidencia`
+     - **Diapositiva / Escena 4 (Las Leyes Accionables / Casos Reales)**:
+       - `(Recommended) Cascada de 3 Casos / Leyes Accionables en Tarjetas Amarillo Pálido + Reacción en Cadena (Efecto Dominó)`
+       - `ComparisonBattle (Caso de fracaso vs Caso de éxito verificado) + Lista de Leyes`
+       - `Matriz de 4 Pilares Prácticos con Checkmarks Verdes`
+     - **Diapositiva / Escena 5 (El Manifiesto Final + CTA `@en1minuto.es`)**:
+       - `(Recommended) Cita Manifiesto (KineticCard) + Ficha Goodreads con Mini-Portada + CtaEndCard con Cronómetro Hero`
+       - `Resumen Ejecutivo de 3 Puntos + CtaEndCard con Cronómetro Hero`
+   - **Regla de parada**: El agente se detiene tras lanzar `ask_question` y espera la respuesta del usuario antes de continuar con la Fase 3.
+
+3. **FASE 3 — Sincronización Audio-First con ElevenLabs (`scripts/elevenlabs-sync.mjs`)**:
+   - Una vez confirmados los gráficos en el cuestionario, guardar `src/data/scenes.json` y ejecutar `node scripts/elevenlabs-sync.mjs` para generar `public/audio/scene-1.mp3`..`scene-5.mp3` y los timestamps exactos palabra por palabra en `public/audio/info.json`.
+
+4. **FASE 4 — Construcción de Escenas con las Reglas Visuales Consolidadas (`Scene1.tsx`–`Scene5.tsx`)**:
+   - Programar las 5 escenas integrando exactamente los gráficos elegidos por el usuario en la Fase 2 y respetando las **4 Reglas Visuales Inquebrantables de `@en1minuto.es`** (ver Sección 0.2).
+
+5. **FASE 5 — Gate de Previsualización (`remotion still` + `qa:gate`) antes del Render MP4**:
+   - Ejecutar `npm.cmd run typecheck` y `npm.cmd run qa:gate` (16/16 checks en verde).
+   - Renderizar fotogramas clave (`npx.cmd remotion still`) o pedir confirmación antes de lanzar el render completo de vídeo MP4.
+
+### 0.2 Las 4 Reglas Visuales Inquebrantables de `@en1minuto.es` (Anti-Regresión)
+Estas mejoras visuales están integradas en el núcleo del proyecto y **NUNCA** deben revertirse:
+1. **PROHIBIDO el Banner Inferior (`Dock Inferior`) — Solo el Reloj Animado en Solitario**:
+   - El vídeo **NO** tiene ningún banner blanco ni barra inferior con texto en la base del lienzo (`1920px`).
+   - En la zona inferior (`bottom: 48px`) aparece **ÚNICAMENTE** el cronómetro circular `<OneMinuteStopwatch size={84} mode="header" />` corriendo en tiempo real (rellenando su sector terracota de $60^\circ$ a $360^\circ$) con una **animación ligera continua** de latido y balanceo suave (`gentlePulse` + `gentleSwayDeg`), desapareciendo suavemente cuando entra la tarjeta final `CtaEndCard` en la Escena 5.
+2. **Tarjetas en Color Amarillo Pálido (`#FEF9C3` / `#FFFBEB`)**:
+   - Todas las tarjetas de contenido (`KineticCard`, `ComparisonBattle`, `VectorLoopCircuit`, `ExponentialGrowthChart`, `CtaEndCard` y fichas de escenas) usan fondo **amarillo pálido cálido (`#FEF9C3` y `#FFFBEB`)** con borde nítido (`2px solid #141413` o `#D94E34`) sobre el lienzo de papel marfil cuadriculado `#F8F7F4`. Prohibido usar tarjetas blancas puras `#FFFFFF` que pierdan contraste editorial.
+3. **PROHIBIDO Títulos de Fondo de Diapositiva y Barras de Título en Tarjetas (Anti-Clutter Visual)**:
+   - **Cero Títulos en el Fondo del Lienzo**: Prohibido poner cabeceras o etiquetas flotantes de escena (`01 / PILOTO AUTOMÁTICO`, `02 / NEUROCIENCIA...` y titulares `<h1>` flotantes en el papel). Ocupan entre 150px y 280px de espacio vertical crítico, roban aire y compiten visualmente con los subtítulos y los gráficos.
+   - **Tarjetas Puras sin Barras de Título Superiores**: Prohibido añadir barras superiores internas con viñetas (`● Título de la tarjeta`) o etiquetas redundantes. Las tarjetas (`KineticCard`, `VectorLoopCircuit`, `ComparisonBattle`, etc.) contienen directamente el gráfico, dato visual, métrica o cita de manera limpia y directa sin barras decorativas que ensucien el diseño.
+4. **Subtítulos `Nunito` ExtraBold en Cápsula Limpia sin Solapamientos**:
+   - Los subtítulos dinámicos (`DynamicCaptions.tsx`) usan la fuente redondeada `Nunito` (`fontWeight: 800`, `52px`) centrados en `top: SAFE_ZONE.maxSafeY - 190` (`1442px`), justo por encima del reloj en solitario y sin chocar con las tarjetas ni con el reloj.
 
 ---
 
@@ -25,30 +91,25 @@ Importadas exclusivamente desde `src/theme/motion.ts`:
   2. `DARK_CAD_XRAY` (*Ref 2 Teclado iPhone & Ref 3 Gancho del Metro*): Gris carbón `#111111`, vista explosionada 2.5D (`ExplodedLayerStack`), corte Rayos X cian `#38BDF8`, cotas ámbar `#F59E0B` (`DimensionRuler`, `LeaderLineCallout`), cajón de dataset (`DatasetTerminalDrawer`) y marco de selección vectorial azul `#3B82F6` (`VectorSelectionBox`).
   3. `TOPOLOGY_WIREFRAME` (*Ref 4 — Topología de la pajita*): Negro petróleo `#0A0E12`, marcador superior de hipótesis (`HypothesisScoreboard`: `[2] [1] [0]`), mallas translúcidas con bocas en verde `#22C55E` y huecos/tachados en rosa `#EC4899`.
   4. `CHRONO_OSCILLOSCOPE` (*Ref 5 — Cronofotografía de las palomas*): Papel carbón `#1E1D1B` con bordes laterales de papel rasgado, estroboscopio (*onion-skinning*) con dianas rojas (`TargetReticle`) arriba y gráfica posición-tiempo en vivo (`LiveTelemetryGraph`) abajo conectada por línea punteada vertical.
-  5. `EDITORIAL_PAPER` (`#F8F7F4`): Papel técnico cálido para recortes editoriales y citas históricas.
+  5. `EDITORIAL_PAPER` (`#F8F7F4`): Papel técnico cálido con tarjetas en amarillo pálido (`#FEF9C3`) para resúmenes de libros `@en1minuto.es`.
 
 ### 1.4 Zona Segura Vertical (9:16 — 1080x1920 @ 30fps)
 - **85% Superior Activo**: Todo texto, subtítulo y vector clave debe situarse por encima de `y = 1632px`.
-- **Reserva Inferior de 288px**: Los `288px` inferiores (`1632px` a `1920px`) están estrictamente reservados para la interfaz nativa de Reels / TikTok / Shorts.
+- **Reserva Inferior de 288px**: Los `288px` inferiores (`1632px` a `1920px`) están estrictamente reservados para la interfaz nativa de Reels / TikTok / Shorts (con el reloj `<OneMinuteStopwatch />` corriendo en solitario en `bottom: 48px`).
 - **Padding Lateral**: Mínimo `96px` a izquierda y derecha (`x` dentro del rango `[96, 984]`).
 
-### 1.5 Regla de Locución, Voz Canónica y Subtítulos `@resultaaquee` (`DynamicCaptions.tsx`)
+### 1.5 Regla de Locución, Voz Canónica y Subtítulos (`DynamicCaptions.tsx`)
 - **Voz Canónica Reciclada de TrendForge**: `ELEVENLABS_VOICE_ID = "RwzBDEn5f6FIgpAjH9YN"` (*"Gabriel Blanco — Voz Canónica de Leo"*), calibrada con `stability: 0.70`, `similarity_boost: 0.75`, `style: 0.05`, `use_speaker_boost: true`, modelo `eleven_multilingual_v2` y preprocesador `preprocessForTts`.
 - **4 Variantes de Subtítulos Sin Vibración (`DynamicCaptions.tsx`)**:
+  - `variant="editorial-clean"` (**Predeterminado para Libros `@en1minuto.es`**): Fuente `Nunito` ExtraBold (`52px`), texto oscuro `#141413` y palabra activa en Terracota `#D94E34` sobre papel `#F8F7F4`.
   - `variant="vector-box"` (*Ref 2 & Ref 3*): Ventana progresiva de 5 palabras en el tercio superior (`placement="upper"`) o inferior; palabras de contexto en gris `#8E8E93`, activas en blanco `#FFFFFF` y palabras clave enmarcadas con `VectorSelectionBox` (`#3B82F6` con 4 nodos cuadrados en las esquinas y mástil superior).
   - `variant="ochre-blueprint"` (*Ref 1*): Texto blanco con palabras clave en amarillo ocre `#FBBF24`.
   - `variant="red-pill"` (*Ref 5*): Ventana de 3 palabras bajo el raíl central (`placement="middle"`) con pastilla roja `#DC2626` en la palabra activa.
-  - `variant="editorial-clean"`: Texto oscuro `#141413` sobre papel `#F8F7F4`.
   - **Cero vibración / cero reflujo**: Prohibido cambiar `padding`, `borderWidth` o `fontWeight` entre la palabra activa y las inactivas; retención de `450ms` en pausas naturales.
-- **Dicción en ElevenLabs**: En `src/data/scenes.json`, los números dentro del campo `text` se escriben en letra (p. ej., `"veinticinco milisegundos"`) mientras que en el gráfico vectorial se renderiza el valor numérico (`"25 ms"`).
+- **Dicción en ElevenLabs**: En `src/data/scenes.json`, los números dentro del campo `text` se escriben en letra (p. ej., `"cuarenta por ciento"`) mientras que en el gráfico vectorial se renderiza el valor numérico (`"40%"`).
 
 ### 1.6 Procedimiento "Art-First" Obligatorio para los Dibujos (`HeroPropStage` + 15 Blueprints + 27 Reglas)
 - **Prohibido dibujar objetos físicos complejos a mano con `<rect>` y `<ellipse>` crudos**: El código React/SVG se usa exclusivamente para **telemetría, cotas (`DimensionRuler`, `LeaderLineCallout`), gráficas en vivo (`LiveTelemetryGraph`), selección vectorial (`VectorSelectionBox`), morphing con `flubber` y cámara**.
-- **Pipeline de 4 Fases para Ilustraciones ("Los Dibujos")**:
-  1. **Fase 1 — Generación de Hero Props 3D CAD (`image-generator`)**: Antes de programar las escenas, se generan las ilustraciones principales de cada escena (vistas explosionadas isométricas, cortes Rayos X de hardware, secciones macro científicas) sin ningún texto incrustado y sobre fondo uniforme `#111111`.
-  2. **Fase 2 — Extracción de Canal Alfa Limpio (`public/assets/props/*.png`)**: Se procesan las ilustraciones con Python (`Pillow` + `numpy`) para convertir el fondo `#111111` en transparencia alfa suave con viñeteado radial en los bordes, de modo que la cuadrícula milimetrada de `BlueprintSurface` se vea a través del objeto sin cortes rectangulares.
-  3. **Fase 3 — Rigging en `HeroPropStage` (`ResultaaqueeBlueprints.tsx`)**: Cada ilustración se monta en `<HeroPropStage>` con levitación orgánica determinista (`noise2D` de `@remotion/noise`), contorno técnico que muta con `flubber`, barrido láser de Rayos X (`scanBeam`), anillos acústicos concéntricos y curvas de entrada `MOTION_EASING.quartOut` (`LottieFiles/motion-design-skill`).
-  4. **Fase 4 — Artboard Gate antes del MP4**: Se renderizan los fotogramas estáticos (`npx remotion still`) de las 4 escenas y se inspeccionan visualmente antes de lanzar el renderizado completo del vídeo MP4.
 
 ---
 
@@ -59,8 +120,8 @@ Importadas exclusivamente desde `src/theme/motion.ts`:
 
 | Slot | Tipo de Subagente | Modo Workspace | Responsabilidad Principal | Archivos con Permiso de Escritura Exclusivo |
 | :--- | :--- | :--- | :--- | :--- |
-| **SLOT 1** | `research` | `inherit` | Verifica datos técnicos reales, patentes, citas históricas y estructura el guion base. | `public/assets/*`<br>`src/data/scenes.json` |
-| **SLOT 2** | `video-director` (`self`) | `inherit` | Ejecuta `remotion-video-director` + `node scripts/elevenlabs-sync.mjs`, genera los MP3 en ElevenLabs, calcula el *Frame Budget* real desde `public/audio/info.json` y ensambla el timeline maestro. | `public/audio/*`<br>`public/audio/info.json`<br>`src/Root.tsx`<br>`src/Video.tsx` |
-| **SLOT 3** | `self` (*Builder Impar*) | `share` | Programa exclusivamente las escenas impares usando las primitivas de `ResultaaqueeBlueprints.tsx`. | `src/scenes/Scene1.tsx`<br>`src/scenes/Scene3.tsx`<br>`src/scenes/Scene5.tsx`<br>`src/components/RoughCard.tsx` |
+| **SLOT 1** | `research` | `inherit` | Ejecuta `scripts/book-ingest.mjs` con el enlace de Goodreads, verifica datos del libro y prepara el cuestionario visual de las 5 escenas. | `public/assets/*`<br>`src/data/book-dossier.json`<br>`src/data/scenes.json` |
+| **SLOT 2** | `video-director` (`self`) | `inherit` | Lanza el cuestionario `ask_question` para elegir gráficos por diapositiva, ejecuta `node scripts/elevenlabs-sync.mjs`, calcula el *Frame Budget* real desde `public/audio/info.json` y ensambla el timeline maestro. | `public/audio/*`<br>`public/audio/info.json`<br>`src/Root.tsx`<br>`src/Video.tsx` |
+| **SLOT 3** | `self` (*Builder Impar*) | `share` | Programa exclusivamente las escenas impares usando tarjetas en amarillo pálido `#FEF9C3` y los componentes elegidos en el cuestionario. | `src/scenes/Scene1.tsx`<br>`src/scenes/Scene3.tsx`<br>`src/scenes/Scene5.tsx`<br>`src/components/RoughCard.tsx` |
 | **SLOT 4** | `self` (*Builder Par*) | `share` | Programa exclusivamente las escenas pares, el aparejo de cámara continua y los subtítulos dinámicos. | `src/scenes/Scene2.tsx`<br>`src/scenes/Scene4.tsx`<br>`src/components/CameraRig.tsx`<br>`src/components/DynamicCaptions.tsx`<br>`src/components/blueprints/ResultaaqueeBlueprints.tsx` |
-| **SLOT 5** | `browser` | `/browser` | Abre `http://localhost:3000`, inspecciona los fotogramas clave de cada escena, captura evidencias como Artefactos, audita los 16 puntos de calidad y ejecuta el **Critic Gate** ($\ge 8.0$ por dimensión, $\ge 8.5$ de media antes de emitir `DELIVERY AUTHORIZED`). | `references/LESSONS.md`<br>Artefactos de QA / Capturas |
+| **SLOT 5** | `browser` | `/browser` | Abre `http://localhost:3000` o inspecciona fotogramas con `remotion still`, audita los 16 puntos de calidad y ejecuta el **Critic Gate** ($\ge 8.0$ por dimensión, $\ge 8.5$ de media antes de emitir `DELIVERY AUTHORIZED`). | `references/LESSONS.md`<br>Artefactos de QA / Capturas |

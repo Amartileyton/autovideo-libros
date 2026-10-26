@@ -12,7 +12,11 @@ export interface KineticCardProps {
   tiltDeg?: number;
   /** Color de acento de la tarjeta o del borde */
   accentBorderColor?: string;
-  /** Badge superior flotante opcional */
+  /** Color de fondo de la tarjeta (por defecto amarillo pálido #FEF9C3) */
+  backgroundColor?: string;
+  /** Título limpio integrado en la cabecera de la tarjeta */
+  title?: string;
+  /** Badge o título superior opcional */
   badgeText?: string;
   badgeColor?: string;
   width?: number | string;
@@ -21,15 +25,17 @@ export interface KineticCardProps {
 }
 
 /**
- * KineticCard — Tarjeta Cinética Multicapa 2.5D (Estilo @eldatomanda / Apple UI)
- * Entrada elástica con inercia, perspectiva sutil 2.5D y sombras suaves multicapa.
+ * KineticCard — Tarjeta Cinética Multicapa 2.5D en Amarillo Pálido (#FEF9C3)
+ * Entrada elástica con inercia, título limpio integrado y sombras suaves multicapa.
  */
 export const KineticCard: React.FC<KineticCardProps> = ({
   children,
   enterFrame = 0,
   enterY = 40,
   tiltDeg = 0,
-  accentBorderColor = '#D94E34',
+  accentBorderColor = '#141413',
+  backgroundColor = '#FEF9C3',
+  title,
   badgeText,
   badgeColor = '#D94E34',
   width = '100%',
@@ -61,28 +67,21 @@ export const KineticCard: React.FC<KineticCardProps> = ({
     CLAMP_EXTRAPOLATION
   );
 
-  // Badge elástico que entra 8 frames después
-  const badgeSpring = badgeText
-    ? spring({
-        frame: Math.max(0, localFrame - 8),
-        fps,
-        config: SPRING_SNAPPY,
-      })
-    : 0;
+  const headerTitle = title || badgeText;
 
   return (
     <div
       style={{
         position: 'relative',
         width,
-        backgroundColor: '#FFFFFF',
+        backgroundColor,
         border: accentBorderColor
           ? `2px solid ${accentBorderColor}`
-          : '1.5px solid rgba(45, 43, 40, 0.12)',
+          : '2px solid #141413',
         borderRadius: 20,
         padding,
         boxShadow:
-          '0 20px 50px rgba(45, 43, 40, 0.08), 0 4px 12px rgba(45, 43, 40, 0.04)',
+          '0 20px 50px rgba(20, 20, 19, 0.08), 0 4px 12px rgba(20, 20, 19, 0.04)',
         boxSizing: 'border-box',
         opacity: entranceSpring,
         transform: `translateY(${translateY}px) scale(${scale}) perspective(1000px) rotateX(${tiltDeg}deg)`,
@@ -90,27 +89,37 @@ export const KineticCard: React.FC<KineticCardProps> = ({
         ...style,
       }}
     >
-      {badgeText && (
+      {headerTitle && (
         <div
           style={{
-            position: 'absolute',
-            top: -14,
-            right: 28,
-            backgroundColor: badgeColor,
-            color: '#FFFFFF',
-            padding: '4px 12px',
-            borderRadius: 8,
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 12,
-            fontWeight: 800,
-            letterSpacing: 0.5,
-            boxShadow: '0 4px 12px rgba(217, 78, 52, 0.30)',
-            opacity: badgeSpring,
-            transform: `scale(${badgeSpring})`,
-            transformOrigin: 'right center',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            marginBottom: 14,
+            paddingBottom: 10,
+            borderBottom: '1.5px solid rgba(20, 20, 19, 0.12)',
           }}
         >
-          {badgeText}
+          <span
+            style={{
+              width: 10,
+              height: 10,
+              borderRadius: '50%',
+              backgroundColor: badgeColor,
+              flexShrink: 0,
+            }}
+          />
+          <span
+            style={{
+              fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
+              fontSize: 18,
+              fontWeight: 800,
+              color: '#141413',
+              letterSpacing: '-0.01em',
+            }}
+          >
+            {headerTitle}
+          </span>
         </div>
       )}
       {children}

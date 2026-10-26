@@ -54,7 +54,7 @@ export const CtaEndCard: React.FC<CtaEndCardProps> = ({
       style={{
         position: 'relative',
         width: 888,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: '#FEF9C3',
         border: '2px solid #D94E34',
         borderRadius: 24,
         padding: '32px 36px 28px',

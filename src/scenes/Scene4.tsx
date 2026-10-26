@@ -20,61 +20,61 @@ export interface Scene4Props {
   visualData?: BookVisualData;
 }
 
-const LAWS = [
+const KEYSTONE_EXAMPLES = [
   {
     num: '01',
-    title: 'HAZLO OBVIO',
-    desc: 'Pon la señal ambiental a la vista sin fricción',
-    tag: 'SEÑAL VISUAL',
-    triggerFrame: 115,
+    title: 'EJERCICIO FÍSICO REGULAR',
+    desc: 'Desencadena automáticamente mejor nutrición, menor impulsividad y mayor productividad.',
+    tag: 'EFECTO BIOLÓGICO',
+    triggerFrame: 170,
   },
   {
     num: '02',
-    title: 'HAZLO ATRACTIVO',
-    desc: 'Agrupa un hábito necesario con uno placentero',
-    tag: 'DOPAMINA',
-    triggerFrame: 142,
+    title: 'SEGURIDAD LABORAL (ALCOA)',
+    desc: 'Paul O\'Neill se enfocó en un solo hábito y quintuplicó los beneficios de la multinacional.',
+    tag: 'CASO REAL DE ÉXITO',
+    highlightBadge: 'BENEFICIOS x5',
+    triggerFrame: 230,
   },
   {
     num: '03',
-    title: 'HAZLO FÁCIL',
-    desc: 'Regla de los 2 minutos: empieza en menos de 120s',
-    highlightBadge: 'REGLA 2 MIN',
-    tag: 'CERO FRICCIÓN',
-    triggerFrame: 178,
-  },
-  {
-    num: '04',
-    title: 'HAZLO SATISFACTORIO',
-    desc: 'Recompensa inmediata para sellar el bucle neural',
-    tag: 'REFUERZO',
-    triggerFrame: 248,
+    title: 'RUTINA MATINAL DE PHELPS',
+    desc: 'Una única secuencia mental automatizada antes de cada carrera produjo 28 medallas olímpicas.',
+    tag: 'ALTO RENDIMIENTO',
+    triggerFrame: 290,
   },
 ];
 
 /**
- * Scene 4 — Las 4 Leyes del Cambio (Kinetic UI + @eldatomanda Style)
- * Timestamps reales de ElevenLabs (321 frames):
- * - 0..65: "Para reprogramar tu conducta, aplica las cuatro leyes..." -> Cabecera
- * - 115: "hazlo obvio" -> Ley 01
- * - 142: "hazlo atractivo" -> Ley 02
- * - 178: "hazlo fácil con la regla de dos minutos" -> Ley 03 + Badge elástico
- * - 248: "hazlo satisfactorio de inmediato" -> Ley 04
+ * Scene 4 — Los Hábitos Angulares y el Efecto Dominó (Kinetic UI + Charles Duhigg Research)
+ * Timestamps reales de ElevenLabs (434 frames):
+ * - 0..70: "No todas las conductas pesan lo mismo."
+ * - 80..180: "Duhigg demuestra que existen hábitos angulares:" -> Tarjeta Hero de Definición
+ * - 190..315: "una sola pequeña victoria, como el ejercicio diario o la seguridad laboral," -> Entradas de casos
+ * - 320..425: "desata un efecto dominó que transforma todas tus demás rutinas." -> Animación del Efecto Dominó
  */
 export const Scene4: React.FC<Scene4Props> = ({
   canvasOffsetX = 0,
   canvasOffsetY = 1980,
-  enterFrame = 1091,
+  enterFrame = 1231,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const localFrame = Math.max(0, frame - enterFrame);
 
-  // 1. Cabecera (frame 0)
-  const headerEntrance = spring({
-    frame: localFrame,
+  // 1. Tarjeta Definición Hábito Angular (frame 20)
+  const heroCardEntrance = spring({
+    frame: Math.max(0, localFrame - 20),
     fps,
     config: SPRING_SNAPPY,
+  });
+
+  // 2. Progreso del Efecto Dominó (frame 310..410)
+  const dominoProgress = spring({
+    frame: Math.max(0, localFrame - 310),
+    fps,
+    config: { damping: 20, stiffness: 120, mass: 0.9 },
+    durationInFrames: 50,
   });
 
   return (
@@ -90,194 +90,213 @@ export const Scene4: React.FC<Scene4Props> = ({
         boxSizing: 'border-box',
       }}
     >
-      {/* 1. Cabecera Editorial */}
+      {/* 1. Tarjeta Hero: El Concepto de Hábito Angular (Sin título de diapositiva ni cabecera) */}
       <div
         style={{
           position: 'absolute',
           top: 150,
           left: 96,
           right: 96,
-          opacity: headerEntrance,
-          transform: `translateY(${(1 - headerEntrance) * -20}px)`,
+          backgroundColor: '#FEF9C3',
+          border: '2px solid #141413',
+          borderLeft: '6px solid #D94E34',
+          borderRadius: 16,
+          padding: '20px 24px',
+          boxShadow: '0 8px 24px rgba(20, 20, 19, 0.05)',
+          opacity: heroCardEntrance,
+          transform: `translateY(${(1 - heroCardEntrance) * 15}px)`,
         }}
       >
         <div
           style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 8,
-            padding: '4px 12px',
-            backgroundColor: '#FFFFFF',
-            border: '1.5px solid #D94E34',
-            borderRadius: 6,
-            marginBottom: 12,
-            boxShadow: '0 2px 6px rgba(217, 78, 52, 0.10)',
-          }}
-        >
-          <span
-            style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 14,
-              fontWeight: 800,
-              color: '#D94E34',
-              letterSpacing: 1.5,
-            }}
-          >
-            04 / PLAN ACCIONABLE
-          </span>
-        </div>
-        <h1
-          style={{
-            fontFamily: "'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif",
-            fontSize: 56,
-            fontWeight: 900,
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+            fontSize: 22,
+            fontWeight: 800,
             color: '#141413',
-            margin: 0,
-            lineHeight: 1.08,
-            letterSpacing: '-0.035em',
+            lineHeight: 1.3,
+            textAlign: 'center',
           }}
         >
-          Las 4 Leyes del Hábito
-        </h1>
+          Una sola pequeña victoria desata una cascada de cambios automáticos
+        </div>
       </div>
 
-      {/* 2. Cajón de las 4 Fichas Cinéticas en Cascada */}
+      {/* 2. Casos Reales del Libro (Lista Escalonada en Amarillo Pálido) */}
       <div
         style={{
           position: 'absolute',
-          top: 310,
+          top: 275,
           left: 96,
           right: 96,
           display: 'flex',
           flexDirection: 'column',
-          gap: 18,
+          gap: 14,
         }}
       >
-        {LAWS.map((law, index) => {
-          const isTriggered = localFrame >= law.triggerFrame;
-          const lawProgress = spring({
-            frame: Math.max(0, localFrame - law.triggerFrame),
+        {KEYSTONE_EXAMPLES.map((item) => {
+          const itemSpring = spring({
+            frame: Math.max(0, localFrame - item.triggerFrame),
             fps,
             config: SPRING_SNAPPY,
           });
 
-          const badgeProgress = law.highlightBadge
-            ? spring({
-                frame: Math.max(0, localFrame - law.triggerFrame - 6),
-                fps,
-                config: SPRING_SNAPPY,
-              })
-            : 0;
-
           return (
             <div
-              key={law.num}
+              key={item.num}
               style={{
+                backgroundColor: '#FEF9C3',
+                border: '2px solid #141413',
+                borderRadius: 16,
+                padding: '16px 22px',
+                boxShadow: '0 6px 18px rgba(20, 20, 19, 0.05)',
+                opacity: itemSpring,
+                transform: `translateX(${(1 - itemSpring) * -25}px)`,
                 position: 'relative',
-                backgroundColor: '#FFFFFF',
-                border: isTriggered
-                  ? '2px solid #D94E34'
-                  : '1.5px solid rgba(45, 43, 40, 0.12)',
-                borderLeft: isTriggered
-                  ? '8px solid #D94E34'
-                  : '1.5px solid rgba(45, 43, 40, 0.12)',
-                borderRadius: 18,
-                padding: '24px 28px',
-                boxShadow: isTriggered
-                  ? '0 16px 40px rgba(217, 78, 52, 0.10), 0 2px 6px rgba(0, 0, 0, 0.03)'
-                  : '0 6px 18px rgba(45, 43, 40, 0.04)',
-                opacity: lawProgress,
-                transform: `translateX(${(1 - lawProgress) * 50}px) scale(${isTriggered ? 1.02 : 0.98})`,
-                transformOrigin: 'left center',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-                <div
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 26,
-                    fontWeight: 900,
-                    color: isTriggered ? '#D94E34' : '#94A3B8',
-                    minWidth: 44,
-                  }}
-                >
-                  {law.num}
-                </div>
-                <div>
-                  <div
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: 6,
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <span
                     style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 12,
-                      marginBottom: 4,
+                      fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
+                      fontSize: 14,
+                      fontWeight: 800,
+                      color: '#FFFFFF',
+                      backgroundColor: '#D94E34',
+                      padding: '2px 8px',
+                      borderRadius: 6,
                     }}
                   >
-                    <span
-                      style={{
-                        fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
-                        fontSize: 27,
-                        fontWeight: 900,
-                        color: isTriggered ? '#141413' : '#64748B',
-                        letterSpacing: '-0.02em',
-                      }}
-                    >
-                      {law.title}
-                    </span>
-                    <span
-                      style={{
-                        fontFamily: "'JetBrains Mono', monospace",
-                        fontSize: 11,
-                        fontWeight: 700,
-                        color: isTriggered ? '#D94E34' : '#94A3B8',
-                        backgroundColor: isTriggered
-                          ? 'rgba(217, 78, 52, 0.10)'
-                          : '#F1F5F9',
-                        padding: '2px 8px',
-                        borderRadius: 4,
-                      }}
-                    >
-                      {law.tag}
-                    </span>
-                  </div>
-                  <div
+                    {item.num}
+                  </span>
+                  <span
                     style={{
-                      fontFamily: "'Inter', sans-serif",
-                      fontSize: 15,
-                      color: '#575550',
-                      lineHeight: 1.3,
+                      fontFamily: "'Plus Jakarta Sans', sans-serif",
+                      fontSize: 19,
+                      fontWeight: 800,
+                      color: '#141413',
                     }}
                   >
-                    {law.desc}
-                  </div>
+                    {item.title}
+                  </span>
                 </div>
+
+                {item.highlightBadge && (
+                  <span
+                    style={{
+                      backgroundColor: '#141413',
+                      color: '#FEF9C3',
+                      fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
+                      fontSize: 12,
+                      fontWeight: 800,
+                      padding: '4px 10px',
+                      borderRadius: 20,
+                    }}
+                  >
+                    {item.highlightBadge}
+                  </span>
+                )}
               </div>
 
-              {law.highlightBadge && (
-                <div
-                  style={{
-                    padding: '8px 14px',
-                    backgroundColor: '#D94E34',
-                    borderRadius: 10,
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 13,
-                    fontWeight: 900,
-                    color: '#FFFFFF',
-                    letterSpacing: 0.5,
-                    boxShadow: '0 4px 14px rgba(217, 78, 52, 0.35)',
-                    opacity: badgeProgress,
-                    transform: `scale(${badgeProgress})`,
-                    transformOrigin: 'right center',
-                  }}
-                >
-                  {law.highlightBadge}
-                </div>
-              )}
+              <div
+                style={{
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: 14,
+                  color: '#575550',
+                  lineHeight: 1.45,
+                }}
+              >
+                {item.desc}
+              </div>
             </div>
           );
         })}
+      </div>
+
+      {/* 3. Visualización del Efecto Dominó en Cadena (Sin barra de título redundante) */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 760,
+          left: 96,
+          right: 96,
+          backgroundColor: '#FEF9C3',
+          border: '2px solid #D94E34',
+          borderRadius: 20,
+          padding: '22px 28px',
+          boxShadow: '0 12px 32px rgba(217, 78, 52, 0.08)',
+        }}
+      >
+        {/* 4 Fichas de Dominó Inclinándose */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 12,
+          }}
+        >
+          {[
+            { label: 'Hábito Angular', sub: 'Paso 1' },
+            { label: 'Mayor Claridad', sub: 'Paso 2' },
+            { label: 'Nuevos Hábitos', sub: 'Paso 3' },
+            { label: 'Transformación', sub: 'Meta' },
+          ].map((domino, idx) => {
+            const tilt = interpolate(
+              dominoProgress,
+              [idx * 0.2, (idx + 1) * 0.25],
+              [0, 10],
+              CLAMP_EXTRAPOLATION
+            );
+
+            return (
+              <div
+                key={domino.label}
+                style={{
+                  flex: 1,
+                  backgroundColor: idx === 0 ? '#D94E34' : '#F8F7F4',
+                  color: idx === 0 ? '#FFFFFF' : '#141413',
+                  border: idx === 0 ? 'none' : '1.5px solid #E5E2DC',
+                  borderRadius: 12,
+                  padding: '16px 8px',
+                  textAlign: 'center',
+                  transform: `rotate(${tilt}deg) translateY(${tilt > 0 ? 4 : 0}px)`,
+                  transformOrigin: 'bottom center',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.06)',
+                }}
+              >
+                <div
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 10,
+                    fontWeight: 800,
+                    opacity: 0.8,
+                    marginBottom: 4,
+                  }}
+                >
+                  {domino.sub}
+                </div>
+                <div
+                  style={{
+                    fontFamily: "'Plus Jakarta Sans', sans-serif",
+                    fontSize: 13,
+                    fontWeight: 800,
+                    lineHeight: 1.2,
+                  }}
+                >
+                  {domino.label}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

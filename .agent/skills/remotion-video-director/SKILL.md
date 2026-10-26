@@ -48,6 +48,16 @@ If the official Remotion skill is installed, leverage it for API-specific detail
 
 ## Four-Phase Workflow
 
+### Phase 0: Book Summary Pipeline (@en1minuto.es) — Mandatory Visual Questionnaire Gate
+
+When the user requests a video for a book (providing a book title and/or a Goodreads URL), you MUST follow the 5-step @en1minuto.es Book Pipeline defined in AGENTS.md:
+1. Run 
+ode scripts/book-ingest.mjs --query "<Title>" --url "<Goodreads_URL>" to populate src/data/book-dossier.json and download the book cover.
+2. MANDATORY QUESTIONNAIRE GATE: Call the sk_question tool BEFORE generating audio or coding scenes so the user chooses which graphic component to integrate into each of the 5 slides (ComparisonBattle, VectorLoopCircuit, ExponentialGrowthChart, KineticCard, Efecto Domino, CtaEndCard). STOP and WAIT for the user response.
+3. Run 
+ode scripts/elevenlabs-sync.mjs to synthesize audio and word timestamps.
+4. Build Scene1.tsx–Scene5.tsx enforcing: (a) NO bottom banner — only <OneMinuteStopwatch /> running at ottom: 48px with light animation, (b) pale yellow cards (#FEF9C3 / #FFFBEB), and (c) clean integrated card titles (Plus Jakarta Sans 800).
+
 ### Phase 1: Strategic Framing
 
 **Goal**: Understand what the user needs through conversation, then assemble expert perspectives.

@@ -87,19 +87,19 @@ export const ComparisonBattle: React.FC<ComparisonBattleProps> = ({
       {/* 1. Opción A (Perdedora / Error común) */}
       <div
         style={{
-          backgroundColor: '#FFFFFF',
+          backgroundColor: '#FFFBEB',
           border: isBattled
             ? '1.5px solid #CBD5E1'
-            : '1.5px solid rgba(45, 43, 40, 0.15)',
+            : '2px solid #141413',
           borderRadius: 18,
           padding: '24px 28px',
           boxShadow: isBattled
             ? '0 4px 12px rgba(0, 0, 0, 0.02)'
-            : '0 10px 30px rgba(45, 43, 40, 0.06)',
+            : '0 10px 30px rgba(20, 20, 19, 0.06)',
           opacity: interpolate(
             battleSpring,
             [0, 1],
-            [springA, 0.42],
+            [springA, 0.48],
             CLAMP_EXTRAPOLATION
           ),
           transform: `scale(${interpolate(
@@ -121,11 +121,10 @@ export const ComparisonBattle: React.FC<ComparisonBattleProps> = ({
         >
           <span
             style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 12,
+              fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
+              fontSize: 13,
               fontWeight: 800,
               color: isBattled ? '#94A3B8' : '#DC2626',
-              letterSpacing: 1.2,
               textDecoration: isBattled ? 'line-through' : 'none',
             }}
           >
@@ -134,9 +133,9 @@ export const ComparisonBattle: React.FC<ComparisonBattleProps> = ({
           {isBattled && (
             <span
               style={{
-                fontFamily: "'Inter', sans-serif",
+                fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
                 fontSize: 12,
-                fontWeight: 700,
+                fontWeight: 800,
                 color: '#DC2626',
                 backgroundColor: 'rgba(220, 38, 38, 0.10)',
                 padding: '3px 8px',
@@ -160,7 +159,7 @@ export const ComparisonBattle: React.FC<ComparisonBattleProps> = ({
               style={{
                 fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
                 fontSize: 32,
-                fontWeight: 900,
+                fontWeight: 800,
                 color: isBattled ? '#64748B' : '#141413',
                 letterSpacing: '-0.02em',
                 textDecoration: isBattled ? 'line-through' : 'none',
@@ -197,18 +196,18 @@ export const ComparisonBattle: React.FC<ComparisonBattleProps> = ({
         </div>
       </div>
 
-      {/* 2. Opción B (Ganadora / Solución de Alto Rendimiento) */}
+      {/* 2. Opción B (Ganadora / Solución de Alto Rendimiento en Amarillo Pálido) */}
       <div
         style={{
-          backgroundColor: '#FFFFFF',
+          backgroundColor: '#FEF9C3',
           border: isBattled
             ? `2.5px solid ${accentColor}`
-            : '1.5px solid rgba(45, 43, 40, 0.15)',
+            : '2px solid #141413',
           borderRadius: 20,
           padding: '28px 32px',
           boxShadow: isBattled
             ? `0 20px 45px rgba(217, 78, 52, 0.14), 0 2px 8px rgba(0, 0, 0, 0.04)`
-            : '0 10px 30px rgba(45, 43, 40, 0.06)',
+            : '0 10px 30px rgba(20, 20, 19, 0.06)',
           opacity: springB,
           transform: `scale(${interpolate(
             battleSpring,
@@ -229,11 +228,10 @@ export const ComparisonBattle: React.FC<ComparisonBattleProps> = ({
         >
           <span
             style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 13,
+              fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
+              fontSize: 14,
               fontWeight: 800,
               color: accentColor,
-              letterSpacing: 1.5,
             }}
           >
             {tagB}
@@ -241,14 +239,13 @@ export const ComparisonBattle: React.FC<ComparisonBattleProps> = ({
           {isBattled && (
             <span
               style={{
-                fontFamily: "'JetBrains Mono', monospace",
+                fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
                 fontSize: 12,
                 fontWeight: 800,
                 color: '#FFFFFF',
                 backgroundColor: accentColor,
                 padding: '4px 10px',
                 borderRadius: 6,
-                letterSpacing: 0.5,
               }}
             >
               EFECTO VERIFICADO ✓

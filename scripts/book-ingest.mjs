@@ -86,10 +86,12 @@ async function safeFetch(url, options = {}, timeoutMs = 8500) {
 /**
  * 1. SCRAPER DE GOODREADS (Ficha del libro JSON-LD + Citas más votadas)
  */
-async function scrapeGoodreads(query) {
+async function scrapeGoodreads(query, directUrl = null) {
   const result = {
     source: 'goodreads',
     bookUrl: null,
+    title: null,
+    author: null,
     ratingValue: null,
     ratingCount: null,
     reviewCount: null,
@@ -100,15 +102,23 @@ async function scrapeGoodreads(query) {
   };
 
   try {
-    const searchUrl = `https://www.goodreads.com/search?q=${encodeURIComponent(query)}`;
-    const searchRes = await safeFetch(searchUrl);
-    if (searchRes && searchRes.ok) {
-      const searchHtml = await searchRes.text();
-      const bookHrefMatch = searchHtml.match(
-        /href="(\/book\/show\/[^"?#]+)(?:\?[^"]*)?"/i
-      );
-      if (bookHrefMatch) {
-        result.bookUrl = `https://www.goodreads.com${bookHrefMatch[1]}`;
+    const isDirectGoodreads =
+      directUrl ||
+      /^https?:\/\/(www\.)?goodreads\.com\/book\/show\//i.test((query || '').trim());
+
+    if (isDirectGoodreads) {
+      result.bookUrl = (directUrl || query).trim();
+    } else if (query && !query.startsWith('http')) {
+      const searchUrl = `https://www.goodreads.com/search?q=${encodeURIComponent(query)}`;
+      const searchRes = await safeFetch(searchUrl);
+      if (searchRes && searchRes.ok) {
+        const searchHtml = await searchRes.text();
+        const bookHrefMatch = searchHtml.match(
+          /href="(\/book\/show\/[^"?#]+)(?:\?[^"]*)?"/i
+        );
+        if (bookHrefMatch) {
+          result.bookUrl = `https://www.goodreads.com${bookHrefMatch[1]}`;
+        }
       }
     }
 
@@ -124,6 +134,13 @@ async function scrapeGoodreads(query) {
         if (ldMatch) {
           try {
             const ld = JSON.parse(ldMatch[1].trim());
+            if (ld.name) {
+              result.title = stripHtmlAndClean(ld.name);
+            }
+            if (ld.author) {
+              const a = Array.isArray(ld.author) ? ld.author[0] : ld.author;
+              result.author = stripHtmlAndClean(a?.name || '');
+            }
             if (ld.aggregateRating) {
               result.ratingValue = Number(ld.aggregateRating.ratingValue) || null;
               result.ratingCount = Number(ld.aggregateRating.ratingCount) || null;
@@ -151,25 +168,28 @@ async function scrapeGoodreads(query) {
     }
 
     // Scraping de citas verificadas en Goodreads Quotes
-    const quotesUrl = `https://www.goodreads.com/quotes/search?q=${encodeURIComponent(query)}&commit=Search`;
-    const quotesRes = await safeFetch(quotesUrl);
-    if (quotesRes && quotesRes.ok) {
-      const quotesHtml = await quotesRes.text();
-      const quoteBlocks = [
-        ...quotesHtml.matchAll(
-          /<div class="quoteText">([\s\S]*?)<\/div>/gi
-        ),
-      ];
-      for (const match of quoteBlocks) {
-        const rawBlock = match[1].split(/<span class="authorOrTitle">/i)[0];
-        const cleaned = stripHtmlAndClean(rawBlock)
-          .replace(/^["“«]+|["”»]+$/g, '')
-          .replace(/\s*―.*$/g, '')
-          .trim();
-        if (cleaned.length >= 25 && cleaned.length <= 210) {
-          result.quotes.push(cleaned);
+    const quotesQuery = result.title || (query && !query.startsWith('http') ? query : '');
+    if (quotesQuery) {
+      const quotesUrl = `https://www.goodreads.com/quotes/search?q=${encodeURIComponent(quotesQuery)}&commit=Search`;
+      const quotesRes = await safeFetch(quotesUrl);
+      if (quotesRes && quotesRes.ok) {
+        const quotesHtml = await quotesRes.text();
+        const quoteBlocks = [
+          ...quotesHtml.matchAll(
+            /<div class="quoteText">([\s\S]*?)<\/div>/gi
+          ),
+        ];
+        for (const match of quoteBlocks) {
+          const rawBlock = match[1].split(/<span class="authorOrTitle">/i)[0];
+          const cleaned = stripHtmlAndClean(rawBlock)
+            .replace(/^["“«]+|["”»]+$/g, '')
+            .replace(/\s*―.*$/g, '')
+            .trim();
+          if (cleaned.length >= 25 && cleaned.length <= 210) {
+            result.quotes.push(cleaned);
+          }
+          if (result.quotes.length >= 6) break;
         }
-        if (result.quotes.length >= 6) break;
       }
     }
   } catch {
@@ -422,6 +442,78 @@ const CANONICAL_BOOK_ENRICHMENT = {
       },
     ],
   },
+  'el-poder-de-los-habitos': {
+    titleEs: 'El poder de los hábitos',
+    originalTitle: 'The Power of Habit: Why We Do What We Do in Life and Business',
+    author: 'Charles Duhigg',
+    publishYear: 2012,
+    pages: 375,
+    readingTimeHours: 4.8,
+    goodreadsRating: 4.13,
+    goodreadsRatingsCount: '585K',
+    categoryTag: 'NEUROCIENCIA CONDUCTUAL · MIT LABS',
+    coreThesis:
+      'Más del cuarenta por ciento de tus acciones diarias no son decisiones conscientes, sino hábitos automáticos grabados en tus ganglios basales. Para reprogramarlos debes aplicar la Regla de Oro: mantener la señal y la recompensa, transformando únicamente la rutina.',
+    mythVsReality: {
+      mythLabel: 'VOLUNTAD BRUTA',
+      realityLabel: 'BUCLE NEURONAL',
+      mythExplanation: 'Confiar en el autocontrol y la fuerza de voluntad consciente',
+      realityExplanation: 'Reprogramar el bucle biológico: Señal, Rutina y Recompensa',
+    },
+    mathematicalProof: {
+      dailyGainPct: 40,
+      annualMultiplier: 5.0,
+      declineMultiplier: 0.2,
+      formulaLabel: '40% ACCIONES AUTOMÁTICAS (DUKE UNIV)',
+    },
+    verifiedQuotes: [
+      {
+        text: 'La regla de oro del cambio de hábitos: no puedes extinguir un mal hábito, solo puedes transformarlo.',
+        highlightPhrases: ['regla de oro', 'no puedes extinguir', 'transformarlo'],
+        chapter: 'Capítulo 3 · La regla de oro del cambio de hábitos',
+      },
+      {
+        text: 'Los hábitos son lo que tú decides que sean. Una vez que entiendes que pueden cambiar, tienes la libertad de rediseñarlos.',
+        highlightPhrases: ['libertad de rediseñarlos', 'los hábitos son'],
+        chapter: 'Capítulo 9 · La neurología del libre albedrío',
+      },
+      {
+        text: 'Los campeones no hacen cosas extraordinarias. Hacen cosas ordinarias, pero las hacen en automático, sin pensar.',
+        highlightPhrases: ['en automático', 'sin pensar', 'campeones'],
+        chapter: 'Capítulo 4 · Los hábitos angulares de Paul O\'Neill',
+      },
+    ],
+    actionableLaws: [
+      {
+        index: 'PASO 01',
+        title: 'Aislar la Señal (Disparador)',
+        rule: 'Identifica la hora, el lugar, el estado emocional y las personas que activan tu piloto automático.',
+        impactPct: 91,
+        highlight: true,
+      },
+      {
+        index: 'PASO 02',
+        title: 'Sustituir la Rutina (Acción)',
+        rule: 'Inserta una conducta constructiva que entregue el mismo alivio sin cambiar el disparador.',
+        impactPct: 95,
+        highlight: true,
+      },
+      {
+        index: 'PASO 03',
+        title: 'Alimentar el Anhelo (Dopamina)',
+        rule: 'Elige una recompensa inmediata que satisfaga el anhelo neurológico genuino.',
+        impactPct: 88,
+        highlight: false,
+      },
+      {
+        index: 'PASO 04',
+        title: 'Hábito Angular (Efecto Dominó)',
+        rule: 'Prioriza una pequeña victoria (ej. ejercicio o registro) que arrastre al resto del sistema.',
+        impactPct: 94,
+        highlight: true,
+      },
+    ],
+  },
 };
 
 /**
@@ -466,21 +558,47 @@ async function downloadBookCover(coverUrl, slug, bookMeta) {
 async function main() {
   const args = process.argv.slice(2);
   const queryIdx = args.indexOf('--query');
-  const query =
-    queryIdx !== -1 && args[queryIdx + 1]
-      ? args[queryIdx + 1]
-      : 'Atomic Habits James Clear';
+  const urlIdx = args.indexOf('--url');
 
-  console.log(`📚 [book-ingest] Iniciando scraping multi-fuente para: "${query}"...`);
+  let directUrl = urlIdx !== -1 && args[urlIdx + 1] ? args[urlIdx + 1] : null;
+  let rawQuery = queryIdx !== -1 && args[queryIdx + 1] ? args[queryIdx + 1] : '';
 
-  const [goodreads, catalog, wikiExtract] = await Promise.all([
-    scrapeGoodreads(query),
-    fetchOpenLibraryAndGoogleBooks(query),
-    fetchWikipediaSummary(query),
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    if (arg === '--query' || arg === '--url') {
+      i++;
+      continue;
+    }
+    if (/^https?:\/\/(www\.)?goodreads\.com/i.test(arg)) {
+      if (!directUrl) directUrl = arg;
+    } else if (!rawQuery) {
+      rawQuery = arg;
+    }
+  }
+
+  const query = rawQuery || (directUrl ? '' : 'Atomic Habits James Clear');
+  const targetDesc = query && directUrl ? `"${query}" + URL: ${directUrl}` : (query || directUrl);
+
+  console.log(`📚 [book-ingest] Iniciando scraping multi-fuente para: ${targetDesc}...`);
+
+  const goodreads = await scrapeGoodreads(query, directUrl);
+  const effectiveQuery = query || goodreads.title || 'Atomic Habits James Clear';
+
+  const [catalog, wikiExtract] = await Promise.all([
+    fetchOpenLibraryAndGoogleBooks(effectiveQuery),
+    fetchWikipediaSummary(effectiveQuery),
   ]);
 
   const isAtomicHabits = /atomic habits|h[aá]bitos at[oó]micos|james clear/i.test(query);
-  const slug = isAtomicHabits ? 'habitos-atomicos' : slugify(catalog.title || query);
+  const isPowerOfHabit =
+    /power of habit|poder de los h[aá]bitos|charles duhigg|12609433/i.test(
+      `${query} ${directUrl || ''}`
+    );
+  const slug = isAtomicHabits
+    ? 'habitos-atomicos'
+    : isPowerOfHabit
+    ? 'el-poder-de-los-habitos'
+    : slugify(catalog.title || query);
   const enrichment = CANONICAL_BOOK_ENRICHMENT[slug] || null;
 
   const rawTokenEstimate = Math.ceil(

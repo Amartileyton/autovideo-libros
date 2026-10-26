@@ -1,74 +1,56 @@
-# AutoVideo Book Studio — Motor Programático de Shorts de Resúmenes de Libros (60–65s · Remotion + Gemini + ElevenLabs)
+# AutoVideo Book Studio (`@en1minuto.es`) — Motor Programático de Shorts de Resúmenes de Libros (60–65s · Remotion + Goodreads + ElevenLabs)
 
-Estudio automatizado de generación de vídeos verticales de resúmenes de libros (**9:16 · 1080×1920 @ 30 fps · 60–65 segundos**) construido sobre **Remotion 4**, **Scraping Multi-Fuente con Compresión Determinista Zero-Token-Waste**, **Guionista Google Gemini (`gemini-2.5-flash`)**, **ElevenLabs Audio-First Sync** y el sistema de primitivas vectoriales **`BookBlueprints` + `@resultaaquee`**.
+Estudio automatizado de generación de vídeos verticales de resúmenes de libros (**9:16 · 1080×1920 @ 30 fps · 60–65 segundos**) construido sobre **Remotion 4**, **Ingesta Directa desde Goodreads (`scripts/book-ingest.mjs`)**, **Cuestionario Interactivo de Gráficos por Diapositiva (`ask_question`)**, **ElevenLabs Audio-First Sync** y el sistema de componentes cinéticos en **Amarillo Pálido (`#FEF9C3`)**.
 
 ---
 
-## 1. Arquitectura del Pipeline (Ahorro Extremo de Tokens ~90%)
+## 1. Workflow Principal de Creación a partir de Título + Enlace de Goodreads
 
 ```mermaid
 flowchart LR
-    A["Fase 1: Scraping Multi-Fuente\n(Goodreads + OpenLibrary + Wiki)"] --> B["Fase 2: Normalizador Local (0 Tokens)\nsrc/data/book-dossier.json (<900 tokens)"]
-    B --> C["Fase 3: Guionista 65s (Gemini / Local)\nsrc/data/scenes.json (5 escenas, ~180 palabras)"]
-    C --> D["Fase 4: Audio-First Sync\nElevenLabs + Timestamps (64.2s / 1926 frames)"]
-    D --> E["Fase 5: Remotion Vector Engine\nBook3DStage + Rough Highlighter + Osciloscopio"]
+    A["Fase 1: Ingesta Goodreads\nnode scripts/book-ingest.mjs --url ..."] --> B["Fase 2: BLOQUEO OBLIGATORIO\nCuestionario Visual por Diapositiva (ask_question)"]
+    B --> C["Fase 3: Audio-First Sync\nnode scripts/elevenlabs-sync.mjs"]
+    C --> D["Fase 4: Escenas 1..5\nTarjetas Amarillo Pálido + Reloj Solitario"]
+    D --> E["Fase 5: QA Gate & Stills\nnpm run qa:gate + remotion still"]
 ```
 
-1. **Fase 1 & 2 — Ingesta Multi-Fuente y Normalizador «Zero-Token-Waste» ([`scripts/book-ingest.mjs`](src/data/book-dossier.json))**:
-   - Extrae de **Goodreads** (JSON-LD + `/quotes`), **Open Library**, **Google Books** y **Wikipedia** la puntuación real, número de reseñas, páginas, portada en alta resolución, citas más votadas y leyes prácticas.
-   - Limpia HTML, anuncios y duplicados en local sin consumir un solo token de LLM, generando [`src/data/book-dossier.json`](src/data/book-dossier.json) (**~890 tokens netos**, ahorrando ~90% de tokens frente al HTML bruto) y descargando la portada en `public/assets/books/<slug>-cover.jpg`.
-2. **Fase 3 — Guionista de Retención en 5 Escenas ([`scripts/book-scriptwriter.mjs`](scripts/book-scriptwriter.mjs))**:
-   - Conecta con **Google Gemini Free Tier (`gemini-2.5-flash`)** o utiliza su compilador determinista local de 0 tokens si no se define API key.
-   - Estructura el resumen en **5 escenas (~180 palabras + pausas prosódicas `[PAUSA 0.4s]`)** calibradas para durar entre **62 y 65 segundos**.
-   - **Dicción TTS vs Telemetría Visual**: Todos los números en `text` se escriben en letra (`"uno por ciento"`, `"treinta y siete coma setenta y ocho veces"`) mientras los gráficos vectoriales muestran las cifras técnicas (`"+1%"`, `"37.78x"`, `"★ 4.38"`).
-3. **Fase 4 — Sincronización Audio-First ([`scripts/elevenlabs-sync.mjs`](scripts/elevenlabs-sync.mjs))**:
-   - Sintetiza las 5 pistas MP3 con la voz de Leo (`es-ES-AlvaroNeural` vía edge-tts o `RwzBDEn5f6FIgpAjH9YN` en ElevenLabs) y calcula las marcas de tiempo palabra por palabra en [`public/audio/info.json`](public/audio/info.json).
-4. **Fase 5 — Edición Vectorial Animada ([`src/components/blueprints/BookBlueprints.tsx`](src/components/blueprints/BookBlueprints.tsx))**:
-   - **`<Book3DStage />`**: Aparejo isométrico 2.5D del libro con portada real, lomo volumétrico, bloque de páginas proporcional, levitación Perlin (`noise2D`) y anillo CAD con morphing `flubber`.
-   - **`<EditorialExcerptHighlighter />`**: Hoja de papel técnico cálido (`#F8F7F4`) con trazos de rotulador físico `roughjs` situados **detrás del texto serif y encima del papel**, revelados de izquierda a derecha en sincronía con la voz.
-   - **`<HabitLoopDiagram />` & `<ActionableLawsDrawer />`**: Diagrama neuronal de 4 fases y cajón escalonado de las leyes prácticas del libro con barras de eficacia y `VectorSelectionBox`.
-   - **`<BookVerdictScorecard />`**: Ficha de síntesis final con cita de identidad y telemetría verificada de Goodreads.
+1. **Fase 1 — Ingesta Directa desde Goodreads ([`scripts/book-ingest.mjs`](scripts/book-ingest.mjs))**:
+   ```bash
+   node scripts/book-ingest.mjs --query "El poder de los hábitos" --url "https://www.goodreads.com/book/show/12609433-the-power-of-habit"
+   ```
+   - Extrae de **Goodreads** (JSON-LD), **Google Books** y **Open Library** el autor, puntuación real, número de votos, páginas y descarga la portada oficial en `public/assets/books/<slug>-cover.jpg`.
+   - Genera [`src/data/book-dossier.json`](src/data/book-dossier.json) sin desperdiciar tokens.
+
+2. **Fase 2 — Cuestionario Interactivo de Gráficos por Diapositiva (`ask_question` — OBLIGATORIO)**:
+   - **Antes** de generar el audio en ElevenLabs o programar `Scene1.tsx`–`Scene5.tsx`, el agente lanza obligatoriamente la herramienta `ask_question` para decidir con el usuario qué gráfico cinético integrar en cada una de las 5 diapositivas:
+     - **Diapositiva 1**: `Portada 2.5D + LiveCounter + ComparisonBattle (Mito vs Realidad)`
+     - **Diapositiva 2**: `VectorLoopCircuit (Circuito de 4 fases con sombreado activo sincronizado a la voz)` o `ExponentialGrowthChart`
+     - **Diapositiva 3**: `KineticCard con Cita Subrayada + Diagrama de Sustitución (Rutina Vieja tachada vs Nueva Rutina)`
+     - **Diapositiva 4**: `Cascada de 3 Casos Reales en Tarjetas Amarillo Pálido + Efecto Dominó en Cadena`
+     - **Diapositiva 5**: `KineticCard Manifiesto + Ficha Goodreads + CtaEndCard con Cronómetro Hero`
+
+3. **Fase 3 — Sincronización Audio-First ([`scripts/elevenlabs-sync.mjs`](scripts/elevenlabs-sync.mjs))**:
+   - Sintetiza las 5 pistas MP3 con la voz canónica de Leo (`RwzBDEn5f6FIgpAjH9YN` en ElevenLabs) y calcula los timestamps palabra por palabra en [`public/audio/info.json`](public/audio/info.json).
+
+4. **Fase 4 — Identidad Visual Consolidada `@en1minuto.es`**:
+   - **Sin Banner Inferior**: Se eliminó el banner inferior completo; en `bottom: 48px` corre **únicamente el reloj `<OneMinuteStopwatch />`** con una animación ligera continua de latido y balanceo (`gentlePulse` + `gentleSwayDeg`).
+   - **Tarjetas en Amarillo Pálido (`#FEF9C3` / `#FFFBEB`)**: Todas las tarjetas destacan sobre el papel marfil `#F8F7F4` con relleno amarillo pálido cálido y bordes nítidos (`2px solid #141413` o `#D94E34`).
+   - **Títulos de Tarjetas Limpios**: Títulos integrados en la cabecera interna de cada tarjeta en `Plus Jakarta Sans` 800 sin etiquetas flotantes superpuestas.
+   - **Subtítulos `Nunito` 800**: Fuente redondeada de alta legibilidad sincronizada palabra por palabra sin vibraciones.
 
 ---
 
-## 2. Las 5 Escenas del Formato Resumen de Libro (64.2s · 1926 Fotogramas)
+## 2. Comandos de Validación y Renderizado
 
-| Escena | Ventana | Blueprint / Modo | Contenido Visual y Narrativo ( Caso Demo: *«Hábitos Atómicos»* ) |
-| :--- | :---: | :--- | :--- |
-| **Escena 1** | `00s – 14s` | `DARK_CAD_XRAY` | **La Trampa de las Metas**: `Book3DStage` 2.5D + `ConceptHypothesisScoreboard` (`[METAS̸]` vs `[SISTEMAS]`) + Cotas quebradas. |
-| **Escena 2** | `14s – 26s` | `CHRONO_OSCILLOSCOPE` | **La Matemática del 1%**: Fórmula `1.01^365 = 37.78x` + Dianas `TargetReticle` + Osciloscopio de doble curva en vivo (`LiveTelemetryGraph`). |
-| **Escena 3** | `26s – 39s` | `EDITORIAL_PAPER` | **Pasaje Central y Bucle Neuronal**: `EditorialExcerptHighlighter` con subrayado físico `roughjs` + `HabitLoopDiagram` (`Señal -> Anhelo -> Respuesta -> Recompensa`). |
-| **Escena 4** | `39s – 52s` | `BLUEPRINT_BLUE` | **Las 4 Leyes Accionables**: `ActionableLawsDrawer` desplegando las 4 Leyes del Cambio y la Regla de los 2 Minutos. |
-| **Escena 5** | `52s – 64.2s` | `TOPOLOGY_WIREFRAME` | **Votos de Identidad y Veredicto**: `Book3DStage` + `BookVerdictScorecard` (`★ 4.38 · 1.94M reseñas · 4.2h lectura`). |
-
----
-
-## 3. Uso Rápido
-
-### 1. Ejecutar el Pipeline Completo para un Libro
 ```bash
-# 1. Scraping multi-fuente (Goodreads + OpenLibrary + Wiki) y compresión a <900 tokens
-npm run book:ingest -- --query "Hábitos Atómicos James Clear"
+# 1. Verificar tipos TypeScript y las 16 reglas del Critic Gate
+npm.cmd run typecheck
+npm.cmd run qa:gate
 
-# 2. Generación del guion de 5 escenas (Gemini 2.5 Flash o compilador local 0 tokens)
-npm run book:script
+# 2. Renderizar fotogramas de verificación rápida (Stills)
+npx.cmd remotion still src/index.ts MainVideo out/preview-s1.png --frame=360
 
-# 3. Síntesis de voz y alineación palabra por palabra (60-65s)
-npm run sync:audio
-```
-*(O ejecuta todo de una vez con `npm run book:pipeline`).*
-
-### 2. Validar Calidad y Critic Gate (16 puntos)
-```bash
-npm run typecheck
-npm run qa:gate
-```
-
-### 3. Previsualizar en Vivo o Renderizar MP4
-```bash
-# Abrir Remotion Studio interactivo (http://localhost:3000)
-npm run dev
-
-# Renderizar el Short completo en MP4 (1080x1920 @ 30fps)
-npm run build
+# 3. Abrir Remotion Studio o renderizar MP4 final
+npm.cmd run dev
+npm.cmd run build
 ```

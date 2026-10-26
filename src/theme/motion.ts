@@ -249,8 +249,8 @@ export const BLUEPRINT_THEMES: Record<BlueprintModeId, BlueprintTheme> = {
     id: 'EDITORIAL_PAPER',
     name: 'Papel Técnico Editorial',
     surface: '#F8F7F4',
-    surfaceRadialGlow: '#FFFFFF',
-    surfaceElevated: '#FFFFFF',
+    surfaceRadialGlow: '#FFFBEB',
+    surfaceElevated: '#FEF9C3',
     gridMajor: '#E5E2DC',
     gridMinor: '#EFECE6',
     ink: '#141413',
@@ -271,7 +271,9 @@ export const BLUEPRINT_THEMES: Record<BlueprintModeId, BlueprintTheme> = {
  */
 export const PALETTE = {
   surface: '#F8F7F4',
-  surfaceElevated: '#FFFFFF',
+  surfaceElevated: '#FEF9C3',
+  cardPaleYellow: '#FEF9C3',
+  cardSoftCream: '#FFFBEB',
   surfaceMuted: '#EFECE6',
   gridLine: '#E5E2DC',
   ink: '#141413',

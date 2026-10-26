@@ -1,16 +1,14 @@
 import React from 'react';
 import {
-  interpolate,
-  spring,
   useCurrentFrame,
   useVideoConfig,
 } from 'remotion';
 import type { BookMetadata, BookVisualData } from '../data/schema';
-import { CLAMP_EXTRAPOLATION, SPRING_SNAPPY } from '../theme/motion';
 import {
-  ExponentialGrowthChart,
   KineticCard,
   LiveCounter,
+  VectorLoopCircuit,
+  type CircuitNode,
 } from '../components/kinetic';
 
 export interface Scene2Props {
@@ -25,36 +23,67 @@ export interface Scene2Props {
   visualData?: BookVisualData;
 }
 
+const DUHIGG_NODES: CircuitNode[] = [
+  {
+    id: 'signal',
+    num: '01',
+    label: 'SEÑAL',
+    sublabel: 'Disparador ambiental o emocional',
+    x: 170,
+    y: 130,
+    triggerFrame: 235,
+    endSpokenFrame: 278,
+  },
+  {
+    id: 'routine',
+    num: '02',
+    label: 'RUTINA',
+    sublabel: 'Conducta física, mental o emocional',
+    x: 718,
+    y: 130,
+    triggerFrame: 278,
+    endSpokenFrame: 317,
+  },
+  {
+    id: 'reward',
+    num: '03',
+    label: 'RECOMPENSA',
+    sublabel: 'Descarga neuroquímica de dopamina',
+    x: 718,
+    y: 350,
+    triggerFrame: 317,
+    endSpokenFrame: 357,
+  },
+  {
+    id: 'craving',
+    num: '04',
+    label: 'ANHELO',
+    sublabel: 'Combustible biológico del bucle',
+    x: 170,
+    y: 350,
+    triggerFrame: 357,
+    endSpokenFrame: 396,
+  },
+];
+
 /**
- * Scene 2 — La Matemática del 1% (Kinetic UI + Exponential Growth Chart)
- * Requisitos del usuario:
- * 1. Eliminadas las dos primeras cajas estáticas.
- * 2. Integrada la tarjeta hero con LiveCounter (1.00 -> 37.78x) y tipografía Plus Jakarta Sans.
- * 3. Gráfico vectorial animado de crecimiento exponencial por debajo, sincronizado con el audio de Leo.
+ * Scene 2 — El Bucle Neurológico del MIT (Kinetic UI + Vector Loop Circuit)
+ * Timestamps reales de ElevenLabs (406 frames):
+ * - 0..49: "En los laboratorios del MIT" -> Entrada de tarjeta de ganglios basales
+ * - 79..130: "cerebro ahorra energía" -> LiveCounter sube a 3 FASES
+ * - 235..278: "Una señal que lo activa," -> Estación 01 (SEÑAL) ACTIVA
+ * - 278..317: "una rutina automática" -> Estación 02 (RUTINA) ACTIVA
+ * - 317..357: "y una recompensa química" -> Estación 03 (RECOMPENSA) ACTIVA
+ * - 357..396: "que libera dopamina." -> Estación 04 (ANHELO) ACTIVA
  */
 export const Scene2: React.FC<Scene2Props> = ({
   canvasOffsetX = 1120,
   canvasOffsetY = 0,
-  enterFrame = 393,
+  enterFrame = 428,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const localFrame = Math.max(0, frame - enterFrame);
-
-  // 1. Cabecera (frame 0)
-  const headerEntrance = spring({
-    frame: localFrame,
-    fps,
-    config: SPRING_SNAPPY,
-  });
-
-  // 2. Progreso de llenado de la barra del 37.78x
-  const fillProgress = spring({
-    frame: Math.max(0, localFrame - 240),
-    fps,
-    config: { damping: 22, stiffness: 100, mass: 0.9 },
-    durationInFrames: 50,
-  });
 
   return (
     <div
@@ -69,83 +98,18 @@ export const Scene2: React.FC<Scene2Props> = ({
         boxSizing: 'border-box',
       }}
     >
-      {/* 1. Cabecera con tipografía de alta visibilidad */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 150,
-          left: 96,
-          right: 96,
-          opacity: headerEntrance,
-          transform: `translateY(${(1 - headerEntrance) * -20}px)`,
-        }}
-      >
-        <div
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 8,
-            padding: '4px 12px',
-            backgroundColor: '#FFFFFF',
-            border: '1.5px solid #D94E34',
-            borderRadius: 6,
-            marginBottom: 12,
-            boxShadow: '0 2px 6px rgba(217, 78, 52, 0.10)',
-          }}
-        >
-          <span
-            style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 14,
-              fontWeight: 800,
-              color: '#D94E34',
-              letterSpacing: 1.5,
-            }}
-          >
-            02 / INTERÉS COMPUESTO
-          </span>
-        </div>
-        <h1
-          style={{
-            fontFamily: "'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif",
-            fontSize: 56,
-            fontWeight: 900,
-            color: '#141413',
-            margin: 0,
-            lineHeight: 1.08,
-            letterSpacing: '-0.035em',
-          }}
-        >
-          La Regla del 1% Diario
-        </h1>
-      </div>
-
-      {/* 2. Tarjeta Hero Integrada con LiveCounter (1.00 -> 37.78x) */}
-      <div style={{ position: 'absolute', top: 300, left: 96, right: 96 }}>
+      {/* 1. Tarjeta Ganglios Basales (Sin título de fondo ni barra redundante) */}
+      <div style={{ position: 'absolute', top: 150, left: 96, right: 96 }}>
         <KineticCard
           enterFrame={10}
           accentBorderColor="#141413"
-          badgeText="POTENCIA COMPUESTA"
-          badgeColor="#141413"
-          padding="28px 36px"
+          badgeColor="#D94E34"
+          padding="24px 30px"
           style={{
             borderTop: '6px solid #D94E34',
             textAlign: 'center',
           }}
         >
-          <div
-            style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 13,
-              fontWeight: 800,
-              color: '#D94E34',
-              letterSpacing: 2,
-              marginBottom: 8,
-            }}
-          >
-            CAPACIDAD FINAL MULTIPLICADA
-          </div>
-
           <div
             style={{
               display: 'flex',
@@ -155,62 +119,78 @@ export const Scene2: React.FC<Scene2Props> = ({
             }}
           >
             <LiveCounter
-              from={1.0}
-              to={37.78}
-              startFrame={235}
-              durationFrames={45}
-              decimals={2}
-              suffix="x"
-              fontSize={104}
+              from={0}
+              to={3}
+              startFrame={170}
+              durationFrames={25}
+              suffix=" FASES"
+              fontSize={60}
               color="#141413"
-              fontFamily="'Plus Jakarta Sans', 'Inter', sans-serif"
             />
           </div>
 
           <div
             style={{
-              fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
-              fontSize: 22,
-              fontWeight: 800,
-              color: '#141413',
-              marginTop: 14,
-              letterSpacing: '-0.02em',
+              fontFamily: "'Inter', sans-serif",
+              fontSize: 16,
+              fontWeight: 600,
+              color: '#575550',
+              marginTop: 10,
+              lineHeight: 1.4,
             }}
           >
-            Mejor al final de un año
-          </div>
-
-          {/* Barra reactiva estilo @eldatomanda */}
-          <div
-            style={{
-              marginTop: 16,
-              width: '100%',
-              height: 10,
-              backgroundColor: 'rgba(217, 78, 52, 0.12)',
-              borderRadius: 5,
-              overflow: 'hidden',
-            }}
-          >
-            <div
-              style={{
-                width: `${interpolate(fillProgress, [0, 1], [3, 100], CLAMP_EXTRAPOLATION)}%`,
-                height: '100%',
-                backgroundColor: '#D94E34',
-                borderRadius: 5,
-              }}
-            />
+            El cerebro automatiza el bucle para ahorrar energía y liberar la corteza prefrontal
           </div>
         </KineticCard>
       </div>
 
-      {/* 3. Gráfico de Crecimiento Exponencial Animado (y = 1.01³⁶⁵) debajo de la tarjeta */}
-      <div style={{ position: 'absolute', top: 660, left: 96, right: 96 }}>
-        <ExponentialGrowthChart
-          startFrame={enterFrame}
-          width={888}
-          height={500}
+      {/* 2. Circuito Vectorial Animado del Bucle del Hábito Sincronizado a la Voz */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 380,
+          left: 96,
+          right: 96,
+        }}
+      >
+        <VectorLoopCircuit
+          nodes={DUHIGG_NODES}
+          currentFrame={localFrame}
           accentColor="#D94E34"
+          width={888}
+          height={480}
+          showTitle={false}
         />
+      </div>
+
+      {/* 3. Tarjeta Inferior con Cita Neurocientífica (Sin barra de título redundante) */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 895,
+          left: 96,
+          right: 96,
+        }}
+      >
+        <KineticCard
+          enterFrame={200}
+          accentBorderColor="#141413"
+          badgeColor="#D94E34"
+          padding="22px 28px"
+        >
+          <div
+            style={{
+              fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
+              fontSize: 22,
+              fontWeight: 700,
+              color: '#141413',
+              lineHeight: 1.38,
+              textAlign: 'center',
+            }}
+          >
+            «El anhelo es el combustible silencioso que mantiene girando el bucle en tu cerebro.»
+          </div>
+        </KineticCard>
       </div>
     </div>
   );

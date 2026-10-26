@@ -1,11 +1,14 @@
 import React from 'react';
 import {
+  Img,
+  interpolate,
   spring,
+  staticFile,
   useCurrentFrame,
   useVideoConfig,
 } from 'remotion';
 import type { BookMetadata, BookVisualData } from '../data/schema';
-import { BRAND_CONFIG, SPRING_SNAPPY } from '../theme/motion';
+import { BRAND_CONFIG, CLAMP_EXTRAPOLATION, SPRING_SNAPPY } from '../theme/motion';
 import { CtaEndCard, KineticCard } from '../components/kinetic';
 
 export interface Scene5Props {
@@ -21,25 +24,26 @@ export interface Scene5Props {
 }
 
 /**
- * Scene 5 — Identidad y Call To Action Final (Kinetic UI + CTA Conversion)
- * Timestamps reales de ElevenLabs (275 frames):
- * - 0..30: "La regla definitiva..." -> Entrada de cabecera
- * - 40..130: "cada pequeña acción es un voto por la persona que quieres ser" -> KineticCard de Identidad
- * - 160..275: "Un libro imprescindible para transformar tu vida..." -> Gran CtaEndCard con llamada a la acción
+ * Scene 5 — El Poder de Elegir y Call To Action Final (Kinetic UI + CTA Conversion)
+ * Timestamps reales de ElevenLabs (402 frames):
+ * - 0..87: "Una vez que entiendes que los hábitos se pueden rediseñar,"
+ * - 86..184: "tienes la libertad y la responsabilidad de transformarlos." -> KineticCard Cita de Duhigg
+ * - 207..260: "El poder de los hábitos, de Charles Duhigg." -> Mini portada y badge Goodreads
+ * - 260..402: "Guarda este resumen y empieza hoy mismo." -> CtaEndCard con Hero Stopwatch
  */
 export const Scene5: React.FC<Scene5Props> = ({
   canvasOffsetX = 560,
   canvasOffsetY = 3960,
-  enterFrame = 1402,
+  enterFrame = 1655,
   visualData,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const localFrame = Math.max(0, frame - enterFrame);
 
-  // 1. Cabecera (frame 0)
-  const headerEntrance = spring({
-    frame: localFrame,
+  // 1. Ficha de Mini Portada y Reconocimiento (frame 170)
+  const bookPillEntrance = spring({
+    frame: Math.max(0, localFrame - 170),
     fps,
     config: SPRING_SNAPPY,
   });
@@ -57,132 +61,138 @@ export const Scene5: React.FC<Scene5Props> = ({
         boxSizing: 'border-box',
       }}
     >
-      {/* 1. Cabecera Editorial con tipografía moderna de alta visibilidad */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 150,
-          left: 96,
-          right: 96,
-          opacity: headerEntrance,
-          transform: `translateY(${(1 - headerEntrance) * -20}px)`,
-        }}
-      >
-        <div
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 8,
-            padding: '4px 12px',
-            backgroundColor: '#FFFFFF',
-            border: '1.5px solid #D94E34',
-            borderRadius: 6,
-            marginBottom: 12,
-            boxShadow: '0 2px 6px rgba(217, 78, 52, 0.10)',
-          }}
-        >
-          <span
-            style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 14,
-              fontWeight: 800,
-              color: '#D94E34',
-              letterSpacing: 1.5,
-            }}
-          >
-            05 / VEREDICTO FINAL
-          </span>
-        </div>
-        <h1
-          style={{
-            fontFamily: "'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif",
-            fontSize: 56,
-            fontWeight: 900,
-            color: '#141413',
-            margin: 0,
-            lineHeight: 1.08,
-            letterSpacing: '-0.035em',
-          }}
-        >
-          Cambio de Identidad
-        </h1>
-      </div>
-
-      {/* 2. Tarjeta de Identidad en KineticCard (frame 40) */}
-      <div style={{ position: 'absolute', top: 310, left: 96, right: 96 }}>
+      {/* 1. Tarjeta Cita Central de Charles Duhigg (Sin cabecera de diapositiva ni título) */}
+      <div style={{ position: 'absolute', top: 150, left: 96, right: 96 }}>
         <KineticCard
-          enterFrame={40}
+          enterFrame={10}
           accentBorderColor="#141413"
-          badgeText="EL SECRETO DEFINITIVO"
           badgeColor="#D94E34"
-          padding="32px 36px"
+          padding="26px 32px"
           style={{
             borderTop: '6px solid #D94E34',
           }}
         >
-          <div
-            style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 13,
-              fontWeight: 800,
-              color: '#D94E34',
-              letterSpacing: 1.5,
-              marginBottom: 10,
-            }}
-          >
-            LA TESIS DE JAMES CLEAR
-          </div>
-
           <blockquote
             style={{
               margin: 0,
               fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
-              fontSize: 32,
+              fontSize: 27,
               fontWeight: 800,
               fontStyle: 'normal',
-              lineHeight: 1.3,
+              lineHeight: 1.32,
               color: '#141413',
               letterSpacing: '-0.02em',
+              textAlign: 'center',
             }}
           >
-            «Cada pequeña acción es un{' '}
+            «Una vez que entiendes que los hábitos se pueden rediseñar, tienes la{' '}
             <span
               style={{
-                backgroundColor: 'rgba(217, 78, 52, 0.18)',
+                backgroundColor: 'rgba(217, 78, 52, 0.16)',
                 padding: '2px 8px',
                 borderRadius: 6,
                 color: '#D94E34',
-                fontWeight: 900,
+                fontWeight: 800,
               }}
             >
-              voto
+              libertad y la responsabilidad
             </span>{' '}
-            por la persona que quieres ser.»
+            de transformarlos.»
           </blockquote>
-
-          <p
-            style={{
-              fontFamily: "'Inter', sans-serif",
-              fontSize: 16,
-              color: '#575550',
-              marginTop: 14,
-              marginBottom: 0,
-              fontWeight: 500,
-            }}
-          >
-            El verdadero cambio no es de resultado, sino de identidad.
-          </p>
         </KineticCard>
       </div>
 
-      {/* 3. Tarjeta Final de Call To Action (CTA) de Alto Rendimiento (frame 155) */}
-      <div style={{ position: 'absolute', top: 620, left: 96, right: 96 }}>
+      {/* 2. Ficha Fusión Libro & Goodreads en Amarillo Pálido */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 360,
+          left: 96,
+          right: 96,
+          opacity: bookPillEntrance,
+          transform: `scale(${interpolate(bookPillEntrance, [0, 1], [0.94, 1], CLAMP_EXTRAPOLATION)})`,
+          backgroundColor: '#FEF9C3',
+          border: '2px solid #141413',
+          borderRadius: 18,
+          padding: '16px 22px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          boxShadow: '0 6px 20px rgba(20, 20, 19, 0.06)',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <div
+            style={{
+              width: 50,
+              height: 75,
+              borderRadius: 6,
+              overflow: 'hidden',
+              boxShadow: '0 4px 10px rgba(0,0,0,0.12)',
+              border: '1px solid #E5E2DC',
+            }}
+          >
+            <Img
+              src={staticFile('assets/books/el-poder-de-los-habitos.jpg')}
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
+          </div>
+          <div>
+            <div
+              style={{
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                fontSize: 18,
+                fontWeight: 900,
+                color: '#141413',
+              }}
+            >
+              El poder de los hábitos
+            </div>
+            <div
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontSize: 14,
+                color: '#575550',
+                marginTop: 2,
+              }}
+            >
+              Charles Duhigg · 375 páginas
+            </div>
+          </div>
+        </div>
+
+        <div style={{ textAlign: 'right' }}>
+          <div
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontSize: 18,
+              fontWeight: 900,
+              color: '#D97706',
+            }}
+          >
+            ★ 4.13
+          </div>
+          <div
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 11,
+              color: '#575550',
+              fontWeight: 700,
+            }}
+          >
+            585K REVIEWS
+          </div>
+        </div>
+      </div>
+
+      {/* 3. Tarjeta Final de Call To Action (CTA) de Alto Rendimiento */}
+      <div style={{ position: 'absolute', top: 490, left: 96, right: 96 }}>
         <CtaEndCard
-          enterFrame={155}
+          enterFrame={260}
           handle={BRAND_CONFIG.channelHandle}
           questionText={
             visualData?.ctaPrompt ??
-            '¿Cuál es el primer hábito que vas a construir hoy?'
+            '¿Cuál es el mal hábito que vas a sustituir esta semana?'
           }
         />
       </div>
