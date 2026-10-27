@@ -214,6 +214,8 @@ export const Video: React.FC<VideoProps> = ({
           visualData={
             scenesJson.scenes[0]?.bookVisualData as BookVisualData | undefined
           }
+          layoutPreset={scenesJson.scenes[0]?.layoutPreset}
+          wordTimestamps={timeline[0]?.wordTimestamps}
         />
 
         <Scene2
@@ -228,6 +230,8 @@ export const Video: React.FC<VideoProps> = ({
           visualData={
             scenesJson.scenes[1]?.bookVisualData as BookVisualData | undefined
           }
+          layoutPreset={scenesJson.scenes[1]?.layoutPreset}
+          wordTimestamps={timeline[1]?.wordTimestamps}
         />
 
         <Scene3
@@ -242,6 +246,8 @@ export const Video: React.FC<VideoProps> = ({
           visualData={
             scenesJson.scenes[2]?.bookVisualData as BookVisualData | undefined
           }
+          layoutPreset={scenesJson.scenes[2]?.layoutPreset}
+          wordTimestamps={timeline[2]?.wordTimestamps}
         />
 
         <Scene4
@@ -256,6 +262,8 @@ export const Video: React.FC<VideoProps> = ({
           visualData={
             scenesJson.scenes[3]?.bookVisualData as BookVisualData | undefined
           }
+          layoutPreset={scenesJson.scenes[3]?.layoutPreset}
+          wordTimestamps={timeline[3]?.wordTimestamps}
         />
 
         <Scene5
@@ -270,6 +278,8 @@ export const Video: React.FC<VideoProps> = ({
           visualData={
             scenesJson.scenes[4]?.bookVisualData as BookVisualData | undefined
           }
+          layoutPreset={scenesJson.scenes[4]?.layoutPreset}
+          wordTimestamps={timeline[4]?.wordTimestamps}
         />
       </CameraRig>
 

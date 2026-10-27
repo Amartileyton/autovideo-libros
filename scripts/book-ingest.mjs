@@ -157,6 +157,24 @@ async function scrapeGoodreads(query, directUrl = null) {
           }
         }
 
+        // Extraer imagen og:image de respaldo si JSON-LD no trajo coverUrl
+        if (!result.coverUrl) {
+          const ogImgMatch = bookHtml.match(
+            /<meta[^>]*property="og:image"[^>]*content="([^"]+)"/i
+          );
+          if (ogImgMatch?.[1]) {
+            result.coverUrl = ogImgMatch[1].trim();
+          }
+        }
+
+        // Normalizar URL de portada de Goodreads a máxima resolución disponible
+        if (result.coverUrl) {
+          result.coverUrl = result.coverUrl.replace(
+            /\._S[XY]\d+(_S[XY]\d+)?_\./i,
+            '.'
+          );
+        }
+
         // Extraer descripción limpia si existe en el DOM
         const descMatch = bookHtml.match(
           /data-testid="description"[\s\S]*?<span[^>]*class="Formatted"[^>]*>([\s\S]*?)<\/span>/i
@@ -200,33 +218,125 @@ async function scrapeGoodreads(query, directUrl = null) {
 }
 
 /**
- * 2. COLLECTOR DE OPEN LIBRARY + GOOGLE BOOKS API (0 coste, JSON estructurado)
+ * 2. COLLECTOR MULTI-FUENTE DE METADATOS Y PORTADAS HD
+ *    (Open Library + Google Books API + Apple Books iTunes API — 0 coste, sin API key)
  */
-async function fetchOpenLibraryAndGoogleBooks(query) {
+async function fetchOpenLibraryAndGoogleBooks(query, secondaryQuery = '') {
   const data = {
     title: null,
     author: null,
     publishYear: null,
     pages: null,
     coverUrl: null,
+    coverCandidates: [],
     ratingValue: null,
     ratingCount: null,
     categories: [],
     description: '',
   };
 
-  // Open Library Search API
-  const olUrl = `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=3`;
+  const addCandidate = (url, source) => {
+    if (!url || typeof url !== 'string') return;
+    const cleanUrl = url.trim().replace(/^http:\/\//i, 'https://');
+    if (!data.coverCandidates.some((c) => c.url === cleanUrl)) {
+      data.coverCandidates.push({ url: cleanUrl, source });
+    }
+    if (!data.coverUrl) {
+      data.coverUrl = cleanUrl;
+    }
+  };
+
+  // A. Apple Books / iTunes Ebook Search API (Portadas editoriales en 900x900px)
+  const appleQueries = [query, secondaryQuery].filter(Boolean);
+  for (const aq of appleQueries) {
+    const itunesUrl = `https://itunes.apple.com/search?term=${encodeURIComponent(
+      aq
+    )}&entity=ebook&limit=3`;
+    const itRes = await safeFetch(itunesUrl);
+    if (itRes && itRes.ok) {
+      try {
+        const itJson = await itRes.json();
+        for (const item of itJson.results || []) {
+          if (item.artworkUrl100) {
+            const hiRes = item.artworkUrl100.replace(
+              /\d+x\d+bb\.(jpg|png)/i,
+              '900x900bb.jpg'
+            );
+            addCandidate(hiRes, 'apple-books-hd');
+          }
+        }
+      } catch {
+        // ignore
+      }
+    }
+  }
+
+  // B. Google Books Volumes API (ES + EN)
+  const gbQueries = [query, secondaryQuery].filter(Boolean);
+  for (const gq of gbQueries) {
+    const gbUrl = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(
+      gq
+    )}&maxResults=4`;
+    const gbRes = await safeFetch(gbUrl);
+    if (gbRes && gbRes.ok) {
+      try {
+        const gbJson = await gbRes.json();
+        for (const item of gbJson.items || []) {
+          const vol = item?.volumeInfo;
+          if (!vol) continue;
+          data.title = data.title || vol.title;
+          data.author = data.author || vol.authors?.[0];
+          if (!data.publishYear && vol.publishedDate) {
+            const yr = parseInt(vol.publishedDate.slice(0, 4), 10);
+            if (!Number.isNaN(yr)) data.publishYear = yr;
+          }
+          data.pages = data.pages || vol.pageCount;
+          if (!data.categories.length && vol.categories) {
+            data.categories = vol.categories;
+          }
+          if (!data.description && vol.description) {
+            data.description = stripHtmlAndClean(vol.description);
+          }
+          const links = vol.imageLinks;
+          if (links) {
+            const rawBest =
+              links.extraLarge ||
+              links.large ||
+              links.medium ||
+              links.small ||
+              links.thumbnail;
+            if (rawBest) {
+              const cleanThumb = rawBest
+                .replace('http://', 'https://')
+                .replace('&edge=curl', '');
+              addCandidate(
+                cleanThumb.replace('zoom=1', 'zoom=2'),
+                'google-books-z2'
+              );
+              addCandidate(cleanThumb, 'google-books-z1');
+            }
+          }
+        }
+      } catch {
+        // ignore
+      }
+    }
+  }
+
+  // C. Open Library Search API
+  const olUrl = `https://openlibrary.org/search.json?q=${encodeURIComponent(
+    query
+  )}&limit=3`;
   const olRes = await safeFetch(olUrl);
   if (olRes && olRes.ok) {
     try {
       const olJson = await olRes.json();
       const doc = olJson.docs?.[0];
       if (doc) {
-        data.title = doc.title || data.title;
-        data.author = doc.author_name?.[0] || data.author;
-        data.publishYear = doc.first_publish_year || data.publishYear;
-        data.pages = doc.number_of_pages_median || data.pages;
+        data.title = data.title || doc.title;
+        data.author = data.author || doc.author_name?.[0];
+        data.publishYear = data.publishYear || doc.first_publish_year;
+        data.pages = data.pages || doc.number_of_pages_median;
         if (doc.ratings_average) {
           data.ratingValue = Number(doc.ratings_average.toFixed(2));
         }
@@ -234,38 +344,16 @@ async function fetchOpenLibraryAndGoogleBooks(query) {
           data.ratingCount = doc.ratings_count;
         }
         if (doc.cover_i) {
-          data.coverUrl = `https://covers.openlibrary.org/b/id/${doc.cover_i}-L.jpg`;
+          addCandidate(
+            `https://covers.openlibrary.org/b/id/${doc.cover_i}-L.jpg`,
+            'openlibrary-cover-id'
+          );
         }
-      }
-    } catch {
-      // ignore
-    }
-  }
-
-  // Google Books Volumes API
-  const gbUrl = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=3`;
-  const gbRes = await safeFetch(gbUrl);
-  if (gbRes && gbRes.ok) {
-    try {
-      const gbJson = await gbRes.json();
-      const vol = gbJson.items?.[0]?.volumeInfo;
-      if (vol) {
-        data.title = data.title || vol.title;
-        data.author = data.author || vol.authors?.[0];
-        if (!data.publishYear && vol.publishedDate) {
-          const yr = parseInt(vol.publishedDate.slice(0, 4), 10);
-          if (!Number.isNaN(yr)) data.publishYear = yr;
-        }
-        data.pages = data.pages || vol.pageCount;
-        data.categories = vol.categories || [];
-        if (vol.description) {
-          data.description = stripHtmlAndClean(vol.description);
-        }
-        if (!data.coverUrl && vol.imageLinks?.thumbnail) {
-          data.coverUrl = vol.imageLinks.thumbnail
-            .replace('http://', 'https://')
-            .replace('&edge=curl', '')
-            .replace('zoom=1', 'zoom=2');
+        if (doc.isbn?.[0]) {
+          addCandidate(
+            `https://covers.openlibrary.org/b/isbn/${doc.isbn[0]}-L.jpg`,
+            'openlibrary-isbn'
+          );
         }
       }
     } catch {
@@ -517,42 +605,233 @@ const CANONICAL_BOOK_ENRICHMENT = {
 };
 
 /**
- * Descarga la portada del libro o genera una portada vectorial de alta resolución
+ * Escapa caracteres XML para inserción segura en SVG
  */
-async function downloadBookCover(coverUrl, slug, bookMeta) {
-  fs.mkdirSync(BOOKS_ASSET_DIR, { recursive: true });
-  const jpgRelPath = `assets/books/${slug}-cover.jpg`;
-  const jpgFullPath = path.join(ROOT_DIR, 'public', jpgRelPath);
+function escapeXml(str = '') {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
 
-  if (coverUrl) {
-    const res = await safeFetch(coverUrl, {}, 10000);
+/**
+ * Divide cualquier título de libro en líneas equilibradas para tipografía vectorial de portada
+ */
+function wrapTitleLines(title = '', maxCharsPerLine = 14) {
+  const words = String(title).trim().toUpperCase().split(/\s+/).filter(Boolean);
+  if (words.length === 0) return ['RESUMEN', 'EDITORIAL'];
+  const lines = [];
+  let current = '';
+
+  for (const word of words) {
+    if (!current) {
+      current = word;
+    } else if ((current + ' ' + word).length <= maxCharsPerLine) {
+      current += ' ' + word;
+    } else {
+      lines.push(current);
+      current = word;
+    }
+  }
+  if (current) lines.push(current);
+  return lines.slice(0, 4);
+}
+
+/**
+ * Valida que el buffer descargado sea realmente una imagen rasterizada válida (JPEG / PNG / WebP)
+ * y no un placeholder vacío de 1x1 píxeles o un HTML de error.
+ */
+function isValidRasterImageBuffer(buf) {
+  if (!buf || buf.length < 6500) return false;
+  const isJpeg = buf[0] === 0xff && buf[1] === 0xd8 && buf[2] === 0xff;
+  const isPng =
+    buf[0] === 0x89 &&
+    buf[1] === 0x50 &&
+    buf[2] === 0x4e &&
+    buf[3] === 0x47;
+  const isWebp =
+    buf.slice(0, 4).toString('ascii') === 'RIFF' &&
+    buf.slice(8, 12).toString('ascii') === 'WEBP';
+  return isJpeg || isPng || isWebp;
+}
+
+/**
+ * Generador de Portadas Vectoriales Editoriales a Medida (Punto 3 — Fallback Tipográfico + Ilustración Temática)
+ * Crea siempre `public/assets/books/${slug}-cover.svg` adaptando título, subtítulo, autor,
+ * métrica científica y emblema vectorial según el libro.
+ */
+function generateEditorialSvgCover(slug, bookMeta) {
+  fs.mkdirSync(BOOKS_ASSET_DIR, { recursive: true });
+  const svgRelPath = `assets/books/${slug}-cover.svg`;
+  const svgFullPath = path.join(ROOT_DIR, 'public', svgRelPath);
+
+  const titleEs = bookMeta.titleEs || bookMeta.title || 'Resumen Editorial';
+  const originalTitle = bookMeta.originalTitle || '';
+  const author = (bookMeta.author || 'Edición @en1minuto.es').toUpperCase();
+  const categoryTag = (
+    bookMeta.categoryTag || 'ENSAYO · EDICIÓN TÉCNICA'
+  ).toUpperCase();
+  const rating = bookMeta.rating || bookMeta.goodreadsRating || 4.3;
+  const ratingsCount =
+    bookMeta.ratingsCount || bookMeta.goodreadsRatingsCount || '100K+';
+  const formulaLabel =
+    bookMeta.formulaLabel ||
+    bookMeta.mathematicalProof?.formulaLabel ||
+    `★ ${rating} GOODREADS`;
+
+  const titleLines = wrapTitleLines(titleEs, 15);
+  const titleFontSize =
+    titleLines.some((l) => l.length > 14) || titleLines.length >= 4
+      ? 42
+      : titleLines.length === 3
+      ? 48
+      : 54;
+  const titleStartY = titleLines.length >= 3 ? 195 : 220;
+  const titleLineHeight = Math.round(titleFontSize * 1.16);
+
+  const titleSvgNodes = titleLines
+    .map((line, idx) => {
+      const y = titleStartY + idx * titleLineHeight;
+      const fill = idx === titleLines.length - 1 ? '#D94E34' : '#141413';
+      return `<text x="300" y="${y}" text-anchor="middle" font-family="'Plus Jakarta Sans', 'Arial Black', sans-serif" font-weight="900" font-size="${titleFontSize}" letter-spacing="-1" fill="${fill}">${escapeXml(
+        line
+      )}</text>`;
+    })
+    .join('\n  ');
+
+  const isHabitLoopBook = /poder-de-los-habitos|power-of-habit|duhigg/i.test(
+    `${slug} ${titleEs} ${author}`
+  );
+
+  // Ilustración central adaptativa: Bucle de 4 estaciones (Duhigg) vs Emblema Orbital Técnico
+  const centerIllustrationSvg = isHabitLoopBook
+    ? `<g transform="translate(0, 15)">
+    <rect x="115" y="380" width="370" height="220" rx="22" fill="#FEF9C3" stroke="#141413" stroke-width="3" />
+    <path d="M 195 435 L 405 435 L 405 545 L 195 545 Z" fill="none" stroke="#D94E34" stroke-width="4" stroke-dasharray="8 6" />
+    <rect x="140" y="410" width="125" height="50" rx="10" fill="#D94E34" stroke="#141413" stroke-width="2.5" />
+    <text x="202" y="441" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="16" fill="#FFFFFF">01 · SEÑAL</text>
+    <rect x="335" y="410" width="125" height="50" rx="10" fill="#FFFBEB" stroke="#141413" stroke-width="2.5" />
+    <text x="397" y="441" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="16" fill="#141413">02 · RUTINA</text>
+    <rect x="320" y="520" width="150" height="50" rx="10" fill="#FFFBEB" stroke="#141413" stroke-width="2.5" />
+    <text x="395" y="551" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="15" fill="#141413">03 · RECOMPENSA</text>
+    <rect x="140" y="520" width="125" height="50" rx="10" fill="#FFFBEB" stroke="#D94E34" stroke-width="2.5" />
+    <text x="202" y="551" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="16" fill="#D94E34">04 · ANHELO</text>
+    <circle cx="300" cy="490" r="26" fill="#141413" />
+    <text x="300" y="496" text-anchor="middle" font-family="monospace" font-weight="800" font-size="15" fill="#FEF9C3">40%</text>
+  </g>`
+    : `<g transform="translate(0, 10)">
+    <circle cx="300" cy="490" r="128" fill="#FEF9C3" stroke="#141413" stroke-width="3" />
+    <circle cx="300" cy="490" r="98" fill="none" stroke="#D94E34" stroke-width="3.5" stroke-dasharray="10 8" />
+    <circle cx="300" cy="490" r="64" fill="rgba(217, 78, 52, 0.12)" stroke="#141413" stroke-width="2.5" />
+    <text x="300" y="498" text-anchor="middle" font-family="monospace" font-weight="800" font-size="22" fill="#141413">${escapeXml(
+      formulaLabel.slice(0, 18)
+    )}</text>
+  </g>`;
+
+  const cleanSubline = originalTitle
+    ? originalTitle.length > 42
+      ? originalTitle.split(':')[0].trim()
+      : originalTitle
+    : formulaLabel;
+
+  const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="900" viewBox="0 0 600 900">
+  <rect width="600" height="900" fill="#F8F7F4" rx="16" />
+  <rect x="24" y="24" width="552" height="852" fill="#FEF9C3" fill-opacity="0.45" stroke="#141413" stroke-width="3" rx="12" />
+  <rect x="38" y="38" width="524" height="824" fill="none" stroke="#D94E34" stroke-width="2" rx="8" />
+  <rect x="110" y="74" width="380" height="36" rx="18" fill="#FEF9C3" stroke="#141413" stroke-width="2" />
+  <text x="300" y="98" text-anchor="middle" font-family="Arial, sans-serif" font-weight="800" font-size="14" letter-spacing="2" fill="#D94E34">${escapeXml(
+    categoryTag.slice(0, 34)
+  )}</text>
+  ${titleSvgNodes}
+  ${centerIllustrationSvg}
+  <text x="300" y="685" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-size="22" fill="#575550">${escapeXml(
+    cleanSubline
+  )}</text>
+  <rect x="150" y="720" width="300" height="40" rx="20" fill="#FEF9C3" stroke="#141413" stroke-width="2" />
+  <text x="300" y="746" text-anchor="middle" font-family="Arial, sans-serif" font-weight="800" font-size="16" fill="#D97706">★ ${escapeXml(
+    rating
+  )} GOODREADS · ${escapeXml(ratingsCount)} LECTORES</text>
+  <text x="300" y="815" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="30" letter-spacing="3" fill="#141413">${escapeXml(
+    author
+  )}</text>
+</svg>`;
+
+  fs.writeFileSync(svgFullPath, svgContent, 'utf-8');
+  return svgRelPath;
+}
+
+/**
+ * Motor Multi-Nivel de Resolución y Descarga de Portadas (Punto 3):
+ * 1. Genera siempre la cubierta vectorial SVG a medida (`${slug}-cover.svg`) como respaldo garantizado.
+ * 2. Intenta descargar la portada oficial en alta resolución desde la cascada de candidatos:
+ *    Goodreads HD -> Apple Books 900px -> Google Books Zoom 2 -> OpenLibrary Large.
+ * 3. Si la red está desactivada (ej. sandbox offline), verifica si existe en caché local
+ *    una portada rasterizada válida (`${slug}-cover.jpg` o `${slug}.jpg`) y la preserva/sincroniza.
+ * 4. Si no hay portada rasterizada remota ni local, asigna la portada vectorial SVG editorial.
+ */
+async function resolveAndDownloadBookCover(candidates = [], slug, bookMeta) {
+  fs.mkdirSync(BOOKS_ASSET_DIR, { recursive: true });
+
+  // 1. Generar siempre el SVG editorial de respaldo adaptado al libro
+  const svgRelPath = generateEditorialSvgCover(slug, bookMeta);
+
+  const canonicalJpgRel = `assets/books/${slug}-cover.jpg`;
+  const canonicalJpgFull = path.join(ROOT_DIR, 'public', canonicalJpgRel);
+  const aliasJpgRel = `assets/books/${slug}.jpg`;
+  const aliasJpgFull = path.join(ROOT_DIR, 'public', aliasJpgRel);
+
+  // 2. Probar cascada de candidatos remotos
+  for (const cand of candidates) {
+    if (!cand?.url) continue;
+    const res = await safeFetch(cand.url, {}, 9000);
     if (res && res.ok) {
-      const arrayBuf = await res.arrayBuffer();
-      const buf = Buffer.from(arrayBuf);
-      if (buf.length > 4000) {
-        fs.writeFileSync(jpgFullPath, buf);
-        return jpgRelPath;
+      try {
+        const arrayBuf = await res.arrayBuffer();
+        const buf = Buffer.from(arrayBuf);
+        if (isValidRasterImageBuffer(buf)) {
+          fs.writeFileSync(canonicalJpgFull, buf);
+          fs.writeFileSync(aliasJpgFull, buf);
+          return {
+            coverImage: canonicalJpgRel,
+            fallbackCoverImage: svgRelPath,
+            coverSource: cand.source || 'remote-hd',
+          };
+        }
+      } catch {
+        // Probar siguiente candidato
       }
     }
   }
 
-  // Si la descarga externa falla o es bloqueada, generamos una portada SVG editorial limpia
-  const svgRelPath = `assets/books/${slug}-cover.svg`;
-  const svgFullPath = path.join(ROOT_DIR, 'public', svgRelPath);
-  const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="900" viewBox="0 0 600 900">
-  <rect width="600" height="900" fill="#F8F7F4" rx="12" />
-  <rect x="28" y="28" width="544" height="844" fill="none" stroke="#D94E34" stroke-width="3" rx="6" />
-  <circle cx="300" cy="430" r="145" fill="none" stroke="#F59E0B" stroke-width="4" stroke-dasharray="10 8" />
-  <circle cx="300" cy="430" r="92" fill="rgba(245, 158, 11, 0.14)" stroke="#141413" stroke-width="3" />
-  <text x="300" y="135" text-anchor="middle" font-family="Georgia, serif" font-size="24" letter-spacing="6" fill="#575550">EDICIÓN TÉCNICA INTEGRAL</text>
-  <text x="300" y="235" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="56" fill="#141413">${(bookMeta.titleEs || 'HÁBITOS').toUpperCase().split(' ')[0]}</text>
-  <text x="300" y="300" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="56" fill="#D94E34">${(bookMeta.titleEs || 'ATÓMICOS').toUpperCase().split(' ').slice(1).join(' ')}</text>
-  <text x="300" y="445" text-anchor="middle" font-family="monospace" font-weight="700" font-size="44" fill="#141413">+1% DIARIO</text>
-  <text x="300" y="665" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-size="26" fill="#575550">Cambios pequeños, resultados extraordinarios</text>
-  <text x="300" y="795" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="34" letter-spacing="4" fill="#141413">${(bookMeta.author || 'JAMES CLEAR').toUpperCase()}</text>
-</svg>`;
-  fs.writeFileSync(svgFullPath, svgContent, 'utf-8');
-  return svgRelPath;
+  // 3. Preservar caché local si existe una portada real en disco (modo offline / sandbox)
+  const existingCanonical =
+    fs.existsSync(canonicalJpgFull) &&
+    isValidRasterImageBuffer(fs.readFileSync(canonicalJpgFull));
+  const existingAlias =
+    fs.existsSync(aliasJpgFull) &&
+    isValidRasterImageBuffer(fs.readFileSync(aliasJpgFull));
+
+  if (existingCanonical || existingAlias) {
+    if (existingAlias && !existingCanonical) {
+      fs.copyFileSync(aliasJpgFull, canonicalJpgFull);
+    } else if (existingCanonical && !existingAlias) {
+      fs.copyFileSync(canonicalJpgFull, aliasJpgFull);
+    }
+    return {
+      coverImage: canonicalJpgRel,
+      fallbackCoverImage: svgRelPath,
+      coverSource: 'local-cache-hd',
+    };
+  }
+
+  // 4. Fallback a la portada vectorial editorial generada a medida
+  return {
+    coverImage: svgRelPath,
+    fallbackCoverImage: svgRelPath,
+    coverSource: 'editorial-svg-fallback',
+  };
 }
 
 async function main() {
@@ -577,37 +856,52 @@ async function main() {
   }
 
   const query = rawQuery || (directUrl ? '' : 'Atomic Habits James Clear');
-  const targetDesc = query && directUrl ? `"${query}" + URL: ${directUrl}` : (query || directUrl);
+  const targetDesc =
+    query && directUrl ? `"${query}" + URL: ${directUrl}` : query || directUrl;
 
-  console.log(`📚 [book-ingest] Iniciando scraping multi-fuente para: ${targetDesc}...`);
+  console.log(
+    `📚 [book-ingest] Iniciando scraping multi-fuente para: ${targetDesc}...`
+  );
 
-  const goodreads = await scrapeGoodreads(query, directUrl);
-  const effectiveQuery = query || goodreads.title || 'Atomic Habits James Clear';
-
-  const [catalog, wikiExtract] = await Promise.all([
-    fetchOpenLibraryAndGoogleBooks(effectiveQuery),
-    fetchWikipediaSummary(effectiveQuery),
-  ]);
-
-  const isAtomicHabits = /atomic habits|h[aá]bitos at[oó]micos|james clear/i.test(query);
+  const isAtomicHabits = /atomic habits|h[aá]bitos at[oó]micos|james clear/i.test(
+    `${query} ${directUrl || ''}`
+  );
   const isPowerOfHabit =
     /power of habit|poder de los h[aá]bitos|charles duhigg|12609433/i.test(
       `${query} ${directUrl || ''}`
     );
-  const slug = isAtomicHabits
+
+  const goodreads = await scrapeGoodreads(query, directUrl);
+  const effectiveQuery =
+    query ||
+    goodreads.title ||
+    (isPowerOfHabit ? 'The Power of Habit Charles Duhigg' : 'Atomic Habits James Clear');
+
+  const preSlug = isAtomicHabits
     ? 'habitos-atomicos'
     : isPowerOfHabit
     ? 'el-poder-de-los-habitos'
-    : slugify(catalog.title || query);
+    : null;
+  const preEnrichment = preSlug ? CANONICAL_BOOK_ENRICHMENT[preSlug] : null;
+  const secondaryQuery = preEnrichment
+    ? `${preEnrichment.titleEs} ${preEnrichment.author}`
+    : '';
+
+  const [catalog, wikiExtract] = await Promise.all([
+    fetchOpenLibraryAndGoogleBooks(effectiveQuery, secondaryQuery),
+    fetchWikipediaSummary(effectiveQuery),
+  ]);
+
+  const slug =
+    preSlug || slugify(catalog.title || goodreads.title || query || 'libro');
   const enrichment = CANONICAL_BOOK_ENRICHMENT[slug] || null;
 
   const rawTokenEstimate = Math.ceil(
-    (
-      (goodreads.description || '').length +
+    ((goodreads.description || '').length +
       (catalog.description || '').length +
       (wikiExtract || '').length +
-      goodreads.quotes.join(' ').length
-    ) / 4
+      goodreads.quotes.join(' ').length) /
+      4
   );
 
   const synopsisCondensed =
@@ -623,11 +917,39 @@ async function main() {
     enrichment?.coreThesis ||
     'Resumen estructurado de alto impacto sobre sistemas conductuales y mejora continua.';
 
-  const coverUrl = goodreads.coverUrl || catalog.coverUrl;
-  const localCoverPath = await downloadBookCover(
-    coverUrl,
+  // Construir cascada priorizada de candidatos de portada
+  const coverCandidates = [];
+  if (goodreads.coverUrl) {
+    coverCandidates.push({ url: goodreads.coverUrl, source: 'goodreads-hd' });
+  }
+  for (const cand of catalog.coverCandidates || []) {
+    coverCandidates.push(cand);
+  }
+
+  const coverMetaInput = {
+    titleEs: enrichment?.titleEs || catalog.title || goodreads.title || query,
+    originalTitle: enrichment?.originalTitle || catalog.title || query,
+    author: enrichment?.author || catalog.author || goodreads.author || 'Autor Principal',
+    categoryTag:
+      enrichment?.categoryTag ||
+      (catalog.categories?.[0] || 'NO FICCIÓN · ENSAYO').toUpperCase(),
+    goodreadsRating:
+      goodreads.ratingValue ||
+      enrichment?.goodreadsRating ||
+      catalog.ratingValue ||
+      4.38,
+    goodreadsRatingsCount:
+      enrichment?.goodreadsRatingsCount ||
+      (goodreads.ratingCount
+        ? `${(goodreads.ratingCount / 1_000_000).toFixed(2)}M`
+        : '585K'),
+    mathematicalProof: enrichment?.mathematicalProof,
+  };
+
+  const coverResult = await resolveAndDownloadBookCover(
+    coverCandidates,
     slug,
-    enrichment || { titleEs: catalog.title, author: catalog.author }
+    coverMetaInput
   );
 
   const mergedQuotes =
@@ -643,9 +965,13 @@ async function main() {
     query,
     slug,
     bookMetadata: {
-      title: enrichment?.titleEs || catalog.title || query,
+      title: enrichment?.titleEs || catalog.title || goodreads.title || query,
       originalTitle: enrichment?.originalTitle || catalog.title || query,
-      author: enrichment?.author || catalog.author || 'Autor Principal',
+      author:
+        enrichment?.author ||
+        catalog.author ||
+        goodreads.author ||
+        'Autor Principal',
       publishYear: enrichment?.publishYear || catalog.publishYear || 2018,
       pages: goodreads.pages || enrichment?.pages || catalog.pages || 320,
       readingTimeHours: enrichment?.readingTimeHours || 4.2,
@@ -659,12 +985,15 @@ async function main() {
         (goodreads.ratingCount
           ? `${(goodreads.ratingCount / 1_000_000).toFixed(2)}M`
           : '1.94M'),
-      coverImage: localCoverPath,
+      coverImage: coverResult.coverImage,
+      fallbackCoverImage: coverResult.fallbackCoverImage,
+      coverSource: coverResult.coverSource,
       categoryTag:
         enrichment?.categoryTag ||
         (catalog.categories?.[0] || 'NO FICCIÓN · ENSAYO').toUpperCase(),
       goodreadsUrl:
         goodreads.bookUrl ||
+        directUrl ||
         'https://www.goodreads.com/book/show/40121378-atomic-habits',
     },
     synopsisCondensed,
@@ -726,12 +1055,43 @@ async function main() {
   fs.mkdirSync(path.dirname(DOSSIER_OUT_PATH), { recursive: true });
   fs.writeFileSync(DOSSIER_OUT_PATH, JSON.stringify(dossier, null, 2), 'utf-8');
 
-  console.log(`✅ [book-ingest] Dossier normalizado escrito en: src/data/book-dossier.json`);
+  // Sincronizar automáticamente bookMetadata en src/data/scenes.json si corresponde al mismo libro
+  const scenesPath = path.join(ROOT_DIR, 'src', 'data', 'scenes.json');
+  if (fs.existsSync(scenesPath)) {
+    try {
+      const scenesData = JSON.parse(fs.readFileSync(scenesPath, 'utf-8'));
+      const currentScenesTitle = (scenesData.bookMetadata?.title || '').toLowerCase();
+      const targetTitle = (dossier.bookMetadata.title || '').toLowerCase();
+      if (
+        !scenesData.bookMetadata ||
+        currentScenesTitle === targetTitle ||
+        slug === slugify(currentScenesTitle)
+      ) {
+        scenesData.bookMetadata = {
+          ...(scenesData.bookMetadata || {}),
+          ...dossier.bookMetadata,
+        };
+        fs.writeFileSync(scenesPath, JSON.stringify(scenesData, null, 2) + '\n', 'utf-8');
+      }
+    } catch {
+      // No bloquear ingesta si scenes.json está siendo editado
+    }
+  }
+
+  console.log(
+    `✅ [book-ingest] Dossier normalizado escrito en: src/data/book-dossier.json`
+  );
   console.log(
     `   ↳ Libro: "${dossier.bookMetadata.title}" (${dossier.bookMetadata.author}, ${dossier.bookMetadata.publishYear})`
   );
   console.log(
-    `   ↳ Goodreads: ★ ${dossier.bookMetadata.rating} (${dossier.bookMetadata.ratingsCount} valoraciones) · Portada: public/${dossier.bookMetadata.coverImage}`
+    `   ↳ Goodreads: ★ ${dossier.bookMetadata.rating} (${dossier.bookMetadata.ratingsCount} valoraciones)`
+  );
+  console.log(
+    `   ↳ Portada Principal: public/${dossier.bookMetadata.coverImage} [fuente: ${dossier.bookMetadata.coverSource}]`
+  );
+  console.log(
+    `   ↳ Portada SVG Respaldo: public/${dossier.bookMetadata.fallbackCoverImage}`
   );
   console.log(
     `   ↳ Optimización de Tokens: ~${dossier.tokenOptimizationStats.rawScrapedTokensApprox} tokens brutos -> ${normalizedTokens} tokens netos (${dossier.tokenOptimizationStats.savingsPercentage}% de ahorro).`

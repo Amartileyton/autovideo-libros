@@ -4,3 +4,5 @@ export * from './VectorLoopCircuit';
 export * from './KineticCard';
 export * from './ExponentialGrowthChart';
 export * from './CtaEndCard';
+export * from './GoodreadsBadgeCluster';
+export * from '../BookCover';

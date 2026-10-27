@@ -36,9 +36,12 @@ export const BookMetadataSchema = z.object({
   publishYear: z.number(),
   pages: z.number(),
   readingTimeHours: z.number().optional(),
+  salesCopies: z.string().optional(),
   rating: z.number(),
   ratingsCount: z.string(),
   coverImage: z.string(),
+  fallbackCoverImage: z.string().optional(),
+  coverSource: z.string().optional(),
   categoryTag: z.string(),
   goodreadsUrl: z.string().optional(),
 });
@@ -62,25 +65,116 @@ export const BookActionableLawSchema = z.object({
   rule: z.string(),
   impactPct: z.number(),
   highlight: z.boolean().optional(),
+  triggerKeyword: z.union([z.string(), z.array(z.string())]).optional(),
 });
 
 export type BookActionableLaw = z.infer<typeof BookActionableLawSchema>;
 
+/**
+ * Catálogo de Presets Visuales del Motor Híbrido Inteligente (mapeado 1:1 al cuestionario ask_question)
+ */
+export const SceneLayoutPresetSchema = z.enum([
+  // Escena 1 — El Gancho + Portada
+  'HOOK_COVER_BATTLE',
+  'HOOK_COVER_STAT',
+  'HOOK_COVER_QUESTION',
+  // Escena 2 — La Tesis / Mecanismo Científico
+  'THESIS_LOOP_CIRCUIT',
+  'THESIS_EXPONENTIAL_CHART',
+  'THESIS_COMPARISON_BATTLE',
+  // Escena 3 — La Regla de Oro / Evidencia Central
+  'RULE_TRANSFORM_CIRCUIT',
+  'RULE_SUBSTITUTION_DIAGRAM',
+  'RULE_EXPONENTIAL_EVIDENCE',
+  // Escena 4 — Las Leyes Accionables / Casos Reales
+  'LAWS_DOMINO_CASCADE',
+  'LAWS_COMPARISON_BATTLE',
+  'LAWS_PILLAR_MATRIX',
+  // Escena 5 — El Manifiesto Final + CTA @en1minuto.es
+  'CTA_MANIFESTO_GOODREADS',
+  'CTA_EXECUTIVE_SUMMARY',
+]);
+
+export type SceneLayoutPreset = z.infer<typeof SceneLayoutPresetSchema>;
+
+/**
+ * Nodo declarativo del circuito vectorial con auto-binding semántico por palabra clave
+ */
+export const CircuitNodeInputSchema = z.object({
+  id: z.string(),
+  num: z.string(),
+  label: z.string(),
+  sublabel: z.string(),
+  triggerKeyword: z.union([z.string(), z.array(z.string())]).optional(),
+  triggerFrame: z.number().optional(),
+  endSpokenFrame: z.number().optional(),
+});
+
+export type CircuitNodeInput = z.infer<typeof CircuitNodeInputSchema>;
+
+/**
+ * Bloque custom declarativo para overrides en el Motor Híbrido Inteligente
+ */
+export const SceneCustomBlockSchema = z.object({
+  type: z.enum([
+    'KINETIC_QUOTE',
+    'LIVE_COUNTER',
+    'COMPARISON_BATTLE',
+    'VECTOR_LOOP',
+    'EXPONENTIAL_CHART',
+    'GOODREADS_BADGES',
+  ]),
+  triggerKeyword: z.union([z.string(), z.array(z.string())]).optional(),
+  props: z.record(z.string(), z.unknown()).optional(),
+});
+
+export type SceneCustomBlock = z.infer<typeof SceneCustomBlockSchema>;
+
 export const BookVisualDataSchema = z
   .object({
+    hookStat: z.string().optional(),
+    hookNumericValue: z.number().optional(),
+    hookUnit: z.string().optional(),
+    hookLabel: z.string().optional(),
+    hookSource: z.string().optional(),
+    hookTriggerKeyword: z.union([z.string(), z.array(z.string())]).optional(),
+    battleTriggerKeyword: z.union([z.string(), z.array(z.string())]).optional(),
     mythLabel: z.string().optional(),
+    mythSubtitle: z.string().optional(),
+    mythTag: z.string().optional(),
     realityLabel: z.string().optional(),
+    realitySubtitle: z.string().optional(),
+    realityTag: z.string().optional(),
+    goodreadsRating: z.string().optional(),
+    goodreadsReviews: z.string().optional(),
     rulerLabel: z.string().optional(),
     formulaLabel: z.string().optional(),
+    formulaSublabel: z.string().optional(),
     primaryCurveLabel: z.string().optional(),
     secondaryCurveLabel: z.string().optional(),
+    loopSteps: z.array(z.string()).optional(),
+    circuitNodes: z.array(CircuitNodeInputSchema).optional(),
+    centralQuote: z.string().optional(),
+    highlightWords: z.array(z.string()).optional(),
     quoteExcerpt: BookQuoteExcerptSchema.optional(),
     secondaryQuote: BookQuoteExcerptSchema.optional(),
     actionableLaws: z.array(BookActionableLawSchema).optional(),
+    dominoSteps: z
+      .array(
+        z.object({
+          label: z.string(),
+          sub: z.string(),
+        })
+      )
+      .optional(),
+    dominoTriggerKeyword: z.union([z.string(), z.array(z.string())]).optional(),
     identityQuote: z.string().optional(),
     verdictBadge: z.string().optional(),
     ctaPrompt: z.string().optional(),
+    ctaActionText: z.string().optional(),
+    showCommunityQuestion: z.boolean().optional(),
     ctaHandle: z.string().optional(),
+    executiveSummaryPoints: z.array(z.string()).optional(),
     callouts: z
       .array(
         z.object({
@@ -112,6 +206,8 @@ export const SceneInputSchema = z.object({
       'EDITORIAL_PAPER',
     ])
     .optional(),
+  layoutPreset: SceneLayoutPresetSchema.optional(),
+  customBlocks: z.array(SceneCustomBlockSchema).optional(),
   visualCue: z.string(),
   cameraTarget: z
     .object({

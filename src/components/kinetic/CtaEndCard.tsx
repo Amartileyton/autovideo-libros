@@ -7,6 +7,12 @@ export interface CtaEndCardProps {
   enterFrame?: number;
   handle?: string;
   questionText?: string;
+  /** Llamada a la acción del final del vídeo hablada por el locutor */
+  ctaText?: string;
+  /** Acción principal destacada (ej. "GUARDA ESTE RESUMEN") */
+  ctaActionLabel?: string;
+  /** Si se muestra o no la tarjeta interactiva de pregunta a la comunidad */
+  showCommunityQuestion?: boolean;
 }
 
 /**
@@ -15,12 +21,16 @@ export interface CtaEndCardProps {
  * Incluye:
  * 1. Logotipo Cronómetro Hero que se hace grande al llegar al CTA.
  * 2. Invitación a seguir a @en1minuto.es con botón de alto contraste y pulso.
- * 3. Caja de debate que incita a comentar sobre el libro para viralizar el algoritmo.
+ * 3. Caja de debate que incita a comentar sobre el libro, estrictamente vinculada al CTA del vídeo.
+ * 4. Micro-acciones con la acción del CTA destacada en Terracota.
  */
 export const CtaEndCard: React.FC<CtaEndCardProps> = ({
   enterFrame = 0,
   handle = '@en1minuto.es',
-  questionText = '¿Cuál es el primer hábito que vas a construir hoy?',
+  questionText = 'Para empezar hoy mismo tras guardar el resumen: ¿cuál es el mal hábito que vas a sustituir?',
+  ctaText = 'Guarda este resumen y empieza hoy mismo',
+  ctaActionLabel = 'GUARDA ESTE RESUMEN',
+  showCommunityQuestion = true,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -169,49 +179,57 @@ export const CtaEndCard: React.FC<CtaEndCardProps> = ({
         </span>
       </div>
 
-      {/* Caja Interactiva de Pregunta para Comentarios */}
-      <div
-        style={{
-          backgroundColor: '#F8F7F4',
-          border: '1.5px dashed rgba(217, 78, 52, 0.40)',
-          borderRadius: 14,
-          padding: '12px 18px',
-          marginBottom: 16,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 12,
-          textAlign: 'left',
-        }}
-      >
-        <span style={{ fontSize: 26, flexShrink: 0 }}>💬</span>
-        <div style={{ flex: 1 }}>
-          <div
-            style={{
-              fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
-              fontSize: 13,
-              fontWeight: 800,
-              color: '#D94E34',
-              letterSpacing: 0.5,
-              textTransform: 'uppercase',
-            }}
-          >
-            Pregunta a la comunidad
-          </div>
-          <div
-            style={{
-              fontFamily: "'Inter', sans-serif",
-              fontSize: 15,
-              fontWeight: 700,
-              color: '#141413',
-              lineHeight: 1.25,
-            }}
-          >
-            {questionText}
+      {/* Caja Interactiva de Pregunta a la Comunidad vinculada al CTA */}
+      {showCommunityQuestion && questionText ? (
+        <div
+          style={{
+            backgroundColor: '#F8F7F4',
+            border: '1.5px dashed rgba(217, 78, 52, 0.40)',
+            borderRadius: 14,
+            padding: '12px 18px',
+            marginBottom: 16,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 12,
+            textAlign: 'left',
+          }}
+        >
+          <span style={{ fontSize: 26, flexShrink: 0 }}>💬</span>
+          <div style={{ flex: 1 }}>
+            <div
+              style={{
+                fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
+                fontSize: 12,
+                fontWeight: 900,
+                color: '#D94E34',
+                letterSpacing: 0.8,
+                textTransform: 'uppercase',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+              }}
+            >
+              <span>Pregunta a la comunidad</span>
+              <span style={{ color: '#141413', opacity: 0.35 }}>•</span>
+              <span style={{ color: '#141413', opacity: 0.85 }}>Vínculo CTA</span>
+            </div>
+            <div
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontSize: 15,
+                fontWeight: 700,
+                color: '#141413',
+                lineHeight: 1.25,
+                marginTop: 2,
+              }}
+            >
+              {questionText}
+            </div>
           </div>
         </div>
-      </div>
+      ) : null}
 
-      {/* Fila de Micro-acciones (Guardar y Compartir) */}
+      {/* Fila de Micro-acciones (Guardar y Compartir) con el CTA del audio destacado */}
       <div
         style={{
           display: 'flex',
@@ -229,14 +247,15 @@ export const CtaEndCard: React.FC<CtaEndCardProps> = ({
             fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
             fontSize: 13,
             fontWeight: 800,
-            color: '#141413',
-            backgroundColor: '#F8F7F4',
+            color: '#FFFFFF',
+            backgroundColor: '#D94E34',
             padding: '6px 14px',
             borderRadius: 8,
+            boxShadow: '0 4px 12px rgba(217, 78, 52, 0.22)',
           }}
         >
           <span>🔖</span>
-          <span>GUARDA ESTE RESUMEN</span>
+          <span>{ctaActionLabel}</span>
         </div>
 
         <div

@@ -14,9 +14,11 @@
     "rating": 4.13,
     "ratingsCount": "585K",
     "salesCopies": "+5M",
-    "coverImage": "assets/books/el-poder-de-los-habitos.jpg",
+    "coverImage": "assets/books/el-poder-de-los-habitos-cover.jpg",
     "categoryTag": "NEUROCIENCIA CONDUCTUAL · MIT LABS",
-    "goodreadsUrl": "https://www.goodreads.com/book/show/12609433-the-power-of-habit?ref=rae_9"
+    "goodreadsUrl": "https://www.goodreads.com/book/show/12609433-the-power-of-habit",
+    "fallbackCoverImage": "assets/books/el-poder-de-los-habitos-cover.svg",
+    "coverSource": "local-cache-hd"
   },
   "scenes": [
     {
@@ -25,7 +27,8 @@
       "text": "¿Crees que controlas tus decisiones diarias? [PAUSA 0.4s] Un estudio de la Universidad de Duke demostró que más del cuarenta por ciento de lo que haces cada día no son elecciones reales, sino hábitos automáticos grabados en tus ganglios basales.",
       "characterPreset": "dramatic",
       "blueprintMode": "EDITORIAL_PAPER",
-      "visualCue": "Portada editorial 2.5D de El poder de los hábitos de Charles Duhigg, contador LiveCounter subiendo al 40% y contraste entre Decisión Consciente y Piloto Automático.",
+      "layoutPreset": "HOOK_COVER_BATTLE",
+      "visualCue": "Portada editorial 2.5D de El poder de los hábitos de Charles Duhigg con 3 píldoras diferenciadas (Autor, Logo Oficial Goodreads + Rating, Lectores), contador LiveCounter subiendo al 40% y contraste entre Elección Consciente y Piloto Automático.",
       "cameraTarget": {
         "x": 0,
         "y": 0,
@@ -39,9 +42,18 @@
       },
       "bookVisualData": {
         "hookStat": "40%",
-        "hookLabel": "ACCIONES AUTOMATIZADAS",
-        "mythLabel": "VOLUNTAD",
-        "realityLabel": "AUTOMATISMO",
+        "hookNumericValue": 40,
+        "hookUnit": "%",
+        "hookLabel": "De tus acciones son hábitos automáticos",
+        "hookSource": "Estudio de la Universidad de Duke",
+        "hookTriggerKeyword": ["cuarenta", "estudio"],
+        "battleTriggerKeyword": ["elecciones", "automaticos", "habitos"],
+        "mythLabel": "Elección Consciente",
+        "mythSubtitle": "Creemos que decidimos cada acción con la mente",
+        "mythTag": "ILUSIÓN DE CONTROL",
+        "realityLabel": "Piloto Automático",
+        "realitySubtitle": "Los ganglios basales ejecutan la conducta sin pensar",
+        "realityTag": "REALIDAD NEUROLÓGICA (40%)",
         "goodreadsRating": "★ 4.13",
         "goodreadsReviews": "585K valoraciones",
         "rulerLabel": "375 PÁGINAS · 585K LECTORES EN GOODREADS"
@@ -53,7 +65,8 @@
       "text": "En los laboratorios del MIT descubrieron cómo el cerebro ahorra energía: [PAUSA 0.4s] todo hábito opera en un bucle de tres fases. [PAUSA 0.4s] Una señal que lo activa, una rutina automática y una recompensa química que libera dopamina.",
       "characterPreset": "narrator",
       "blueprintMode": "EDITORIAL_PAPER",
-      "visualCue": "Circuito vectorial de 3 fases con partícula de dopamina: Señal ambiental, Rutina física o mental y Recompensa biológica, impulsado por el Anhelo.",
+      "layoutPreset": "THESIS_LOOP_CIRCUIT",
+      "visualCue": "Circuito vectorial de 4 estaciones con auto-binding semántico a la voz: Señal ambiental, Rutina física o mental, Recompensa biológica y Anhelo de dopamina.",
       "cameraTarget": {
         "x": 1120,
         "y": 0,
@@ -63,15 +76,47 @@
       "metrics": {
         "label": "FASES DEL BUCLE",
         "numericValue": 3,
-        "unit": "PASOS"
+        "unit": " FASES"
       },
       "bookVisualData": {
+        "hookTriggerKeyword": ["tres", "fases", "bucle"],
         "loopSteps": [
           "SEÑAL",
           "RUTINA",
-          "RECOMPENSA"
+          "RECOMPENSA",
+          "ANHELO"
         ],
-        "centralQuote": "El cerebro transforma rutinas en hábitos automáticos para liberar espacio cognitivo.",
+        "circuitNodes": [
+          {
+            "id": "signal",
+            "num": "01",
+            "label": "SEÑAL",
+            "sublabel": "Disparador ambiental o emocional",
+            "triggerKeyword": ["señal", "senal"]
+          },
+          {
+            "id": "routine",
+            "num": "02",
+            "label": "RUTINA",
+            "sublabel": "Conducta física, mental o emocional",
+            "triggerKeyword": ["rutina"]
+          },
+          {
+            "id": "reward",
+            "num": "03",
+            "label": "RECOMPENSA",
+            "sublabel": "Descarga neuroquímica de dopamina",
+            "triggerKeyword": ["recompensa"]
+          },
+          {
+            "id": "craving",
+            "num": "04",
+            "label": "ANHELO",
+            "sublabel": "Combustible biológico del bucle",
+            "triggerKeyword": ["dopamina", "libera"]
+          }
+        ],
+        "centralQuote": "«El anhelo es el combustible silencioso que mantiene girando el bucle en tu cerebro.»",
         "highlightWords": [
           "rutinas",
           "hábitos automáticos"
@@ -84,7 +129,8 @@
       "text": "Aquí reside la gran revelación de Charles Duhigg: [PAUSA 0.4s] no puedes destruir un mal hábito, solo puedes sustituirlo. [PAUSA 0.4s] Debes conservar la misma señal y la misma recompensa, cambiando únicamente la rutina que ejecutas.",
       "characterPreset": "expert",
       "blueprintMode": "EDITORIAL_PAPER",
-      "visualCue": "Reprogramación neuroconductual en vivo: misma señal y recompensa, reemplazando la rutina dañina por una constructiva.",
+      "layoutPreset": "RULE_TRANSFORM_CIRCUIT",
+      "visualCue": "Reprogramación neuroconductual en vivo sincronizada por palabra clave: misma señal y recompensa, reemplazando la rutina dañina por una constructiva.",
       "cameraTarget": {
         "x": 1120,
         "y": 1980,
@@ -97,11 +143,42 @@
         "unit": "LEY"
       },
       "bookVisualData": {
-        "centralQuote": "No puedes extinguir un mal hábito; la regla de oro consiste en transformar la rutina.",
+        "circuitNodes": [
+          {
+            "id": "signal_fixed",
+            "num": "01",
+            "label": "MISMA SEÑAL",
+            "sublabel": "Mantener disparador ambiental",
+            "triggerKeyword": ["señal", "senal"]
+          },
+          {
+            "id": "routine_changed",
+            "num": "02",
+            "label": "RUTINA SUSTITUIDA",
+            "sublabel": "Acción destructiva ➔ constructiva",
+            "triggerKeyword": ["rutina", "cambiando"]
+          },
+          {
+            "id": "reward_fixed",
+            "num": "03",
+            "label": "MISMA RECOMPENSA",
+            "sublabel": "Satisfacer mismo anhelo químico",
+            "triggerKeyword": ["recompensa"]
+          },
+          {
+            "id": "new_habit",
+            "num": "04",
+            "label": "HÁBITO REPROGRAMADO",
+            "sublabel": "Consolidación en ganglios basales",
+            "triggerKeyword": ["ejecutas"]
+          }
+        ],
+        "centralQuote": "No puedes extinguir un mal hábito; la clave consiste en sustituir la rutina conservando la misma señal y recompensa.",
         "highlightWords": [
-          "no puedes extinguir",
-          "transformar la rutina"
-        ]
+          "sustituir la rutina"
+        ],
+        "formulaLabel": "Misma Señal + Nueva Rutina = Misma Recompensa",
+        "formulaSublabel": "El principio científico demostrado por Charles Duhigg"
       }
     },
     {
@@ -110,7 +187,8 @@
       "text": "No todas las conductas pesan lo mismo. [PAUSA 0.4s] Duhigg demuestra que existen hábitos angulares: [PAUSA 0.4s] una sola pequeña victoria, como el ejercicio diario o la seguridad laboral, desata un efecto dominó que transforma todas tus demás rutinas.",
       "characterPreset": "narrator",
       "blueprintMode": "EDITORIAL_PAPER",
-      "visualCue": "Efecto dominó de victorias tempranas: cómo un hábito angular desencadena mejoras en cadena sobre finanzas, salud y disciplina.",
+      "layoutPreset": "LAWS_DOMINO_CASCADE",
+      "visualCue": "Efecto dominó de victorias tempranas sincronizado a la voz: cómo un hábito angular desencadena mejoras en cadena sobre finanzas, salud y disciplina.",
       "cameraTarget": {
         "x": 0,
         "y": 1980,
@@ -123,35 +201,38 @@
         "unit": "HÁBITO"
       },
       "bookVisualData": {
+        "dominoTriggerKeyword": ["domino", "efecto"],
         "actionableLaws": [
           {
-            "index": "PASO 01",
-            "title": "Aislar la Señal",
-            "rule": "Identifica el disparador exacto: lugar, hora o emoción.",
+            "index": "01",
+            "title": "EJERCICIO FÍSICO REGULAR",
+            "rule": "Desencadena automáticamente mejor nutrición, menor impulsividad y mayor productividad.",
             "impactPct": 92,
-            "highlight": true
+            "highlight": false,
+            "triggerKeyword": ["victoria", "ejercicio"]
           },
           {
-            "index": "PASO 02",
-            "title": "Elegir la Recompensa",
-            "rule": "Descubre qué anhelo real estás buscando satisfacer.",
-            "impactPct": 88,
-            "highlight": false
+            "index": "02",
+            "title": "SEGURIDAD LABORAL (ALCOA)",
+            "rule": "Paul O'Neill se enfocó en un solo hábito y quintuplicó los beneficios de la multinacional.",
+            "impactPct": 98,
+            "highlight": true,
+            "triggerKeyword": ["seguridad", "laboral"]
           },
           {
-            "index": "PASO 03",
-            "title": "Reescribir la Rutina",
-            "rule": "Inserta la nueva conducta que entregue el mismo alivio.",
+            "index": "03",
+            "title": "RUTINA MATINAL DE PHELPS",
+            "rule": "Una única secuencia mental automatizada antes de cada carrera produjo 28 medallas olímpicas.",
             "impactPct": 96,
-            "highlight": true
-          },
-          {
-            "index": "PASO 04",
-            "title": "Hábito Angular",
-            "rule": "Empieza por una sola victoria que altere todo el sistema.",
-            "impactPct": 94,
-            "highlight": true
+            "highlight": false,
+            "triggerKeyword": ["desata", "transforma"]
           }
+        ],
+        "dominoSteps": [
+          { "label": "Hábito Angular", "sub": "Paso 1" },
+          { "label": "Mayor Claridad", "sub": "Paso 2" },
+          { "label": "Nuevos Hábitos", "sub": "Paso 3" },
+          { "label": "Transformación", "sub": "Meta" }
         ]
       }
     },
@@ -161,7 +242,8 @@
       "text": "Una vez que entiendes que los hábitos se pueden rediseñar, tienes la libertad y la responsabilidad de transformarlos. [PAUSA 0.5s] El poder de los hábitos, de Charles Duhigg. [PAUSA 0.4s] Guarda este resumen y empieza hoy mismo.",
       "characterPreset": "conversational",
       "blueprintMode": "EDITORIAL_PAPER",
-      "visualCue": "Tarjeta final de conversión con cronómetro oficial @en1minuto.es, portada de Charles Duhigg y pregunta de interacción.",
+      "layoutPreset": "CTA_MANIFESTO_GOODREADS",
+      "visualCue": "Tarjeta final de conversión con cronómetro oficial @en1minuto.es, portada de Charles Duhigg con logo oficial de Goodreads en cajas diferenciadas y pregunta de interacción.",
       "cameraTarget": {
         "x": 560,
         "y": 3960,
@@ -174,8 +256,11 @@
         "unit": "★"
       },
       "bookVisualData": {
-        "identityQuote": "Una vez que entiendes que los hábitos se pueden moldear, tienes la libertad y la responsabilidad de transformarlos.",
-        "ctaPrompt": "¿Cuál es el mal hábito que vas a sustituir esta semana?",
+        "identityQuote": "Una vez que entiendes que los hábitos se pueden rediseñar, tienes la libertad y la responsabilidad de transformarlos.",
+        "highlightWords": ["libertad y la responsabilidad"],
+        "ctaPrompt": "Para empezar hoy mismo tras guardar el resumen: ¿cuál es el mal hábito que vas a sustituir?",
+        "ctaActionText": "GUARDA ESTE RESUMEN",
+        "showCommunityQuestion": true,
         "ctaHandle": "@en1minuto.es",
         "verdictBadge": "OBRA MAESTRA · NEUROCIENCIA APLICADA"
       }

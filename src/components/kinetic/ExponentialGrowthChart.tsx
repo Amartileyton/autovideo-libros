@@ -8,6 +8,7 @@ export interface ExponentialGrowthChartProps {
   width?: number;
   height?: number;
   accentColor?: string;
+  showTitle?: boolean;
 }
 
 /**
@@ -25,6 +26,7 @@ export const ExponentialGrowthChart: React.FC<ExponentialGrowthChartProps> = ({
   width = 888,
   height = 520,
   accentColor = '#D94E34',
+  showTitle = false,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -118,53 +120,55 @@ export const ExponentialGrowthChart: React.FC<ExponentialGrowthChartProps> = ({
         transform: `translateY(${(1 - containerEntrance) * 20}px)`,
       }}
     >
-      {/* 1. Barra de título limpio de la tarjeta */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          borderBottom: '1.5px solid rgba(20, 20, 19, 0.12)',
-          paddingBottom: 12,
-          marginBottom: 8,
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div
-            style={{
-              width: 10,
-              height: 10,
-              borderRadius: '50%',
-              backgroundColor: accentColor,
-            }}
-          />
-          <span
-            style={{
-              fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
-              fontSize: 17,
-              fontWeight: 800,
-              color: '#141413',
-              letterSpacing: '-0.01em',
-            }}
-          >
-            Crecimiento Exponencial (1.01³⁶⁵)
-          </span>
-        </div>
-
+      {/* 1. Barra de título opcional (desactivada por defecto por regla Anti-Clutter) */}
+      {showTitle ? (
         <div
           style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 12,
-            fontWeight: 700,
-            color: accentColor,
-            backgroundColor: 'rgba(217, 78, 52, 0.08)',
-            padding: '3px 10px',
-            borderRadius: 6,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            borderBottom: '1.5px solid rgba(20, 20, 19, 0.12)',
+            paddingBottom: 12,
+            marginBottom: 8,
           }}
         >
-          DÍA {currentPt.day} / 365 · {currentPt.val.toFixed(2)}x
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div
+              style={{
+                width: 10,
+                height: 10,
+                borderRadius: '50%',
+                backgroundColor: accentColor,
+              }}
+            />
+            <span
+              style={{
+                fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
+                fontSize: 17,
+                fontWeight: 800,
+                color: '#141413',
+                letterSpacing: '-0.01em',
+              }}
+            >
+              Crecimiento Exponencial (1.01³⁶⁵)
+            </span>
+          </div>
+
+          <div
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 12,
+              fontWeight: 700,
+              color: accentColor,
+              backgroundColor: 'rgba(217, 78, 52, 0.08)',
+              padding: '3px 10px',
+              borderRadius: 6,
+            }}
+          >
+            DÍA {currentPt.day} / 365 · {currentPt.val.toFixed(2)}x
+          </div>
         </div>
-      </div>
+      ) : null}
 
       {/* 2. Capa SVG: Gráfico, Rejilla, Ejes y Curva Dinámica */}
       <svg

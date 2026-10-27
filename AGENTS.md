@@ -45,17 +45,19 @@ Todo vídeo de resumen de libro debe seguir estrictamente este orden secuencial:
        - `Resumen Ejecutivo de 3 Puntos + CtaEndCard con Cronómetro Hero`
    - **Regla de parada**: El agente se detiene tras lanzar `ask_question` y espera la respuesta del usuario antes de continuar con la Fase 3.
 
-3. **FASE 3 — Sincronización Audio-First con ElevenLabs (`scripts/elevenlabs-sync.mjs`)**:
-   - Una vez confirmados los gráficos en el cuestionario, guardar `src/data/scenes.json` y ejecutar `node scripts/elevenlabs-sync.mjs` para generar `public/audio/scene-1.mp3`..`scene-5.mp3` y los timestamps exactos palabra por palabra en `public/audio/info.json`.
+3. **FASE 3 — Sincronización Audio-First con ElevenLabs (`scripts/elevenlabs-sync.mjs`) + Motor Híbrido Inteligente**:
+   - Una vez confirmados los gráficos en el cuestionario, guardar `src/data/scenes.json` asignando en cada escena su `layoutPreset` correspondiente (`HOOK_COVER_BATTLE`, `THESIS_LOOP_CIRCUIT`, `RULE_TRANSFORM_CIRCUIT`, `LAWS_DOMINO_CASCADE`, `CTA_MANIFESTO_GOODREADS`, etc.) y las palabras clave `triggerKeyword` en `bookVisualData`.
+   - Ejecutar `node scripts/elevenlabs-sync.mjs` para generar `public/audio/scene-1.mp3`..`scene-5.mp3` y los timestamps exactos palabra por palabra en `public/audio/info.json`.
+   - El **Auto-Binder Semántico (`src/utils/wordTimingBinder.ts`)** cruza automáticamente `triggerKeyword` con `wordTimestamps` de `info.json` para encender las estaciones del circuito (`VectorLoopCircuit`), lanzar los contadores (`LiveCounter`) y activar las batallas (`ComparisonBattle`) en el fotograma exacto en que el locutor pronuncia cada palabra.
 
 4. **FASE 4 — Construcción de Escenas con las Reglas Visuales Consolidadas (`Scene1.tsx`–`Scene5.tsx`)**:
-   - Programar las 5 escenas integrando exactamente los gráficos elegidos por el usuario en la Fase 2 y respetando las **4 Reglas Visuales Inquebrantables de `@en1minuto.es`** (ver Sección 0.2).
+   - Configurar o personalizar las 5 escenas respetando las **6 Reglas Visuales Inquebrantables de `@en1minuto.es`** (ver Sección 0.2).
 
 5. **FASE 5 — Gate de Previsualización (`remotion still` + `qa:gate`) antes del Render MP4**:
    - Ejecutar `npm.cmd run typecheck` y `npm.cmd run qa:gate` (16/16 checks en verde).
    - Renderizar fotogramas clave (`npx.cmd remotion still`) o pedir confirmación antes de lanzar el render completo de vídeo MP4.
 
-### 0.2 Las 4 Reglas Visuales Inquebrantables de `@en1minuto.es` (Anti-Regresión)
+### 0.2 Las 6 Reglas Visuales Inquebrantables de `@en1minuto.es` (Anti-Regresión)
 Estas mejoras visuales están integradas en el núcleo del proyecto y **NUNCA** deben revertirse:
 1. **PROHIBIDO el Banner Inferior (`Dock Inferior`) — Solo el Reloj Animado en Solitario**:
    - El vídeo **NO** tiene ningún banner blanco ni barra inferior con texto en la base del lienzo (`1920px`).
@@ -67,6 +69,16 @@ Estas mejoras visuales están integradas en el núcleo del proyecto y **NUNCA** 
    - **Tarjetas Puras sin Barras de Título Superiores**: Prohibido añadir barras superiores internas con viñetas (`● Título de la tarjeta`) o etiquetas redundantes. Las tarjetas (`KineticCard`, `VectorLoopCircuit`, `ComparisonBattle`, etc.) contienen directamente el gráfico, dato visual, métrica o cita de manera limpia y directa sin barras decorativas que ensucien el diseño.
 4. **Subtítulos `Nunito` ExtraBold en Cápsula Limpia sin Solapamientos**:
    - Los subtítulos dinámicos (`DynamicCaptions.tsx`) usan la fuente redondeada `Nunito` (`fontWeight: 800`, `52px`) centrados en `top: SAFE_ZONE.maxSafeY - 190` (`1442px`), justo por encima del reloj en solitario y sin chocar con las tarjetas ni con el reloj.
+5. **Píldoras/Cajas Diferenciadas con Logo Oficial de Goodreads (`GoodreadsBadgeCluster` + `BookCover`)**:
+   - **Prohibido usar una sola píldora plana** que mezcle autor, nota de Goodreads y lectores debajo de la portada.
+   - Es obligatorio usar `<GoodreadsBadgeCluster />` (`src/components/kinetic/GoodreadsBadgeCluster.tsx`), que despliega **3 cajas independientes con entrada escalonada (`SPRING_SNAPPY`)**:
+     1. **Caja 1 (Autor)**: Punto terracota `#D94E34` + nombre del autor en tipografía editorial.
+     2. **Caja 2 Protagonista (Goodreads Oficial)**: Logotipo oficial `public/assets/branding/goodreads-logo.png` + divisor + cápsula oscura `#141413` con estrella dorada `★ rating` y pulso de énfasis elástico.
+     3. **Caja 3 (Lectores)**: Cifra destacada en terracota (`+585K`) + `lectores`.
+   - En la Escena 5 (`Scene5.tsx`), la ficha de reconocimiento del libro también separa la caja de la mini-portada y la caja oficial de Goodreads con el logo `assets/branding/goodreads-logo.png`.
+6. **Coherencia Narrativa del CTA Final y Pregunta a la Comunidad (`ctaPrompt` + `CtaEndCard`)**:
+   - En la última diapositiva (`Scene5.tsx` y `CtaEndCard`), si se incluye una tarjeta con pregunta a la comunidad (`showCommunityQuestion: true`), la pregunta formulada **DEBE estar estrictamente relacionada y coordinada con la llamada a la acción (CTA) del final del vídeo**.
+   - Prohibido formular preguntas genéricas o desvinculadas de la acción de cierre. Si el locutor concluye con *"Guarda este resumen y empieza hoy mismo"*, la pregunta comunitaria debe ligar directamente esa acción: *"Para empezar hoy mismo tras guardar el resumen: ¿cuál es el mal hábito que vas a sustituir?"*, y la micro-acción *"GUARDA ESTE RESUMEN"* se destacará visualmente en Terracota `#D94E34`.
 
 ---
 

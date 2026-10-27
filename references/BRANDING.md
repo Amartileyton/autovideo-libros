@@ -42,8 +42,24 @@
 
 ---
 
-## 5. Workflow Obligatorio con Cuestionario de Gráficos por Diapositiva (`ask_question`)
+## 5. Píldoras/Cajas Diferenciadas con Logo Oficial de Goodreads (`GoodreadsBadgeCluster`)
+- **Prohibido usar una única píldora combinada** para autor, valoración y lectores debajo de la portada del libro en la Escena 1 o en la Escena 5.
+- Se utiliza obligatoriamente el componente `<GoodreadsBadgeCluster />` (`src/components/kinetic/GoodreadsBadgeCluster.tsx`), que presenta **3 cajas diferenciadas en amarillo pálido (`#FEF9C3`)** con bordes asimétricos de relieve (`borderBottom: 4px solid`) y entrada escalonada (`SPRING_SNAPPY`):
+  1. **Caja 1 — Autor**: Punto terracota (`#D94E34`) + nombre del autor.
+  2. **Caja 2 — Goodreads Oficial (Protagonista)**: Logotipo oficial `public/assets/branding/goodreads-logo.png` + línea divisoria sutil + insignia oscura (`#141413`) con estrella ámbar `★ 4.13` y pulso elástico de atención.
+  3. **Caja 3 — Lectores**: Contador en terracota (`+585K`) + etiqueta `lectores`.
+
+---
+
+## 6. Workflow Obligatorio con Cuestionario de Gráficos (`ask_question`) y Motor Híbrido Inteligente
 Cuando el usuario envía el **título de un libro y su enlace de Goodreads**:
-1. Ejecutar `node scripts/book-ingest.mjs --query "<Título>" --url "<URL_Goodreads>"`.
+1. Ejecutar `node scripts/book-ingest.mjs --query "<Título>" --url "<URL_Goodreads>"` (descarga portada con cascada de 4 niveles + fallback vectorial SVG en `<BookCover />`).
 2. **Lanzar obligatoriamente `ask_question`** antes de sintetizar audio o programar escenas para que el usuario elija qué gráfico interactivo quiere en cada una de las 5 diapositivas (`ComparisonBattle`, `VectorLoopCircuit`, `ExponentialGrowthChart`, `KineticCard`, `Efecto Dominó`, `CtaEndCard`).
-3. Una vez respondido el cuestionario, ejecutar `node scripts/elevenlabs-sync.mjs` y construir `Scene1.tsx`–`Scene5.tsx`.
+3. Guardar los `layoutPreset` y `triggerKeyword` en `src/data/scenes.json`, ejecutar `node scripts/elevenlabs-sync.mjs` y dejar que `src/utils/wordTimingBinder.ts` sincronice automáticamente las animaciones al fotograma exacto de cada palabra pronunciada.
+
+---
+
+## 7. Coherencia Narrativa del CTA Final y Pregunta a la Comunidad
+- Si la última diapositiva (`Scene5.tsx` y `CtaEndCard`) incluye la tarjeta interactiva de pregunta a la comunidad (`showCommunityQuestion: true`), su texto debe estar **estrictamente vinculado a la llamada a la acción (CTA) del final del vídeo**.
+- Si el locutor cierra con *"Guarda este resumen y empieza hoy mismo"*, la pregunta no puede ser genérica: debe invitar al debate ligando esa acción (ej. *"Para empezar hoy mismo tras guardar el resumen: ¿cuál es el mal hábito que vas a sustituir?"*).
+- La micro-acción solicitada por el locutor (*"GUARDA ESTE RESUMEN"*) se destacará con fondo Terracota `#D94E34` y texto blanco para reforzar la orden verbal de manera instantánea y elegante.

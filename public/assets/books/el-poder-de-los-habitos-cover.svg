@@ -1,12 +1,27 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="600" height="900" viewBox="0 0 600 900">
-  <rect width="600" height="900" fill="#F8F7F4" rx="12" />
-  <rect x="28" y="28" width="544" height="844" fill="none" stroke="#D94E34" stroke-width="3" rx="6" />
-  <circle cx="300" cy="430" r="145" fill="none" stroke="#F59E0B" stroke-width="4" stroke-dasharray="10 8" />
-  <circle cx="300" cy="430" r="92" fill="rgba(245, 158, 11, 0.14)" stroke="#141413" stroke-width="3" />
-  <text x="300" y="135" text-anchor="middle" font-family="Georgia, serif" font-size="24" letter-spacing="6" fill="#575550">EDICIÓN TÉCNICA INTEGRAL</text>
-  <text x="300" y="235" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="56" fill="#141413">EL</text>
-  <text x="300" y="300" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="56" fill="#D94E34">PODER DE LOS HÁBITOS</text>
-  <text x="300" y="445" text-anchor="middle" font-family="monospace" font-weight="700" font-size="44" fill="#141413">+1% DIARIO</text>
-  <text x="300" y="665" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-size="26" fill="#575550">Cambios pequeños, resultados extraordinarios</text>
-  <text x="300" y="795" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="34" letter-spacing="4" fill="#141413">CHARLES DUHIGG</text>
+  <rect width="600" height="900" fill="#F8F7F4" rx="16" />
+  <rect x="24" y="24" width="552" height="852" fill="#FEF9C3" fill-opacity="0.45" stroke="#141413" stroke-width="3" rx="12" />
+  <rect x="38" y="38" width="524" height="824" fill="none" stroke="#D94E34" stroke-width="2" rx="8" />
+  <rect x="110" y="74" width="380" height="36" rx="18" fill="#FEF9C3" stroke="#141413" stroke-width="2" />
+  <text x="300" y="98" text-anchor="middle" font-family="Arial, sans-serif" font-weight="800" font-size="14" letter-spacing="2" fill="#D94E34">NEUROCIENCIA CONDUCTUAL · MIT LABS</text>
+  <text x="300" y="220" text-anchor="middle" font-family="'Plus Jakarta Sans', 'Arial Black', sans-serif" font-weight="900" font-size="42" letter-spacing="-1" fill="#141413">EL PODER DE LOS</text>
+  <text x="300" y="269" text-anchor="middle" font-family="'Plus Jakarta Sans', 'Arial Black', sans-serif" font-weight="900" font-size="42" letter-spacing="-1" fill="#D94E34">HÁBITOS</text>
+  <g transform="translate(0, 15)">
+    <rect x="115" y="380" width="370" height="220" rx="22" fill="#FEF9C3" stroke="#141413" stroke-width="3" />
+    <path d="M 195 435 L 405 435 L 405 545 L 195 545 Z" fill="none" stroke="#D94E34" stroke-width="4" stroke-dasharray="8 6" />
+    <rect x="140" y="410" width="125" height="50" rx="10" fill="#D94E34" stroke="#141413" stroke-width="2.5" />
+    <text x="202" y="441" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="16" fill="#FFFFFF">01 · SEÑAL</text>
+    <rect x="335" y="410" width="125" height="50" rx="10" fill="#FFFBEB" stroke="#141413" stroke-width="2.5" />
+    <text x="397" y="441" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="16" fill="#141413">02 · RUTINA</text>
+    <rect x="320" y="520" width="150" height="50" rx="10" fill="#FFFBEB" stroke="#141413" stroke-width="2.5" />
+    <text x="395" y="551" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="15" fill="#141413">03 · RECOMPENSA</text>
+    <rect x="140" y="520" width="125" height="50" rx="10" fill="#FFFBEB" stroke="#D94E34" stroke-width="2.5" />
+    <text x="202" y="551" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="16" fill="#D94E34">04 · ANHELO</text>
+    <circle cx="300" cy="490" r="26" fill="#141413" />
+    <text x="300" y="496" text-anchor="middle" font-family="monospace" font-weight="800" font-size="15" fill="#FEF9C3">40%</text>
+  </g>
+  <text x="300" y="685" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-size="22" fill="#575550">The Power of Habit</text>
+  <rect x="150" y="720" width="300" height="40" rx="20" fill="#FEF9C3" stroke="#141413" stroke-width="2" />
+  <text x="300" y="746" text-anchor="middle" font-family="Arial, sans-serif" font-weight="800" font-size="16" fill="#D97706">★ 4.13 GOODREADS · 585K LECTORES</text>
+  <text x="300" y="815" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="30" letter-spacing="3" fill="#141413">CHARLES DUHIGG</text>
 </svg>

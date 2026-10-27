@@ -1,17 +1,28 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   interpolate,
   spring,
   useCurrentFrame,
   useVideoConfig,
 } from 'remotion';
-import type { BookMetadata, BookVisualData } from '../data/schema';
+import type {
+  BookMetadata,
+  BookVisualData,
+  SceneLayoutPreset,
+  WordTimestamp,
+} from '../data/schema';
 import { CLAMP_EXTRAPOLATION, SPRING_SNAPPY } from '../theme/motion';
 import {
+  ComparisonBattle,
+  ExponentialGrowthChart,
   KineticCard,
   VectorLoopCircuit,
-  type CircuitNode,
 } from '../components/kinetic';
+import {
+  bindCircuitNodesToAudio,
+  findKeywordFrameWindow,
+  type BoundCircuitNode,
+} from '../utils/wordTimingBinder';
 
 export interface Scene3Props {
   headline?: string;
@@ -23,9 +34,11 @@ export interface Scene3Props {
   enterFrame?: number;
   bookMetadata?: BookMetadata;
   visualData?: BookVisualData;
+  layoutPreset?: SceneLayoutPreset;
+  wordTimestamps?: WordTimestamp[];
 }
 
-const TRANSFORMATION_NODES: CircuitNode[] = [
+const DEFAULT_TRANSFORMATION_NODES: BoundCircuitNode[] = [
   {
     id: 'signal_fixed',
     num: '01',
@@ -35,6 +48,7 @@ const TRANSFORMATION_NODES: CircuitNode[] = [
     y: 130,
     triggerFrame: 230,
     endSpokenFrame: 275,
+    triggerKeyword: ['señal', 'senal'],
   },
   {
     id: 'routine_changed',
@@ -45,6 +59,7 @@ const TRANSFORMATION_NODES: CircuitNode[] = [
     y: 130,
     triggerFrame: 318,
     endSpokenFrame: 375,
+    triggerKeyword: ['rutina', 'cambiando'],
   },
   {
     id: 'reward_fixed',
@@ -55,6 +70,7 @@ const TRANSFORMATION_NODES: CircuitNode[] = [
     y: 350,
     triggerFrame: 280,
     endSpokenFrame: 319,
+    triggerKeyword: ['recompensa'],
   },
   {
     id: 'new_habit',
@@ -65,26 +81,66 @@ const TRANSFORMATION_NODES: CircuitNode[] = [
     y: 350,
     triggerFrame: 375,
     endSpokenFrame: 410,
+    triggerKeyword: ['ejecutas'],
   },
 ];
 
 /**
- * Scene 3 — La Regla de Oro del Cambio (Circuito de Transformación + Cita Editorial)
- * Timestamps reales de ElevenLabs (417 frames):
- * - 0..50: "Aquí reside la gran revelación de Charles Duhigg:"
- * - 100..200: "no puedes destruir un mal hábito, solo puedes sustituirlo." -> Cita de Oro (KineticCard)
- * - 230..275: "Debes conservar la misma señal..." -> Estación 01 (MISMA SEÑAL)
- * - 280..319: "...y la misma recompensa," -> Estación 03 (MISMA RECOMPENSA)
- * - 318..410: "cambiando únicamente la rutina que ejecutas." -> Estación 02 (RUTINA SUSTITUIDA) y 04 (REPROGRAMADO)
+ * Scene 3 — La Regla de Oro del Cambio (Motor Híbrido Inteligente + Auto-Binder Semántico)
+ * Soporta los 3 presets del cuestionario interactivo:
+ * - RULE_TRANSFORM_CIRCUIT (Default): Circuito interactivo de transformación sincronizado a la voz + Cita Editorial
+ * - RULE_SUBSTITUTION_DIAGRAM: Diagrama de Sustitución (Rutina Vieja Tachada vs Nueva Rutina) + Cita Editorial
+ * - RULE_EXPONENTIAL_EVIDENCE: Gráfico de Progresión Temporal + Tarjeta de Evidencia
  */
 export const Scene3: React.FC<Scene3Props> = ({
   canvasOffsetX = 1120,
   canvasOffsetY = 1980,
   enterFrame = 824,
+  visualData,
+  layoutPreset = 'RULE_TRANSFORM_CIRCUIT',
+  wordTimestamps,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const localFrame = Math.max(0, frame - enterFrame);
+
+  // Auto-binding semántico de los 4 nodos del circuito de transformación
+  const boundNodes = useMemo(() => {
+    const coords = [
+      { x: 170, y: 130, fallbackStart: 230, fallbackEnd: 275 },
+      { x: 718, y: 130, fallbackStart: 318, fallbackEnd: 375 },
+      { x: 718, y: 350, fallbackStart: 280, fallbackEnd: 319 },
+      { x: 170, y: 350, fallbackStart: 375, fallbackEnd: 410 },
+    ];
+
+    const rawNodes: BoundCircuitNode[] =
+      visualData?.circuitNodes && visualData.circuitNodes.length === 4
+        ? visualData.circuitNodes.map((n, idx) => ({
+            id: n.id,
+            num: n.num,
+            label: n.label,
+            sublabel: n.sublabel,
+            x: coords[idx].x,
+            y: coords[idx].y,
+            triggerFrame: n.triggerFrame ?? coords[idx].fallbackStart,
+            endSpokenFrame: n.endSpokenFrame ?? coords[idx].fallbackEnd,
+            triggerKeyword: n.triggerKeyword ?? [n.label],
+          }))
+        : DEFAULT_TRANSFORMATION_NODES;
+
+    return bindCircuitNodesToAudio(rawNodes, wordTimestamps);
+  }, [visualData?.circuitNodes, wordTimestamps]);
+
+  const formulaWindow = useMemo(
+    () =>
+      findKeywordFrameWindow(
+        wordTimestamps,
+        ['recompensa', 'rutina'],
+        280,
+        350
+      ),
+    [wordTimestamps]
+  );
 
   // 1. Cita de Oro de Charles Duhigg (frame 30)
   const quoteEntrance = spring({
@@ -93,9 +149,9 @@ export const Scene3: React.FC<Scene3Props> = ({
     config: SPRING_SNAPPY,
   });
 
-  // 2. Entrada de la tarjeta resumen inferior (frame 280)
+  // 2. Entrada de la tarjeta resumen inferior sincronizada
   const summaryEntrance = spring({
-    frame: Math.max(0, localFrame - 280),
+    frame: Math.max(0, localFrame - formulaWindow.startFrame),
     fps,
     config: SPRING_SNAPPY,
   });
@@ -158,7 +214,7 @@ export const Scene3: React.FC<Scene3Props> = ({
         </KineticCard>
       </div>
 
-      {/* 2. Circuito Vectorial Interactivo de Transformación Sincronizado a la Voz */}
+      {/* 2. Bloque Central Gobernado por layoutPreset (Motor Híbrido Inteligente) */}
       <div
         style={{
           position: 'absolute',
@@ -167,14 +223,38 @@ export const Scene3: React.FC<Scene3Props> = ({
           right: 96,
         }}
       >
-        <VectorLoopCircuit
-          nodes={TRANSFORMATION_NODES}
-          currentFrame={localFrame}
-          accentColor="#D94E34"
-          width={888}
-          height={480}
-          showTitle={false}
-        />
+        {layoutPreset === 'RULE_SUBSTITUTION_DIAGRAM' ? (
+          <ComparisonBattle
+            titleA="Intentar Suprimir el Hábito"
+            subtitleA="Luchar contra la señal y el anhelo agota la fuerza de voluntad"
+            tagA="FRACASO RECURRENTE"
+            titleB="Sustituir Solo la Rutina"
+            subtitleB="Misma señal + Nueva conducta constructiva = Mismo alivio"
+            tagB="REGLA DE ORO (DUHIGG)"
+            metricB={{ value: 100, suffix: '% EFICAZ' }}
+            enterFrameA={130}
+            enterFrameB={185}
+            battleFrame={240}
+            accentColor="#D94E34"
+          />
+        ) : layoutPreset === 'RULE_EXPONENTIAL_EVIDENCE' ? (
+          <ExponentialGrowthChart
+            startFrame={enterFrame + 40}
+            width={888}
+            height={480}
+            accentColor="#D94E34"
+            showTitle={false}
+          />
+        ) : (
+          <VectorLoopCircuit
+            nodes={boundNodes}
+            currentFrame={localFrame}
+            accentColor="#D94E34"
+            width={888}
+            height={480}
+            showTitle={false}
+          />
+        )}
       </div>
 
       {/* 3. Tarjeta Inferior de Fórmula Neuroconductual */}
@@ -211,7 +291,8 @@ export const Scene3: React.FC<Scene3Props> = ({
                 color: '#141413',
               }}
             >
-              Misma Señal + Nueva Rutina = Misma Recompensa
+              {visualData?.formulaLabel ??
+                'Misma Señal + Nueva Rutina = Misma Recompensa'}
             </div>
             <div
               style={{
@@ -221,7 +302,8 @@ export const Scene3: React.FC<Scene3Props> = ({
                 marginTop: 3,
               }}
             >
-              El principio científico demostrado por Charles Duhigg
+              {visualData?.formulaSublabel ??
+                'El principio científico demostrado por Charles Duhigg'}
             </div>
           </div>
           <div

@@ -1,15 +1,23 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { useCurrentFrame } from 'remotion';
+import type {
+  BookMetadata,
+  BookVisualData,
+  SceneLayoutPreset,
+  WordTimestamp,
+} from '../data/schema';
 import {
-  useCurrentFrame,
-  useVideoConfig,
-} from 'remotion';
-import type { BookMetadata, BookVisualData } from '../data/schema';
-import {
+  ComparisonBattle,
+  ExponentialGrowthChart,
   KineticCard,
   LiveCounter,
   VectorLoopCircuit,
-  type CircuitNode,
 } from '../components/kinetic';
+import {
+  bindCircuitNodesToAudio,
+  findKeywordFrameWindow,
+  type BoundCircuitNode,
+} from '../utils/wordTimingBinder';
 
 export interface Scene2Props {
   headline?: string;
@@ -21,9 +29,11 @@ export interface Scene2Props {
   enterFrame?: number;
   bookMetadata?: BookMetadata;
   visualData?: BookVisualData;
+  layoutPreset?: SceneLayoutPreset;
+  wordTimestamps?: WordTimestamp[];
 }
 
-const DUHIGG_NODES: CircuitNode[] = [
+const DEFAULT_DUHIGG_NODES: BoundCircuitNode[] = [
   {
     id: 'signal',
     num: '01',
@@ -33,6 +43,7 @@ const DUHIGG_NODES: CircuitNode[] = [
     y: 130,
     triggerFrame: 235,
     endSpokenFrame: 278,
+    triggerKeyword: ['señal', 'senal'],
   },
   {
     id: 'routine',
@@ -43,6 +54,7 @@ const DUHIGG_NODES: CircuitNode[] = [
     y: 130,
     triggerFrame: 278,
     endSpokenFrame: 317,
+    triggerKeyword: ['rutina'],
   },
   {
     id: 'reward',
@@ -53,6 +65,7 @@ const DUHIGG_NODES: CircuitNode[] = [
     y: 350,
     triggerFrame: 317,
     endSpokenFrame: 357,
+    triggerKeyword: ['recompensa'],
   },
   {
     id: 'craving',
@@ -63,27 +76,68 @@ const DUHIGG_NODES: CircuitNode[] = [
     y: 350,
     triggerFrame: 357,
     endSpokenFrame: 396,
+    triggerKeyword: ['dopamina', 'libera', 'anhelo'],
   },
 ];
 
 /**
- * Scene 2 — El Bucle Neurológico del MIT (Kinetic UI + Vector Loop Circuit)
- * Timestamps reales de ElevenLabs (406 frames):
- * - 0..49: "En los laboratorios del MIT" -> Entrada de tarjeta de ganglios basales
- * - 79..130: "cerebro ahorra energía" -> LiveCounter sube a 3 FASES
- * - 235..278: "Una señal que lo activa," -> Estación 01 (SEÑAL) ACTIVA
- * - 278..317: "una rutina automática" -> Estación 02 (RUTINA) ACTIVA
- * - 317..357: "y una recompensa química" -> Estación 03 (RECOMPENSA) ACTIVA
- * - 357..396: "que libera dopamina." -> Estación 04 (ANHELO) ACTIVA
+ * Scene 2 — La Tesis / Mecanismo Científico (Motor Híbrido Inteligente + Auto-Binder Semántico)
+ * Soporta los 3 presets del cuestionario interactivo:
+ * - THESIS_LOOP_CIRCUIT (Default): VectorLoopCircuit sincronizado a la voz + KineticCard
+ * - THESIS_EXPONENTIAL_CHART: ExponentialGrowthChart + LiveCounter
+ * - THESIS_COMPARISON_BATTLE: ComparisonBattle + KineticCard
  */
 export const Scene2: React.FC<Scene2Props> = ({
+  metricValue = 3,
+  metricUnit = ' FASES',
   canvasOffsetX = 1120,
   canvasOffsetY = 0,
   enterFrame = 428,
+  visualData,
+  layoutPreset = 'THESIS_LOOP_CIRCUIT',
+  wordTimestamps,
 }) => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
   const localFrame = Math.max(0, frame - enterFrame);
+
+  // Auto-binding del contador de fases
+  const counterWindow = useMemo(
+    () =>
+      findKeywordFrameWindow(
+        wordTimestamps,
+        visualData?.hookTriggerKeyword ?? ['tres', 'fases', 'bucle'],
+        165,
+        200
+      ),
+    [wordTimestamps, visualData?.hookTriggerKeyword]
+  );
+
+  // Auto-binding semántico de los 4 nodos del circuito a partir de scenes.json + info.json
+  const boundNodes = useMemo(() => {
+    const coords = [
+      { x: 170, y: 130, fallbackStart: 235, fallbackEnd: 278 },
+      { x: 718, y: 130, fallbackStart: 278, fallbackEnd: 317 },
+      { x: 718, y: 350, fallbackStart: 317, fallbackEnd: 357 },
+      { x: 170, y: 350, fallbackStart: 357, fallbackEnd: 396 },
+    ];
+
+    const rawNodes: BoundCircuitNode[] =
+      visualData?.circuitNodes && visualData.circuitNodes.length === 4
+        ? visualData.circuitNodes.map((n, idx) => ({
+            id: n.id,
+            num: n.num,
+            label: n.label,
+            sublabel: n.sublabel,
+            x: coords[idx].x,
+            y: coords[idx].y,
+            triggerFrame: n.triggerFrame ?? coords[idx].fallbackStart,
+            endSpokenFrame: n.endSpokenFrame ?? coords[idx].fallbackEnd,
+            triggerKeyword: n.triggerKeyword ?? [n.label],
+          }))
+        : DEFAULT_DUHIGG_NODES;
+
+    return bindCircuitNodesToAudio(rawNodes, wordTimestamps);
+  }, [visualData?.circuitNodes, wordTimestamps]);
 
   return (
     <div
@@ -98,7 +152,7 @@ export const Scene2: React.FC<Scene2Props> = ({
         boxSizing: 'border-box',
       }}
     >
-      {/* 1. Tarjeta Ganglios Basales (Sin título de fondo ni barra redundante) */}
+      {/* 1. Tarjeta Superior con LiveCounter sincronizado (Sin título de fondo ni barra redundante) */}
       <div style={{ position: 'absolute', top: 150, left: 96, right: 96 }}>
         <KineticCard
           enterFrame={10}
@@ -120,10 +174,10 @@ export const Scene2: React.FC<Scene2Props> = ({
           >
             <LiveCounter
               from={0}
-              to={3}
-              startFrame={170}
+              to={metricValue}
+              startFrame={counterWindow.startFrame}
               durationFrames={25}
-              suffix=" FASES"
+              suffix={metricUnit.startsWith(' ') ? metricUnit : ` ${metricUnit}`}
               fontSize={60}
               color="#141413"
             />
@@ -144,7 +198,7 @@ export const Scene2: React.FC<Scene2Props> = ({
         </KineticCard>
       </div>
 
-      {/* 2. Circuito Vectorial Animado del Bucle del Hábito Sincronizado a la Voz */}
+      {/* 2. Bloque Central Gobernado por layoutPreset (Motor Híbrido Inteligente) */}
       <div
         style={{
           position: 'absolute',
@@ -153,14 +207,38 @@ export const Scene2: React.FC<Scene2Props> = ({
           right: 96,
         }}
       >
-        <VectorLoopCircuit
-          nodes={DUHIGG_NODES}
-          currentFrame={localFrame}
-          accentColor="#D94E34"
-          width={888}
-          height={480}
-          showTitle={false}
-        />
+        {layoutPreset === 'THESIS_EXPONENTIAL_CHART' ? (
+          <ExponentialGrowthChart
+            startFrame={enterFrame + 30}
+            width={888}
+            height={480}
+            accentColor="#D94E34"
+            showTitle={false}
+          />
+        ) : layoutPreset === 'THESIS_COMPARISON_BATTLE' ? (
+          <ComparisonBattle
+            titleA={visualData?.mythLabel ?? 'Corteza Prefrontal'}
+            subtitleA="Alto gasto metabólico en cada micro-decisión"
+            tagA="ESFUERZO CONSCIENTE"
+            titleB={visualData?.realityLabel ?? 'Ganglios Basales'}
+            subtitleB="Ejecución automática en bucle de 3 fases"
+            tagB="AHORRO NEURONAL"
+            metricB={{ value: metricValue, suffix: ' FASES' }}
+            enterFrameA={120}
+            enterFrameB={170}
+            battleFrame={220}
+            accentColor="#D94E34"
+          />
+        ) : (
+          <VectorLoopCircuit
+            nodes={boundNodes}
+            currentFrame={localFrame}
+            accentColor="#D94E34"
+            width={888}
+            height={480}
+            showTitle={false}
+          />
+        )}
       </div>
 
       {/* 3. Tarjeta Inferior con Cita Neurocientífica (Sin barra de título redundante) */}
@@ -188,7 +266,8 @@ export const Scene2: React.FC<Scene2Props> = ({
               textAlign: 'center',
             }}
           >
-            «El anhelo es el combustible silencioso que mantiene girando el bucle en tu cerebro.»
+            {visualData?.centralQuote ??
+              '«El anhelo es el combustible silencioso que mantiene girando el bucle en tu cerebro.»'}
           </div>
         </KineticCard>
       </div>
