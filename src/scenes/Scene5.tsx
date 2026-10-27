@@ -33,14 +33,16 @@ export interface Scene5Props {
 
 /**
  * Scene 5 — El Manifiesto Final + Goodreads Oficial + Call To Action (Motor Híbrido Inteligente)
- * Soporta los 2 presets del cuestionario interactivo:
- * - CTA_MANIFESTO_GOODREADS (Default): Cita Manifiesto (KineticCard) + Ficha Goodreads con Logo Oficial y Cajas Diferenciadas + CtaEndCard
- * - CTA_EXECUTIVE_SUMMARY: Resumen Ejecutivo de 3 Puntos + CtaEndCard con Cronómetro Hero
+ *
+ * Distribución vertical balanceada que ocupa toda la pantalla de arriba hacia abajo (90px a 1580px):
+ * 1. Manifiesto / Cita Editorial: top 90px a 360px
+ * 2. Ficha Libro + Píldoras Diferenciadas de Goodreads: top 420px a 700px
+ * 3. CtaEndCard con ranura acoplada para el Cronómetro Hero: top 760px a 1580px
  */
 export const Scene5: React.FC<Scene5Props> = ({
   canvasOffsetX = 560,
   canvasOffsetY = 3960,
-  enterFrame = 1655,
+  enterFrame = 1548,
   bookMetadata,
   visualData,
   layoutPreset = 'CTA_MANIFESTO_GOODREADS',
@@ -50,46 +52,33 @@ export const Scene5: React.FC<Scene5Props> = ({
   const { fps } = useVideoConfig();
   const localFrame = Math.max(0, frame - enterFrame);
 
+  // Ventana para el bloque del libro (frame ~170-240 cuando se menciona el libro)
   const bookWindow = useMemo(
     () =>
       findKeywordFrameWindow(
         wordTimestamps,
-        ['poder', 'charles', 'duhigg'],
+        ['doce', 'reglas', 'vivir', 'jordan', 'peterson'],
         170,
-        255
+        250
       ),
     [wordTimestamps]
   );
 
-  const ctaWindow = useMemo(
-    () =>
-      findKeywordFrameWindow(
-        wordTimestamps,
-        ['guarda', 'resumen', 'empieza'],
-        260,
-        395
-      ),
-    [wordTimestamps]
-  );
-
-  // 1. Ficha de Mini Portada y Reconocimiento con cajas diferenciadas
+  // 1. Ficha de Mini Portada y Reconocimiento con cajas diferenciadas (frame 170)
   const bookPillEntrance = spring({
-    frame: Math.max(0, localFrame - bookWindow.startFrame),
+    frame: Math.max(0, localFrame - (bookWindow.startFrame - 15)),
     fps,
     config: SPRING_SNAPPY,
   });
 
   const badgePop = spring({
-    frame: Math.max(0, localFrame - (bookWindow.startFrame + 12)),
+    frame: Math.max(0, localFrame - (bookWindow.startFrame - 5)),
     fps,
     config: SPRING_SNAPPY,
   });
 
-  const summaryPoints = visualData?.executiveSummaryPoints ?? [
-    '1. Identifica la Señal y el Anhelo que disparan tu conducta.',
-    '2. Sustituye únicamente la Rutina conservando la misma Recompensa.',
-    '3. Enfócate en 1 Hábito Angular para desatar el efecto dominó.',
-  ];
+  // CTA Card entra suavemente en localFrame = 180 para preparar el aterrizaje del reloj volador
+  const ctaCardEntranceFrame = 180;
 
   return (
     <div
@@ -100,144 +89,125 @@ export const Scene5: React.FC<Scene5Props> = ({
         width: 1080,
         height: 1920,
         pointerEvents: 'none',
-        padding: '0 96px',
         boxSizing: 'border-box',
       }}
     >
-      {/* 1. Bloque Superior según layoutPreset: Manifiesto o Resumen Ejecutivo de 3 Puntos */}
-      <div style={{ position: 'absolute', top: 150, left: 96, right: 96 }}>
-        {layoutPreset === 'CTA_EXECUTIVE_SUMMARY' ? (
-          <KineticCard
-            enterFrame={10}
-            accentBorderColor="#141413"
-            badgeColor="#D94E34"
-            padding="22px 26px"
+      {/* 1. Bloque Superior: Manifiesto de Gran Formato y Legibilidad (top: 90px a 360px) */}
+      <div style={{ position: 'absolute', top: 90, left: 54, right: 54 }}>
+        <KineticCard
+          enterFrame={10}
+          accentBorderColor="#141413"
+          badgeColor="#D94E34"
+          padding="38px 44px"
+          style={{
+            borderTop: '8px solid #D94E34',
+          }}
+        >
+          <blockquote
             style={{
-              borderTop: '6px solid #D94E34',
+              margin: 0,
+              fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
+              fontSize: 34,
+              fontWeight: 900,
+              fontStyle: 'normal',
+              lineHeight: 1.38,
+              color: '#141413',
+              letterSpacing: '-0.02em',
+              textAlign: 'center',
             }}
           >
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {summaryPoints.map((pt) => (
-                <div
-                  key={pt}
-                  style={{
-                    fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
-                    fontSize: 18,
-                    fontWeight: 800,
-                    color: '#141413',
-                    lineHeight: 1.32,
-                  }}
-                >
-                  {pt}
-                </div>
-              ))}
-            </div>
-          </KineticCard>
-        ) : (
-          <KineticCard
-            enterFrame={10}
-            accentBorderColor="#141413"
-            badgeColor="#D94E34"
-            padding="26px 32px"
-            style={{
-              borderTop: '6px solid #D94E34',
-            }}
-          >
-            <blockquote
-              style={{
-                margin: 0,
-                fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
-                fontSize: 27,
-                fontWeight: 800,
-                fontStyle: 'normal',
-                lineHeight: 1.32,
-                color: '#141413',
-                letterSpacing: '-0.02em',
-                textAlign: 'center',
-              }}
-            >
-              «Una vez que entiendes que los hábitos se pueden rediseñar, tienes la{' '}
-              <span
-                style={{
-                  backgroundColor: 'rgba(217, 78, 52, 0.16)',
-                  padding: '2px 8px',
-                  borderRadius: 6,
-                  color: '#D94E34',
-                  fontWeight: 800,
-                }}
-              >
-                libertad y la responsabilidad
-              </span>{' '}
-              de transformarlos.»
-            </blockquote>
-          </KineticCard>
-        )}
+            {visualData?.identityQuote ? (
+              visualData.identityQuote.includes('antídoto real frente al caos') ? (
+                <>
+                  «Asumir la carga de tu propio destino es el{' '}
+                  <span
+                    style={{
+                      backgroundColor: 'rgba(217, 78, 52, 0.16)',
+                      padding: '2px 12px',
+                      borderRadius: 6,
+                      color: '#D94E34',
+                      fontWeight: 900,
+                    }}
+                  >
+                    antídoto real frente al caos
+                  </span>
+                  .»
+                </>
+              ) : (
+                `«${visualData.identityQuote}»`
+              )
+            ) : (
+              '«Asumir la carga de tu propio destino es el único antídoto real frente al caos.»'
+            )}
+          </blockquote>
+        </KineticCard>
       </div>
 
-      {/* 2. Ficha Libro + Píldoras Diferenciadas con Logo Oficial de Goodreads */}
+      {/* 2. Ficha Libro + Píldoras Diferenciadas con Logo Oficial de Goodreads (top: 420px a 700px) */}
       <div
         style={{
           position: 'absolute',
-          top: 355,
-          left: 96,
-          right: 96,
+          top: 420,
+          left: 54,
+          right: 54,
           display: 'flex',
           alignItems: 'stretch',
           justifyContent: 'space-between',
-          gap: 14,
+          gap: 20,
         }}
       >
         {/* Caja A: Mini-Portada + Título y Autor */}
         <div
           style={{
-            flex: 1,
+            flex: 1.15,
             opacity: bookPillEntrance,
             transform: `translateY(${(1 - bookPillEntrance) * 16}px) scale(${interpolate(
               bookPillEntrance,
               [0, 1],
-              [0.95, 1],
+              [0.94, 1],
               CLAMP_EXTRAPOLATION
             )})`,
             backgroundColor: '#FEF9C3',
-            border: '2px solid #141413',
-            borderBottom: '4px solid #141413',
-            borderRadius: 18,
-            padding: '14px 20px',
+            border: '2.5px solid #141413',
+            borderBottom: '5px solid #141413',
+            borderRadius: 24,
+            padding: '22px 30px',
             display: 'flex',
             alignItems: 'center',
-            gap: 16,
-            boxShadow: '0 6px 20px rgba(20, 20, 19, 0.06)',
+            gap: 22,
+            boxShadow: '0 10px 28px rgba(20, 20, 19, 0.08)',
           }}
         >
           <BookCover
             bookMetadata={bookMetadata}
-            width={50}
-            height={75}
-            borderRadius={6}
+            width={84}
+            height={122}
+            borderRadius={8}
             variant="mini"
           />
           <div>
             <div
               style={{
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
-                fontSize: 18,
+                fontSize: 26,
                 fontWeight: 900,
                 color: '#141413',
+                lineHeight: 1.2,
               }}
             >
-              {bookMetadata?.title ?? 'El poder de los hábitos'}
+              {bookMetadata?.title ?? '12 reglas para vivir'}
             </div>
             <div
               style={{
                 fontFamily: "'Inter', sans-serif",
-                fontSize: 14,
+                fontSize: 18,
                 fontWeight: 700,
                 color: '#575550',
-                marginTop: 4,
+                marginTop: 6,
               }}
             >
-              {bookMetadata?.author ?? 'Charles Duhigg'} ·{' '}
-              {bookMetadata?.pages ?? 375} págs.
+              {bookMetadata?.author ?? 'Jordan B. Peterson'} ·{' '}
+              {bookMetadata?.pages ?? 512} págs.
             </div>
           </div>
         </div>
@@ -245,6 +215,7 @@ export const Scene5: React.FC<Scene5Props> = ({
         {/* Caja B Diferenciada: Logo Oficial de Goodreads + Calificación + Lectores */}
         <div
           style={{
+            flex: 0.85,
             opacity: badgePop,
             transform: `translateY(${(1 - badgePop) * 18}px) scale(${interpolate(
               badgePop,
@@ -253,71 +224,72 @@ export const Scene5: React.FC<Scene5Props> = ({
               CLAMP_EXTRAPOLATION
             )})`,
             backgroundColor: '#FEF9C3',
-            border: '2px solid #141413',
-            borderBottom: '4px solid #D97706',
-            borderRadius: 18,
-            padding: '12px 20px',
+            border: '2.5px solid #141413',
+            borderBottom: '5px solid #D97706',
+            borderRadius: 24,
+            padding: '22px 28px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: 6,
-            boxShadow: '0 8px 22px rgba(217, 119, 6, 0.14)',
+            gap: 12,
+            boxShadow: '0 12px 32px rgba(217, 119, 6, 0.16)',
           }}
         >
           <Img
             src={staticFile('assets/branding/goodreads-logo.png')}
             style={{
-              height: 17,
+              height: 28,
               width: 'auto',
               objectFit: 'contain',
               display: 'block',
             }}
           />
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
             <span
               style={{
                 backgroundColor: '#141413',
                 color: '#FEF9C3',
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
-                fontSize: 14,
+                fontSize: 19,
                 fontWeight: 900,
-                padding: '3px 9px',
-                borderRadius: 8,
+                padding: '6px 16px',
+                borderRadius: 12,
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: 4,
+                gap: 6,
               }}
             >
-              <span style={{ color: '#F59E0B' }}>★</span>
-              {bookMetadata?.rating ?? 4.13}
+              <span style={{ color: '#F59E0B', fontSize: 19 }}>★</span>
+              {bookMetadata?.rating ?? 3.90}
             </span>
             <span
               style={{
                 fontFamily: "'JetBrains Mono', monospace",
-                fontSize: 12,
+                fontSize: 17,
                 color: '#D94E34',
-                fontWeight: 800,
+                fontWeight: 900,
               }}
             >
-              +{bookMetadata?.ratingsCount ?? '585K'}
+              +{bookMetadata?.ratingsCount ?? '240K'}
             </span>
           </div>
         </div>
       </div>
 
-      {/* 3. Tarjeta Final de Call To Action (CTA) de Alto Rendimiento */}
-      <div style={{ position: 'absolute', top: 490, left: 96, right: 96 }}>
+      {/* 3. Tarjeta Final de Call To Action (CTA) con ranura para el reloj volador (top: 760px a 1580px) */}
+      <div style={{ position: 'absolute', top: 760, left: 54, right: 54 }}>
         <CtaEndCard
-          enterFrame={ctaWindow.startFrame}
+          enterFrame={ctaCardEntranceFrame}
           handle={BRAND_CONFIG.channelHandle}
-          ctaText={visualData?.ctaPrompt ? 'Guarda este resumen y empieza hoy mismo' : undefined}
-          ctaActionLabel={visualData?.ctaActionText ?? 'GUARDA ESTE RESUMEN'}
+          ctaText="Guarda este resumen y empieza hoy mismo"
+          ctaActionLabel={visualData?.ctaActionText ?? "GUARDA ESTE RESUMEN Y EMPIEZA HOY MISMO"}
           showCommunityQuestion={visualData?.showCommunityQuestion ?? true}
           questionText={
             visualData?.ctaPrompt ??
-            'Para empezar hoy mismo tras guardar el resumen: ¿cuál es el mal hábito que vas a sustituir?'
+            'Para empezar hoy mismo tras guardar el resumen: ¿cuál es el rincón de tu vida o habitación que vas a poner en orden hoy?'
           }
+          showInternalStopwatch={false}
         />
       </div>
     </div>

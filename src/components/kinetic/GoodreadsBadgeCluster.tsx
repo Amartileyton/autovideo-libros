@@ -29,10 +29,10 @@ export interface GoodreadsBadgeClusterProps {
  * destacando en el centro el logotipo oficial de Goodreads junto a su calificación verificada.
  */
 export const GoodreadsBadgeCluster: React.FC<GoodreadsBadgeClusterProps> = ({
-  author = 'Charles Duhigg',
-  rating = 4.13,
-  ratingsCount = '585K',
-  startFrame = 65,
+  author = 'Morgan Housel',
+  rating = 4.38,
+  ratingsCount = '1.94M',
+  startFrame = 14,
   currentFrame,
   style,
 }) => {
@@ -40,38 +40,32 @@ export const GoodreadsBadgeCluster: React.FC<GoodreadsBadgeClusterProps> = ({
   const frame = currentFrame ?? globalFrame;
   const { fps } = useVideoConfig();
 
-  // Entrada escalonada de las 3 cajas independientes
-  const pill1Spring = spring({
+  // Entrada tipo "estampado de parche / sticker" con impacto y rebote elástico progresivo
+  // Parche 1 (Autor): entra muy temprano (frame 14)
+  const patch1Spring = spring({
     frame: Math.max(0, frame - startFrame),
     fps,
-    config: SPRING_SNAPPY,
+    config: { damping: 14, stiffness: 220, mass: 0.7 },
   });
 
-  const pill2Spring = spring({
-    frame: Math.max(0, frame - (startFrame + 8)),
-    fps,
-    config: SPRING_SNAPPY,
-  });
-
-  const pill3Spring = spring({
-    frame: Math.max(0, frame - (startFrame + 16)),
-    fps,
-    config: SPRING_SNAPPY,
-  });
-
-  // Pulso sutil de énfasis sobre la caja central de Goodreads cuando termina de entrar
-  const highlightPop = spring({
+  // Parche 2 (Goodreads Oficial): se estampa en frame 42
+  const patch2Spring = spring({
     frame: Math.max(0, frame - (startFrame + 28)),
     fps,
-    config: SPRING_SNAPPY,
+    config: { damping: 14, stiffness: 220, mass: 0.7 },
   });
 
-  const centerScale = interpolate(
-    highlightPop,
-    [0, 0.5, 1],
-    [1, 1.05, 1.02],
-    CLAMP_EXTRAPOLATION
-  );
+  // Parche 3 (Comunidad de Lectores): se estampa en frame 70
+  const patch3Spring = spring({
+    frame: Math.max(0, frame - (startFrame + 56)),
+    fps,
+    config: { damping: 14, stiffness: 220, mass: 0.7 },
+  });
+
+  // Escalas de impacto: caen desde 1.45x y rebotan a 1.0x como un sello físico
+  const scale1 = interpolate(patch1Spring, [0, 1], [1.45, 1], CLAMP_EXTRAPOLATION);
+  const scale2 = interpolate(patch2Spring, [0, 1], [1.5, 1], CLAMP_EXTRAPOLATION);
+  const scale3 = interpolate(patch3Spring, [0, 1], [1.4, 1], CLAMP_EXTRAPOLATION);
 
   const cleanCount = String(ratingsCount).startsWith('+')
     ? String(ratingsCount)
@@ -84,46 +78,43 @@ export const GoodreadsBadgeCluster: React.FC<GoodreadsBadgeClusterProps> = ({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: 12,
-        marginTop: 18,
+        gap: 14,
+        marginTop: 22,
         width: '100%',
         ...style,
       }}
     >
-      {/* CAJA 1: Autor del Libro */}
+      {/* PARCHE 1: Sello Autor del Libro con inclinación sticker */}
       <div
         style={{
           display: 'inline-flex',
           alignItems: 'center',
-          gap: 8,
-          padding: '10px 18px',
+          gap: 10,
+          padding: '12px 22px',
           backgroundColor: '#FEF9C3',
-          border: '2px solid #141413',
-          borderBottom: '4px solid #141413',
-          borderRadius: 14,
-          boxShadow: '0 6px 16px rgba(20, 20, 19, 0.06)',
-          opacity: pill1Spring,
-          transform: `translateY(${(1 - pill1Spring) * 18}px) scale(${interpolate(
-            pill1Spring,
-            [0, 1],
-            [0.9, 1],
-            CLAMP_EXTRAPOLATION
-          )})`,
+          border: '2.5px solid #141413',
+          borderBottom: '5px solid #141413',
+          borderRadius: 16,
+          boxShadow: '0 10px 24px rgba(20, 20, 19, 0.12)',
+          opacity: patch1Spring,
+          transform: `translateY(${(1 - patch1Spring) * -30}px) scale(${scale1}) rotate(-2.5deg)`,
+          transformOrigin: 'center center',
         }}
       >
         <span
           style={{
-            width: 8,
-            height: 8,
+            width: 10,
+            height: 10,
             borderRadius: '50%',
             backgroundColor: '#D94E34',
             flexShrink: 0,
+            boxShadow: '0 0 0 2px rgba(217, 78, 52, 0.25)',
           }}
         />
         <span
           style={{
             fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
-            fontSize: 15,
+            fontSize: 18,
             fontWeight: 800,
             color: '#141413',
             letterSpacing: '-0.01em',
@@ -134,30 +125,29 @@ export const GoodreadsBadgeCluster: React.FC<GoodreadsBadgeClusterProps> = ({
         </span>
       </div>
 
-      {/* CAJA 2 (PROTAGONISTA): Logo Oficial de Goodreads + Calificación Estrella */}
+      {/* PARCHE 2: Parche Oficial Goodreads con estrella dorada */}
       <div
         style={{
           display: 'inline-flex',
           alignItems: 'center',
-          gap: 10,
-          padding: '9px 18px',
+          gap: 12,
+          padding: '12px 22px',
           backgroundColor: '#FEF9C3',
-          border: '2px solid #141413',
-          borderBottom: '4px solid #D97706',
-          borderRadius: 14,
+          border: '2.5px solid #141413',
+          borderBottom: '5px solid #D97706',
+          borderRadius: 16,
           boxShadow:
-            '0 10px 24px rgba(217, 119, 6, 0.15), 0 3px 8px rgba(20, 20, 19, 0.06)',
-          opacity: pill2Spring,
-          transform: `translateY(${(1 - pill2Spring) * 20}px) scale(${
-            interpolate(pill2Spring, [0, 1], [0.88, 1], CLAMP_EXTRAPOLATION) *
-            centerScale
-          })`,
+            '0 14px 30px rgba(217, 119, 6, 0.20), 0 4px 12px rgba(20, 20, 19, 0.08)',
+          opacity: patch2Spring,
+          transform: `translateY(${(1 - patch2Spring) * -35}px) scale(${scale2}) rotate(3.2deg)`,
+          transformOrigin: 'center center',
+          zIndex: 2,
         }}
       >
         <Img
           src={staticFile('assets/branding/goodreads-logo.png')}
           style={{
-            height: 19,
+            height: 22,
             width: 'auto',
             objectFit: 'contain',
             display: 'block',
@@ -165,29 +155,30 @@ export const GoodreadsBadgeCluster: React.FC<GoodreadsBadgeClusterProps> = ({
         />
         <span
           style={{
-            width: 1.5,
-            height: 16,
-            backgroundColor: 'rgba(20, 20, 19, 0.18)',
+            width: 2,
+            height: 20,
+            backgroundColor: 'rgba(20, 20, 19, 0.22)',
           }}
         />
         <div
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: 4,
+            gap: 5,
             backgroundColor: '#141413',
             color: '#FEF9C3',
-            padding: '3px 9px',
-            borderRadius: 8,
+            padding: '4px 12px',
+            borderRadius: 10,
+            boxShadow: '0 2px 6px rgba(0,0,0,0.25)',
           }}
         >
-          <span style={{ color: '#F59E0B', fontSize: 14, lineHeight: 1 }}>
+          <span style={{ color: '#F59E0B', fontSize: 16, lineHeight: 1 }}>
             ★
           </span>
           <span
             style={{
               fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
-              fontSize: 14,
+              fontSize: 17,
               fontWeight: 900,
               color: '#FEF9C3',
               letterSpacing: '-0.01em',
@@ -198,31 +189,27 @@ export const GoodreadsBadgeCluster: React.FC<GoodreadsBadgeClusterProps> = ({
         </div>
       </div>
 
-      {/* CAJA 3: Comunidad de Lectores Verificados */}
+      {/* PARCHE 3: Parche Comunidad de Lectores */}
       <div
         style={{
           display: 'inline-flex',
           alignItems: 'center',
-          gap: 7,
-          padding: '10px 16px',
+          gap: 8,
+          padding: '12px 20px',
           backgroundColor: '#FEF9C3',
-          border: '2px solid #141413',
-          borderBottom: '4px solid #D94E34',
-          borderRadius: 14,
-          boxShadow: '0 6px 16px rgba(20, 20, 19, 0.06)',
-          opacity: pill3Spring,
-          transform: `translateY(${(1 - pill3Spring) * 18}px) scale(${interpolate(
-            pill3Spring,
-            [0, 1],
-            [0.9, 1],
-            CLAMP_EXTRAPOLATION
-          )})`,
+          border: '2.5px solid #141413',
+          borderBottom: '5px solid #D94E34',
+          borderRadius: 16,
+          boxShadow: '0 10px 24px rgba(20, 20, 19, 0.12)',
+          opacity: patch3Spring,
+          transform: `translateY(${(1 - patch3Spring) * -30}px) scale(${scale3}) rotate(-2deg)`,
+          transformOrigin: 'center center',
         }}
       >
         <span
           style={{
             fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
-            fontSize: 15,
+            fontSize: 18,
             fontWeight: 900,
             color: '#D94E34',
             whiteSpace: 'nowrap',
@@ -233,7 +220,7 @@ export const GoodreadsBadgeCluster: React.FC<GoodreadsBadgeClusterProps> = ({
         <span
           style={{
             fontFamily: "'Inter', sans-serif",
-            fontSize: 14,
+            fontSize: 16,
             fontWeight: 700,
             color: '#575550',
             whiteSpace: 'nowrap',

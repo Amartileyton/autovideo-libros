@@ -44,7 +44,8 @@ const calculateTotalFrames = (audioManifest: AudioManifest): number => {
   );
   const totalOverlap =
     Math.max(0, audioManifest.scenes.length - 1) * crossDissolve;
-  return Math.max(30, rawSum - totalOverlap);
+  const initialLead = 12; // 12 fotogramas (400ms) de pre-roll inicial para dicción limpia sin cortes
+  return Math.max(30, rawSum - totalOverlap + initialLead);
 };
 
 export const RemotionRoot: React.FC = () => {
@@ -64,7 +65,7 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={{
           title:
             scenesJson.projectTitle ||
-            'El poder de los hábitos — Charles Duhigg (Resumen 65s)',
+            '12 reglas para vivir — Jordan B. Peterson (Resumen 65s)',
           surfaceColor: BLUEPRINT_THEMES.EDITORIAL_PAPER.surface,
           enableCaptions: true,
           enableBackgroundMusic: false,

@@ -82,32 +82,33 @@ const DEFAULT_DUHIGG_NODES: BoundCircuitNode[] = [
 
 /**
  * Scene 2 — La Tesis / Mecanismo Científico (Motor Híbrido Inteligente + Auto-Binder Semántico)
- * Soporta los 3 presets del cuestionario interactivo:
- * - THESIS_LOOP_CIRCUIT (Default): VectorLoopCircuit sincronizado a la voz + KineticCard
- * - THESIS_EXPONENTIAL_CHART: ExponentialGrowthChart + LiveCounter
- * - THESIS_COMPARISON_BATTLE: ComparisonBattle + KineticCard
+ *
+ * Distribución vertical balanceada que ocupa toda la pantalla (80px a 1480px):
+ * 1. Tarjeta Superior con LiveCounter sincronizado: top 80px a 290px
+ * 2. Bloque Central (ExponentialGrowthChart): top 320px a 940px
+ * 3. Tarjeta Inferior de Impacto Editorial: top 980px a 1480px (gran presencia vertical)
  */
 export const Scene2: React.FC<Scene2Props> = ({
-  metricValue = 3,
-  metricUnit = ' FASES',
+  metricValue = 99,
+  metricUnit = '%',
   canvasOffsetX = 1120,
   canvasOffsetY = 0,
-  enterFrame = 428,
+  enterFrame = 361,
   visualData,
-  layoutPreset = 'THESIS_LOOP_CIRCUIT',
+  layoutPreset = 'THESIS_EXPONENTIAL_CHART',
   wordTimestamps,
 }) => {
   const frame = useCurrentFrame();
   const localFrame = Math.max(0, frame - enterFrame);
 
-  // Auto-binding del contador de fases
+  // Auto-binding del contador de fases/métricas
   const counterWindow = useMemo(
     () =>
       findKeywordFrameWindow(
         wordTimestamps,
-        visualData?.hookTriggerKeyword ?? ['tres', 'fases', 'bucle'],
-        165,
-        200
+        visualData?.hookTriggerKeyword ?? ['primera', 'regla', 'biologica'],
+        4,
+        45
       ),
     [wordTimestamps, visualData?.hookTriggerKeyword]
   );
@@ -148,19 +149,18 @@ export const Scene2: React.FC<Scene2Props> = ({
         width: 1080,
         height: 1920,
         pointerEvents: 'none',
-        padding: '0 96px',
         boxSizing: 'border-box',
       }}
     >
-      {/* 1. Tarjeta Superior con LiveCounter sincronizado (Sin título de fondo ni barra redundante) */}
-      <div style={{ position: 'absolute', top: 150, left: 96, right: 96 }}>
+      {/* 1. Tarjeta Superior con LiveCounter sincronizado (top: 80px a 290px, left: 54, right: 54) */}
+      <div style={{ position: 'absolute', top: 80, left: 54, right: 54 }}>
         <KineticCard
           enterFrame={10}
           accentBorderColor="#141413"
           badgeColor="#D94E34"
-          padding="24px 30px"
+          padding="28px 36px"
           style={{
-            borderTop: '6px solid #D94E34',
+            borderTop: '7px solid #D94E34',
             textAlign: 'center',
           }}
         >
@@ -178,7 +178,7 @@ export const Scene2: React.FC<Scene2Props> = ({
               startFrame={counterWindow.startFrame}
               durationFrames={25}
               suffix={metricUnit.startsWith(' ') ? metricUnit : ` ${metricUnit}`}
-              fontSize={60}
+              fontSize={78}
               color="#141413"
             />
           </div>
@@ -186,34 +186,40 @@ export const Scene2: React.FC<Scene2Props> = ({
           <div
             style={{
               fontFamily: "'Inter', sans-serif",
-              fontSize: 16,
-              fontWeight: 600,
-              color: '#575550',
-              marginTop: 10,
-              lineHeight: 1.4,
+              fontSize: 23,
+              fontWeight: 700,
+              color: '#374151',
+              marginTop: 12,
+              lineHeight: 1.35,
             }}
           >
-            El cerebro automatiza el bucle para ahorrar energía y liberar la corteza prefrontal
+            {visualData?.formulaLabel ??
+              'Más del 99% de la riqueza de Warren Buffett se acumuló tras cumplir cincuenta años'}
           </div>
         </KineticCard>
       </div>
 
-      {/* 2. Bloque Central Gobernado por layoutPreset (Motor Híbrido Inteligente) */}
+      {/* 2. Bloque Central Gobernado por layoutPreset (top: 320px a 920px, Ancho Completo 972px) */}
       <div
         style={{
           position: 'absolute',
-          top: 380,
-          left: 96,
-          right: 96,
+          top: 320,
+          left: 54,
+          right: 54,
         }}
       >
         {layoutPreset === 'THESIS_EXPONENTIAL_CHART' ? (
           <ExponentialGrowthChart
-            startFrame={enterFrame + 30}
-            width={888}
-            height={480}
+            startFrame={enterFrame + 20}
+            width={972}
+            height={580}
             accentColor="#D94E34"
             showTitle={false}
+            multiplierMax={99}
+            peakBadgeText="99% DE LA FORTUNA"
+            latentLabel="PACIENCIA Y ACUMULACIÓN INVISIBLE"
+            unit="%"
+            xLabels={['20 AÑOS', '35 AÑOS', '50 AÑOS', '65 AÑOS', '80+ AÑOS']}
           />
         ) : layoutPreset === 'THESIS_COMPARISON_BATTLE' ? (
           <ComparisonBattle
@@ -227,6 +233,7 @@ export const Scene2: React.FC<Scene2Props> = ({
             enterFrameA={120}
             enterFrameB={170}
             battleFrame={220}
+            currentFrame={localFrame}
             accentColor="#D94E34"
           />
         ) : (
@@ -234,42 +241,118 @@ export const Scene2: React.FC<Scene2Props> = ({
             nodes={boundNodes}
             currentFrame={localFrame}
             accentColor="#D94E34"
-            width={888}
-            height={480}
+            width={972}
+            height={540}
             showTitle={false}
           />
         )}
       </div>
 
-      {/* 3. Tarjeta Inferior con Cita Neurocientífica (Sin barra de título redundante) */}
+      {/* 3. Tarjeta Inferior de Gran Formato y Presencia Vertical (top: 940px a 1480px) */}
       <div
         style={{
           position: 'absolute',
-          top: 895,
-          left: 96,
-          right: 96,
+          top: 940,
+          left: 54,
+          right: 54,
+          height: 520,
         }}
       >
-        <KineticCard
-          enterFrame={200}
-          accentBorderColor="#141413"
-          badgeColor="#D94E34"
-          padding="22px 28px"
+        <div
+          style={{
+            height: '100%',
+            backgroundColor: '#FEF9C3',
+            border: '2.5px solid #141413',
+            borderLeft: '8px solid #D94E34',
+            borderRadius: 26,
+            padding: '38px 44px',
+            boxShadow: '0 16px 44px rgba(20, 20, 19, 0.08), 0 4px 14px rgba(0,0,0,0.04)',
+            boxSizing: 'border-box',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+          }}
         >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span
+              style={{
+                backgroundColor: '#D94E34',
+                color: '#FFFFFF',
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                fontSize: 15,
+                fontWeight: 900,
+                padding: '5px 16px',
+                borderRadius: 8,
+                letterSpacing: 0.5,
+              }}
+            >
+              BIOLOGÍA CONDUCTUAL
+            </span>
+
+            <span
+              style={{
+                backgroundColor: '#141413',
+                color: '#FEF9C3',
+                padding: '6px 18px',
+                borderRadius: 12,
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                fontSize: 16,
+                fontWeight: 900,
+              }}
+            >
+              SEROTONINA ACTIVA
+            </span>
+          </div>
+
+          <div>
+            <div
+              style={{
+                fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
+                fontSize: 34,
+                fontWeight: 900,
+                color: '#141413',
+                lineHeight: 1.34,
+                letterSpacing: '-0.02em',
+                textAlign: 'center',
+              }}
+            >
+              {visualData?.centralQuote ??
+                '«Mantente erguido con los hombros hacia atrás: asume la responsabilidad voluntaria de existir.»'}
+            </div>
+
+            <div
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontSize: 22,
+                fontWeight: 600,
+                color: '#374151',
+                marginTop: 14,
+                lineHeight: 1.45,
+                textAlign: 'center',
+              }}
+            >
+              {visualData?.formulaSublabel ??
+                'Adoptar una postura erguida eleva la serotonina, reduce la ansiedad y predispone a tu cerebro a triunfar en la jerarquía.'}
+            </div>
+          </div>
+
           <div
             style={{
-              fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
-              fontSize: 22,
-              fontWeight: 700,
-              color: '#141413',
-              lineHeight: 1.38,
-              textAlign: 'center',
+              alignSelf: 'center',
+              backgroundColor: 'rgba(217, 78, 52, 0.12)',
+              border: '1.5px solid #D94E34',
+              borderRadius: 10,
+              padding: '8px 22px',
+              fontFamily: "'Plus Jakarta Sans', sans-serif",
+              fontSize: 15,
+              fontWeight: 900,
+              color: '#D94E34',
+              letterSpacing: 0.5,
             }}
           >
-            {visualData?.centralQuote ??
-              '«El anhelo es el combustible silencioso que mantiene girando el bucle en tu cerebro.»'}
+            ANTÍDOTO BIOLÓGICO: CUERPO ERGUIDO ➔ CEREBRO FIRME
           </div>
-        </KineticCard>
+        </div>
       </div>
     </div>
   );

@@ -1,96 +1,88 @@
 {
-  "generatedAt": "2026-10-27T07:39:54.021Z",
-  "query": "The Power of Habit",
-  "slug": "el-poder-de-los-habitos",
+  "generatedAt": "2026-10-27T12:44:11.039Z",
+  "query": "12 reglas para vivir",
+  "slug": "12-reglas-para-vivir",
   "bookMetadata": {
-    "title": "El poder de los hábitos",
-    "originalTitle": "The Power of Habit: Why We Do What We Do in Life and Business",
-    "author": "Charles Duhigg",
-    "publishYear": 2012,
-    "pages": 375,
-    "readingTimeHours": 4.8,
-    "rating": 4.13,
-    "ratingsCount": "585K",
-    "coverImage": "assets/books/el-poder-de-los-habitos-cover.jpg",
-    "fallbackCoverImage": "assets/books/el-poder-de-los-habitos-cover.svg",
+    "title": "12 reglas para vivir",
+    "originalTitle": "12 Rules for Life: An Antidote to Chaos",
+    "author": "Jordan B. Peterson",
+    "publishYear": 2018,
+    "pages": 512,
+    "readingTimeHours": 6.2,
+    "rating": 3.9,
+    "ratingsCount": "240K",
+    "coverImage": "assets/books/12-reglas-para-vivir-cover.jpg",
+    "fallbackCoverImage": "assets/books/12-reglas-para-vivir-cover.svg",
     "coverSource": "local-cache-hd",
-    "categoryTag": "NEUROCIENCIA CONDUCTUAL · MIT LABS",
-    "goodreadsUrl": "https://www.goodreads.com/book/show/12609433-the-power-of-habit"
+    "categoryTag": "PSICOLOGÍA CONDUCTUAL · RESPONSABILIDAD",
+    "goodreadsUrl": "https://www.goodreads.com/book/show/42263558"
   },
-  "synopsisCondensed": "Para reprogramarlos debes aplicar la Regla de Oro: mantener la señal y la recompensa, transformando únicamente la rutina. Más del cuarenta por ciento de tus acciones diarias no son decisiones conscientes, sino hábitos automáticos grabados en tus ganglios basales.",
+  "synopsisCondensed": "El sufrimiento y el caos son inevitables, pero el antídoto no es culpar al mundo ni esperar la felicidad pasiva, sino asumir la máxima responsabilidad individual sobre tu propia vida.",
   "mythVsReality": {
-    "mythLabel": "VOLUNTAD BRUTA",
-    "realityLabel": "BUCLE NEURONAL",
-    "mythExplanation": "Confiar en el autocontrol y la fuerza de voluntad consciente",
-    "realityExplanation": "Reprogramar el bucle biológico: Señal, Rutina y Recompensa"
+    "mythLabel": "VICTIMISMO PASIVO",
+    "realityLabel": "RESPONSABILIDAD TOTAL",
+    "mythExplanation": "Culpar al sistema o al azar y esperar que el entorno cambie",
+    "realityExplanation": "Asumir la carga voluntaria de ordenar tu propia vida antes de opinar"
   },
   "mathematicalProof": {
-    "dailyGainPct": 40,
-    "annualMultiplier": 5,
-    "declineMultiplier": 0.2,
-    "formulaLabel": "40% ACCIONES AUTOMÁTICAS (DUKE UNIV)"
+    "dailyGainPct": 1,
+    "annualMultiplier": 12,
+    "declineMultiplier": 0.1,
+    "formulaLabel": "ORDEN = CARGA VOLUNTARIA DEL CAOS"
   },
   "verifiedQuotes": [
     {
-      "text": "La regla de oro del cambio de hábitos: no puedes extinguir un mal hábito, solo puedes transformarlo.",
+      "text": "Mantén la espalda erguida y los hombros hacia atrás. Asumir la carga de tu vida transforma tu propia neurobiología.",
       "highlightPhrases": [
-        "regla de oro",
-        "no puedes extinguir",
-        "transformarlo"
+        "espalda erguida",
+        "hombros hacia atrás",
+        "transforma tu propia neurobiología"
       ],
-      "chapter": "Capítulo 3 · La regla de oro del cambio de hábitos"
+      "chapter": "Regla 1 · Mantente erguido con los hombros hacia atrás"
     },
     {
-      "text": "Los hábitos son lo que tú decides que sean. Una vez que entiendes que pueden cambiar, tienes la libertad de rediseñarlos.",
+      "text": "Compárate con quien eras ayer, no con quien es otra persona hoy.",
       "highlightPhrases": [
-        "libertad de rediseñarlos",
-        "los hábitos son"
+        "con quien eras ayer",
+        "no con quien es otra persona hoy"
       ],
-      "chapter": "Capítulo 9 · La neurología del libre albedrío"
+      "chapter": "Regla 4 · Compárate con quien eras tú ayer"
     },
     {
-      "text": "Los campeones no hacen cosas extraordinarias. Hacen cosas ordinarias, pero las hacen en automático, sin pensar.",
+      "text": "Pon tu casa en perfecto orden antes de criticar al mundo.",
       "highlightPhrases": [
-        "en automático",
-        "sin pensar",
-        "campeones"
+        "tu casa en perfecto orden",
+        "antes de criticar al mundo"
       ],
-      "chapter": "Capítulo 4 · Los hábitos angulares de Paul O'Neill"
+      "chapter": "Regla 6 · Pon tu casa en perfecto orden"
     }
   ],
   "actionableLaws": [
     {
-      "index": "PASO 01",
-      "title": "Aislar la Señal (Disparador)",
-      "rule": "Identifica la hora, el lugar, el estado emocional y las personas que activan tu piloto automático.",
-      "impactPct": 91,
+      "index": "REGLA 01",
+      "title": "Espalda Erguida (Serotonina)",
+      "rule": "Tu postura corporal envía señales directas a tu cerebro: asumir el combate aumenta tu estatus biológico.",
+      "impactPct": 92,
       "highlight": true
     },
     {
-      "index": "PASO 02",
-      "title": "Sustituir la Rutina (Acción)",
-      "rule": "Inserta una conducta constructiva que entregue el mismo alivio sin cambiar el disparador.",
+      "index": "REGLA 04",
+      "title": "Tu Propio Baremo de Progreso",
+      "rule": "La comparación externa es veneno; mide únicamente tu avance relativo respecto a tu versión de ayer.",
       "impactPct": 95,
       "highlight": true
     },
     {
-      "index": "PASO 03",
-      "title": "Alimentar el Anhelo (Dopamina)",
-      "rule": "Elige una recompensa inmediata que satisfaga el anhelo neurológico genuino.",
-      "impactPct": 88,
-      "highlight": false
-    },
-    {
-      "index": "PASO 04",
-      "title": "Hábito Angular (Efecto Dominó)",
-      "rule": "Prioriza una pequeña victoria (ej. ejercicio o registro) que arrastre al resto del sistema.",
-      "impactPct": 94,
+      "index": "REGLA 06",
+      "title": "Ordena tu Casa Primero",
+      "rule": "Antes de intentar arreglar la sociedad, arregla tu propia habitación y asume la responsabilidad de tus actos.",
+      "impactPct": 96,
       "highlight": true
     }
   ],
   "tokenOptimizationStats": {
     "rawScrapedTokensApprox": 8400,
-    "normalizedDossierTokens": 893,
-    "savingsPercentage": 89.4
+    "normalizedDossierTokens": 801,
+    "savingsPercentage": 90.5
   }
 }

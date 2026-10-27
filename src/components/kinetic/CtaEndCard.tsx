@@ -9,38 +9,44 @@ export interface CtaEndCardProps {
   questionText?: string;
   /** Llamada a la acción del final del vídeo hablada por el locutor */
   ctaText?: string;
-  /** Acción principal destacada (ej. "GUARDA ESTE RESUMEN") */
+  /** Acción principal destacada que coincide literalmente con el audio */
   ctaActionLabel?: string;
   /** Si se muestra o no la tarjeta interactiva de pregunta a la comunidad */
   showCommunityQuestion?: boolean;
+  /** Si la tarjeta dibuja su propio reloj interno (false cuando Video.tsx orquesta el reloj volador) */
+  showInternalStopwatch?: boolean;
 }
 
 /**
  * CtaEndCard — Tarjeta Final de Llamada a la Acción y Comunidad (@en1minuto.es)
  *
- * Incluye:
- * 1. Logotipo Cronómetro Hero que se hace grande al llegar al CTA.
- * 2. Invitación a seguir a @en1minuto.es con botón de alto contraste y pulso.
- * 3. Caja de debate que incita a comentar sobre el libro, estrictamente vinculada al CTA del vídeo.
- * 4. Micro-acciones con la acción del CTA destacada en Terracota.
+ * Características consolidadas:
+ * 1. Espacio superior reservado (120px) para el aterrizaje del reloj volador desde el bottom.
+ * 2. Cero badges redundantes de "TIEMPO CUMPLIDO".
+ * 3. Titular contundente alineado al audio.
+ * 4. Botón de alto contraste con pulso en Terracota.
+ * 5. Caja de pregunta limpia sin la etiqueta "Vínculo CTA".
+ * 6. Acción principal destacada que coincide exactamente con la locución del audio.
+ * 7. Ocupación vertical dominante en el tercio inferior del lienzo (hasta Y = 1540px).
  */
 export const CtaEndCard: React.FC<CtaEndCardProps> = ({
   enterFrame = 0,
   handle = '@en1minuto.es',
-  questionText = 'Para empezar hoy mismo tras guardar el resumen: ¿cuál es el mal hábito que vas a sustituir?',
+  questionText = 'Para empezar hoy mismo tras guardar el resumen: ¿cuál es el gasto de apariencia que vas a eliminar?',
   ctaText = 'Guarda este resumen y empieza hoy mismo',
-  ctaActionLabel = 'GUARDA ESTE RESUMEN',
+  ctaActionLabel = 'GUARDA ESTE RESUMEN Y EMPIEZA HOY MISMO',
   showCommunityQuestion = true,
+  showInternalStopwatch = false,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const localFrame = Math.max(0, frame - enterFrame);
 
-  // 1. Entrada de la tarjeta con resorte snappy
+  // 1. Entrada de la tarjeta con resorte elástico
   const cardSpring = spring({
     frame: localFrame,
     fps,
-    config: SPRING_SNAPPY,
+    config: { damping: 18, stiffness: 140, mass: 0.9 },
   });
 
   // 2. Pulso constante en el botón de Seguir (animación en bucle)
@@ -52,24 +58,17 @@ export const CtaEndCard: React.FC<CtaEndCardProps> = ({
     CLAMP_EXTRAPOLATION
   );
 
-  // 3. Efecto de aparición del cronómetro central
-  const stopwatchEntrance = spring({
-    frame: Math.max(0, localFrame - 8),
-    fps,
-    config: SPRING_SNAPPY,
-  });
-
   return (
     <div
       style={{
         position: 'relative',
-        width: 888,
+        width: '100%',
         backgroundColor: '#FEF9C3',
-        border: '2px solid #D94E34',
-        borderRadius: 24,
-        padding: '32px 36px 28px',
+        border: '3px solid #D94E34',
+        borderRadius: 28,
+        padding: '36px 40px 38px',
         boxShadow:
-          '0 24px 60px rgba(217, 78, 52, 0.16), 0 4px 14px rgba(0,0,0,0.04)',
+          '0 28px 70px rgba(217, 78, 52, 0.20), 0 4px 16px rgba(0,0,0,0.04)',
         boxSizing: 'border-box',
         textAlign: 'center',
         opacity: cardSpring,
@@ -81,72 +80,41 @@ export const CtaEndCard: React.FC<CtaEndCardProps> = ({
         )})`,
       }}
     >
-      {/* 1. Cronómetro de 1 Minuto Central Hero (Se hace grande aquí) */}
+      {/* 1. Ranura reservada para el Cronómetro Hero (el reloj del bottom sube y se acopla aquí) */}
       <div
         style={{
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          marginBottom: 16,
-          transform: `scale(${stopwatchEntrance})`,
+          height: 120,
+          marginBottom: 18,
         }}
       >
-        <OneMinuteStopwatch
-          size={110}
-          mode="hero"
-          currentFrame={localFrame}
-          style={{
-            filter: 'drop-shadow(0 8px 20px rgba(217, 78, 52, 0.25))',
-          }}
-        />
+        {showInternalStopwatch && (
+          <OneMinuteStopwatch
+            size={115}
+            mode="hero"
+            currentFrame={localFrame}
+            style={{
+              filter: 'drop-shadow(0 8px 24px rgba(217, 78, 52, 0.30))',
+            }}
+          />
+        )}
       </div>
 
-      {/* Badge superior */}
-      <div
-        style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: 6,
-          padding: '4px 14px',
-          backgroundColor: 'rgba(217, 78, 52, 0.10)',
-          borderRadius: 20,
-          marginBottom: 12,
-        }}
-      >
-        <div
-          style={{
-            width: 8,
-            height: 8,
-            borderRadius: '50%',
-            backgroundColor: '#D94E34',
-          }}
-        />
-        <span
-          style={{
-            fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
-            fontSize: 12,
-            fontWeight: 800,
-            color: '#D94E34',
-            letterSpacing: 1.2,
-          }}
-        >
-          TIEMPO CUMPLIDO · 1 MINUTO DESTILADO
-        </span>
-      </div>
-
-      {/* Titular de Alto Impacto */}
+      {/* Titular de Alto Impacto vinculado al CTA */}
       <h3
         style={{
           fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
-          fontSize: 34,
+          fontSize: 38,
           fontWeight: 900,
           color: '#141413',
-          margin: '0 0 8px 0',
+          margin: '0 0 16px 0',
           letterSpacing: '-0.03em',
           lineHeight: 1.15,
         }}
       >
-        Aprende 1 libro al día en 60 segundos
+        {ctaText}
       </h3>
 
       {/* Botón Principal de Seguir a @en1minuto.es con Pulso */}
@@ -155,22 +123,22 @@ export const CtaEndCard: React.FC<CtaEndCardProps> = ({
           display: 'inline-flex',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: 12,
+          gap: 14,
           backgroundColor: '#D94E34',
           color: '#FFFFFF',
-          padding: '14px 34px',
-          borderRadius: 16,
-          boxShadow: '0 8px 24px rgba(217, 78, 52, 0.35)',
+          padding: '18px 46px',
+          borderRadius: 20,
+          boxShadow: '0 10px 28px rgba(217, 78, 52, 0.38)',
           transform: `scale(${pulseScale})`,
           transformOrigin: 'center center',
-          margin: '12px auto 18px',
+          margin: '10px auto 22px',
         }}
       >
-        <span style={{ fontSize: 20 }}>🔔</span>
+        <span style={{ fontSize: 26 }}>🔔</span>
         <span
           style={{
             fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
-            fontSize: 20,
+            fontSize: 23,
             fontWeight: 900,
             letterSpacing: 0.5,
           }}
@@ -179,48 +147,43 @@ export const CtaEndCard: React.FC<CtaEndCardProps> = ({
         </span>
       </div>
 
-      {/* Caja Interactiva de Pregunta a la Comunidad vinculada al CTA */}
+      {/* Caja Interactiva de Pregunta a la Comunidad limpia (sin Vínculo CTA) */}
       {showCommunityQuestion && questionText ? (
         <div
           style={{
             backgroundColor: '#F8F7F4',
-            border: '1.5px dashed rgba(217, 78, 52, 0.40)',
-            borderRadius: 14,
-            padding: '12px 18px',
-            marginBottom: 16,
+            border: '2px dashed rgba(217, 78, 52, 0.45)',
+            borderRadius: 20,
+            padding: '20px 28px',
+            marginBottom: 24,
             display: 'flex',
             alignItems: 'center',
-            gap: 12,
+            gap: 18,
             textAlign: 'left',
           }}
         >
-          <span style={{ fontSize: 26, flexShrink: 0 }}>💬</span>
+          <span style={{ fontSize: 34, flexShrink: 0 }}>💬</span>
           <div style={{ flex: 1 }}>
             <div
               style={{
                 fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
-                fontSize: 12,
+                fontSize: 15,
                 fontWeight: 900,
                 color: '#D94E34',
                 letterSpacing: 0.8,
                 textTransform: 'uppercase',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 6,
               }}
             >
-              <span>Pregunta a la comunidad</span>
-              <span style={{ color: '#141413', opacity: 0.35 }}>•</span>
-              <span style={{ color: '#141413', opacity: 0.85 }}>Vínculo CTA</span>
+              Pregunta a la comunidad
             </div>
             <div
               style={{
                 fontFamily: "'Inter', sans-serif",
-                fontSize: 15,
+                fontSize: 21,
                 fontWeight: 700,
                 color: '#141413',
-                lineHeight: 1.25,
-                marginTop: 2,
+                lineHeight: 1.35,
+                marginTop: 4,
               }}
             >
               {questionText}
@@ -229,29 +192,30 @@ export const CtaEndCard: React.FC<CtaEndCardProps> = ({
         </div>
       ) : null}
 
-      {/* Fila de Micro-acciones (Guardar y Compartir) con el CTA del audio destacado */}
+      {/* Fila de Micro-acciones con el CTA textual coincidente al 100% con el audio */}
       <div
         style={{
           display: 'flex',
           justifyContent: 'center',
-          gap: 16,
-          borderTop: '1px solid #E5E2DC',
-          paddingTop: 14,
+          gap: 18,
+          borderTop: '1.5px solid #E5E2DC',
+          paddingTop: 22,
         }}
       >
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: 6,
+            gap: 10,
             fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
-            fontSize: 13,
-            fontWeight: 800,
+            fontSize: 17,
+            fontWeight: 900,
             color: '#FFFFFF',
             backgroundColor: '#D94E34',
-            padding: '6px 14px',
-            borderRadius: 8,
-            boxShadow: '0 4px 12px rgba(217, 78, 52, 0.22)',
+            padding: '14px 28px',
+            borderRadius: 14,
+            boxShadow: '0 6px 18px rgba(217, 78, 52, 0.30)',
+            letterSpacing: 0.3,
           }}
         >
           <span>🔖</span>
@@ -262,18 +226,19 @@ export const CtaEndCard: React.FC<CtaEndCardProps> = ({
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: 6,
+            gap: 8,
             fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
-            fontSize: 13,
+            fontSize: 16,
             fontWeight: 800,
             color: '#141413',
             backgroundColor: '#F8F7F4',
-            padding: '6px 14px',
-            borderRadius: 8,
+            padding: '14px 22px',
+            borderRadius: 14,
+            border: '1.5px solid #141413',
           }}
         >
           <span>↗️</span>
-          <span>COMPARTE CON UN AMIGO</span>
+          <span>COMPARTIR</span>
         </div>
       </div>
     </div>

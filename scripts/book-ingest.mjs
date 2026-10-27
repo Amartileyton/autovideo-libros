@@ -602,6 +602,143 @@ const CANONICAL_BOOK_ENRICHMENT = {
       },
     ],
   },
+  'la-psicologia-del-dinero': {
+    titleEs: 'La psicología del dinero',
+    originalTitle: 'The Psychology of Money',
+    author: 'Morgan Housel',
+    publishYear: 2020,
+    pages: 256,
+    readingTimeHours: 4.0,
+    goodreadsRating: 4.38,
+    goodreadsRatingsCount: '1.94M',
+    categoryTag: 'PSICOLOGÍA FINANCIERA · DECISIONES',
+    coreThesis:
+      'Hacerlo bien con el dinero tiene poco que ver con lo listo que seas y mucho con cómo te comportas. Saber de finanzas es fácil; dominar la psicología, la paciencia y el interés compuesto es lo que construye verdadera riqueza.',
+    mythVsReality: {
+      mythLabel: 'MATEMÁTICAS',
+      realityLabel: 'CONDUCTA',
+      mythExplanation: 'Creer que el dinero es pura fórmula, cálculo y coeficiente intelectual',
+      realityExplanation: 'El éxito financiero es una habilidad blanda: paciencia y autocontrol',
+    },
+    mathematicalProof: {
+      dailyGainPct: 99,
+      annualMultiplier: 84.5,
+      declineMultiplier: 0.1,
+      formulaLabel: '99% DE LA RIQUEZA DE BUFFETT FUE TRAS LOS 50 AÑOS',
+    },
+    verifiedQuotes: [
+      {
+        text: 'La habilidad financiera más difícil es conseguir que la meta deje de moverse.',
+        highlightPhrases: ['meta deje de moverse', 'habilidad financiera'],
+        chapter: 'Capítulo 3 · Nunca es suficiente',
+      },
+      {
+        text: 'Gastar dinero para mostrar a la gente cuánto dinero tienes es la forma más rápida de tener menos dinero.',
+        highlightPhrases: ['forma más rápida', 'menos dinero'],
+        chapter: 'Capítulo 8 · La paradoja del hombre en el coche',
+      },
+      {
+        text: 'La verdadera riqueza es lo que no se ve: los coches no comprados y las inversiones no tocadas.',
+        highlightPhrases: ['riqueza es lo que no se ve', 'inversiones no tocadas'],
+        chapter: 'Capítulo 9 · La riqueza es lo que no ves',
+      },
+    ],
+    actionableLaws: [
+      {
+        index: 'LEY 01',
+        title: 'El Juego de la Supervivencia',
+        rule: 'Nunca arriesgues lo que necesitas por intentar ganar lo que solo deseas.',
+        impactPct: 93,
+        highlight: true,
+      },
+      {
+        index: 'LEY 02',
+        title: 'El Interés Compuesto Oculto',
+        rule: 'El tiempo vence al talento: deja que el efecto bola de nieve trabaje sin interrumpirlo jamás.',
+        impactPct: 96,
+        highlight: true,
+      },
+      {
+        index: 'LEY 03',
+        title: 'Riqueza es lo Invisible',
+        rule: 'La riqueza es la opción financiera y la libertad de tiempo, no las posesiones visibles.',
+        impactPct: 90,
+        highlight: false,
+      },
+      {
+        index: 'LEY 04',
+        title: 'Definir Cuándo es Suficiente',
+        rule: 'Evita la trampa de mover la meta; la comparación social constante destruye cualquier fortuna.',
+        impactPct: 94,
+        highlight: true,
+      },
+    ],
+  },
+  '12-reglas-para-vivir': {
+    titleEs: '12 reglas para vivir',
+    originalTitle: '12 Rules for Life: An Antidote to Chaos',
+    author: 'Jordan B. Peterson',
+    publishYear: 2018,
+    pages: 512,
+    readingTimeHours: 6.2,
+    goodreadsRating: 3.90,
+    goodreadsRatingsCount: '240K',
+    categoryTag: 'PSICOLOGÍA CONDUCTUAL · RESPONSABILIDAD',
+    coreThesis:
+      'El sufrimiento y el caos son inevitables, pero el antídoto no es culpar al mundo ni esperar la felicidad pasiva, sino asumir la máxima responsabilidad individual sobre tu propia vida.',
+    mythVsReality: {
+      mythLabel: 'VICTIMISMO PASIVO',
+      realityLabel: 'RESPONSABILIDAD TOTAL',
+      mythExplanation: 'Culpar al sistema o al azar y esperar que el entorno cambie',
+      realityExplanation: 'Asumir la carga voluntaria de ordenar tu propia vida antes de opinar',
+    },
+    mathematicalProof: {
+      dailyGainPct: 1,
+      annualMultiplier: 12,
+      declineMultiplier: 0.1,
+      formulaLabel: 'ORDEN = CARGA VOLUNTARIA DEL CAOS',
+    },
+    verifiedQuotes: [
+      {
+        text: 'Mantén la espalda erguida y los hombros hacia atrás. Asumir la carga de tu vida transforma tu propia neurobiología.',
+        highlightPhrases: ['espalda erguida', 'hombros hacia atrás', 'transforma tu propia neurobiología'],
+        chapter: 'Regla 1 · Mantente erguido con los hombros hacia atrás',
+      },
+      {
+        text: 'Compárate con quien eras ayer, no con quien es otra persona hoy.',
+        highlightPhrases: ['con quien eras ayer', 'no con quien es otra persona hoy'],
+        chapter: 'Regla 4 · Compárate con quien eras tú ayer',
+      },
+      {
+        text: 'Pon tu casa en perfecto orden antes de criticar al mundo.',
+        highlightPhrases: ['tu casa en perfecto orden', 'antes de criticar al mundo'],
+        chapter: 'Regla 6 · Pon tu casa en perfecto orden',
+      },
+    ],
+    actionableLaws: [
+      {
+        index: 'REGLA 01',
+        title: 'Espalda Erguida (Serotonina)',
+        rule: 'Tu postura corporal envía señales directas a tu cerebro: asumir el combate aumenta tu estatus biológico.',
+        impactPct: 92,
+        highlight: true,
+      },
+      {
+        index: 'REGLA 04',
+        title: 'Tu Propio Baremo de Progreso',
+        rule: 'La comparación externa es veneno; mide únicamente tu avance relativo respecto a tu versión de ayer.',
+        impactPct: 95,
+        highlight: true,
+      },
+      {
+        index: 'REGLA 06',
+        title: 'Ordena tu Casa Primero',
+        rule: 'Antes de intentar arreglar la sociedad, arregla tu propia habitación y asume la responsabilidad de tus actos.',
+        impactPct: 96,
+        highlight: true,
+      },
+    ],
+  },
 };
 
 /**
@@ -870,17 +1007,35 @@ async function main() {
     /power of habit|poder de los h[aá]bitos|charles duhigg|12609433/i.test(
       `${query} ${directUrl || ''}`
     );
+  const isPsychologyOfMoney =
+    /psicolog[ií]a del dinero|psychology of money|morgan housel|61338803/i.test(
+      `${query} ${directUrl || ''}`
+    );
+  const is12Rules =
+    /12 reglas|12 rules|peterson|42263558/i.test(
+      `${query} ${directUrl || ''}`
+    );
 
   const goodreads = await scrapeGoodreads(query, directUrl);
   const effectiveQuery =
     query ||
     goodreads.title ||
-    (isPowerOfHabit ? 'The Power of Habit Charles Duhigg' : 'Atomic Habits James Clear');
+    (isPowerOfHabit
+      ? 'The Power of Habit Charles Duhigg'
+      : isPsychologyOfMoney
+      ? 'The Psychology of Money Morgan Housel'
+      : is12Rules
+      ? '12 Rules for Life Jordan Peterson'
+      : 'Atomic Habits James Clear');
 
   const preSlug = isAtomicHabits
     ? 'habitos-atomicos'
     : isPowerOfHabit
     ? 'el-poder-de-los-habitos'
+    : isPsychologyOfMoney
+    ? 'la-psicologia-del-dinero'
+    : is12Rules
+    ? '12-reglas-para-vivir'
     : null;
   const preEnrichment = preSlug ? CANONICAL_BOOK_ENRICHMENT[preSlug] : null;
   const secondaryQuery = preEnrichment

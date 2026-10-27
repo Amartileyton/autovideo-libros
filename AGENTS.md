@@ -59,9 +59,10 @@ Todo vídeo de resumen de libro debe seguir estrictamente este orden secuencial:
 
 ### 0.2 Las 6 Reglas Visuales Inquebrantables de `@en1minuto.es` (Anti-Regresión)
 Estas mejoras visuales están integradas en el núcleo del proyecto y **NUNCA** deben revertirse:
-1. **PROHIBIDO el Banner Inferior (`Dock Inferior`) — Solo el Reloj Animado en Solitario**:
+1. **PROHIBIDO el Banner Inferior (`Dock Inferior`) y PROHIBIDO CUALQUIER PITIDO O ALARMA AL INICIO**:
+   - **Cero Alarmas o Pitidos Iniciales**: Queda terminantemente prohibido incluir alarmas, pitidos (`alarm.mp3`) o efectos sonoros estridentes al fotograma 0. El vídeo debe comenzar en silencio limpio o música suave de fondo. Es condición indispensable para cualquier vídeo producido por este pipeline.
    - El vídeo **NO** tiene ningún banner blanco ni barra inferior con texto en la base del lienzo (`1920px`).
-   - En la zona inferior (`bottom: 48px`) aparece **ÚNICAMENTE** el cronómetro circular `<OneMinuteStopwatch size={84} mode="header" />` corriendo en tiempo real (rellenando su sector terracota de $60^\circ$ a $360^\circ$) con una **animación ligera continua** de latido y balanceo suave (`gentlePulse` + `gentleSwayDeg`), desapareciendo suavemente cuando entra la tarjeta final `CtaEndCard` en la Escena 5.
+   - En la zona inferior (`bottom: 48px`) aparece **ÚNICAMENTE** el cronómetro circular `<OneMinuteStopwatch size={84} mode="header" />` corriendo en tiempo real (rellenando su sector terracota de $60^\circ$ a $360^\circ$) con una **animación ligera continua** de latido y balanceo suave (`gentlePulse` + `gentleSwayDeg`), hasta que inicia su vuelo hacia la tarjeta final en la Escena 5.
 2. **Tarjetas en Color Amarillo Pálido (`#FEF9C3` / `#FFFBEB`)**:
    - Todas las tarjetas de contenido (`KineticCard`, `ComparisonBattle`, `VectorLoopCircuit`, `ExponentialGrowthChart`, `CtaEndCard` y fichas de escenas) usan fondo **amarillo pálido cálido (`#FEF9C3` y `#FFFBEB`)** con borde nítido (`2px solid #141413` o `#D94E34`) sobre el lienzo de papel marfil cuadriculado `#F8F7F4`. Prohibido usar tarjetas blancas puras `#FFFFFF` que pierdan contraste editorial.
 3. **PROHIBIDO Títulos de Fondo de Diapositiva y Barras de Título en Tarjetas (Anti-Clutter Visual)**:
@@ -76,9 +77,24 @@ Estas mejoras visuales están integradas en el núcleo del proyecto y **NUNCA** 
      2. **Caja 2 Protagonista (Goodreads Oficial)**: Logotipo oficial `public/assets/branding/goodreads-logo.png` + divisor + cápsula oscura `#141413` con estrella dorada `★ rating` y pulso de énfasis elástico.
      3. **Caja 3 (Lectores)**: Cifra destacada en terracota (`+585K`) + `lectores`.
    - En la Escena 5 (`Scene5.tsx`), la ficha de reconocimiento del libro también separa la caja de la mini-portada y la caja oficial de Goodreads con el logo `assets/branding/goodreads-logo.png`.
-6. **Coherencia Narrativa del CTA Final y Pregunta a la Comunidad (`ctaPrompt` + `CtaEndCard`)**:
-   - En la última diapositiva (`Scene5.tsx` y `CtaEndCard`), si se incluye una tarjeta con pregunta a la comunidad (`showCommunityQuestion: true`), la pregunta formulada **DEBE estar estrictamente relacionada y coordinada con la llamada a la acción (CTA) del final del vídeo**.
-   - Prohibido formular preguntas genéricas o desvinculadas de la acción de cierre. Si el locutor concluye con *"Guarda este resumen y empieza hoy mismo"*, la pregunta comunitaria debe ligar directamente esa acción: *"Para empezar hoy mismo tras guardar el resumen: ¿cuál es el mal hábito que vas a sustituir?"*, y la micro-acción *"GUARDA ESTE RESUMEN"* se destacará visualmente en Terracota `#D94E34`.
+6. **Coherencia Narrativa Estricta 1:1 del CTA Final y Pregunta a la Comunidad**:
+   - En la última diapositiva (`Scene5.tsx` y `CtaEndCard`), el botón de acción principal **DEBE coincidir literalmente palabra por palabra con la locución de cierre de ElevenLabs** (ej. si el locutor dice *"Guarda este resumen y empieza hoy mismo"*, la micro-acción debe decir literalmente `GUARDA ESTE RESUMEN Y EMPIEZA HOY MISMO`).
+   - **Prohibido incluir etiquetas meta como `"VÍNCULO CTA"`** o badges redundantes como `"TIEMPO CUMPLIDO · 1 MINUTO DESTILADO"`. La pregunta comunitaria debe ligar directamente la acción: *"Para empezar hoy mismo tras guardar el resumen: ¿cuál es el mal hábito que vas a sustituir?"*, en tipografía limpia y sin cajas de texto sobrantes.
+7. **Ascenso Dinámico del Reloj Footer a la Tarjeta Final (Hero Stopwatch Docking)**:
+   - El cronómetro circular del footer **NO** debe desvanecerse con un fade-out estático. En la Escena 5, el reloj inicia su vuelo con anticipación (~80-85 frames antes de concluir el vídeo) con un suave suavizado cúbico continuo, ascendiendo desde `bottom: 48px` (`Y = 1788px`) hasta acoplarse con precisión milimétrica en la ranura superior de `CtaEndCard` (`clockY = 603px`), expandiendo su tamaño de `84px` a `110px` y activando su modo `hero` (relleno al 100% de $360^\circ$) exactamente en el fotograma en que el locutor dice la primera palabra del CTA ("Guarda este resumen...").
+8. **Tamaño, Anchura y Protagonismo Máximo de Tarjetas (Anti-Microtexto en Móvil)**:
+   - Las tarjetas de contenido (`KineticCard`, `ComparisonBattle`, `ExponentialGrowthChart`, `CtaEndCard`) ocupan **protagonismo dominante en pantalla** con márgenes de seguridad de `left: 54px, right: 54px` (ancho neto de **972px** en el lienzo 9:16).
+   - Prohibido el texto enano: los cuerpos de texto deben tener entre `20px` y `24px` con peso `600/700`, los títulos `28px` a `36px` (`fontWeight: 800/900`) y las métricas numéricas `60px` a `76px`.
+9. **Sincronización Estricta del Tachado Editorial (Anti-Tachado Prematuro)**:
+   - En componentes de confrontación o descarte (`ComparisonBattle`), la opción descartada debe permanecer completamente limpia y legible desde su entrada. El tachado dinámico en rojo y el sello `DESCARTADO ✗` deben activarse **única y exclusivamente en el fotograma exacto en que la voz pronuncia la palabra clave de descarte** (usando `currentFrame` relativo a la escena).
+10. **Parches Dinámicos / Stickers con Rebote en la Escena 1**:
+    - Para evitar aperturas estáticas en los primeros segundos del vídeo, las insignias de autor, valoración de Goodreads y comunidad de lectores se estampan como parches editoriales escalonados (con inclinaciones sutiles tipo sticker `[-2.5°, +3.2°, -2°]` y rebote de impacto `scale(1.45) ➔ scale(1.0)`).
+11. **Diagramas de Flujo Verticales Descendentes para Leyes (De Arriba Hacia Abajo)**:
+    - En la presentación de leyes o principios accionables (Escena 4), queda descartado el dominó horizontal y las flechas curvadas/feas; se implementa una estructura vertical descendente de arriba hacia abajo (Ley 01 Arriba ➔ Ley 02 Centro ➔ Ley 03 Abajo). Cada tarjeta se conecta a la siguiente mediante un **indicador de flujo vertical recto** que nace del centro del vértice inferior de la tarjeta y desciende recto hacia el centro de la tarjeta inferior, animado estrictamente de arriba hacia abajo con punta de flecha limpia.
+12. **Llenado Vertical Equilibrado del Lienzo 9:16 (Anti-Concentración Superior)**:
+    - Queda estrictamente prohibido apelotonar los elementos en el tercio o mitad superior de la pantalla dejando un vacío en la zona inferior. En todas las escenas, el contenido debe distribuirse de forma armónica desde `top: 70–90px` hasta `top: 1300–1340px`, dejando el margen de seguridad para los subtítulos dinámicos (`1442px`).
+13. **Pre-Roll de Audio de 12 Fotogramas (Anti-Clipping de Audio Inicial)**:
+    - Para garantizar que la primera sílaba o palabra inicial (ej. "¿Por qué...") nunca sea cercenada por retardos de buffer de audio de los motores de renderizado, el timeline maestro en `Root.tsx` y `Video.tsx` debe iniciar con un margen de pre-roll de 12 fotogramas (`initialLead = 12`), desplazando suavemente la entrada del audio y los subtítulos para una audición cristalina.
 
 ---
 

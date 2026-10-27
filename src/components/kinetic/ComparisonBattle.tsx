@@ -22,12 +22,14 @@ export interface ComparisonBattleProps {
   battleFrame?: number;
 
   accentColor?: string;
+  /** Fotograma local opcional para evitar desfases cuando la escena se renderiza con offset global */
+  currentFrame?: number;
 }
 
 /**
  * ComparisonBattle — Tarjeta Dinámica de Confrontación A vs B (Estilo @eldatomanda)
- * Compara dos estados o conceptos. Al llegar a `battleFrame`, la opción A se atenúa/tacha
- * y la opción B se expande elásticamente con barra de progreso y métrica en vivo.
+ * Compara dos estados o conceptos. Al llegar a `battleFrame`, la opción A se atenúa y se tacha
+ * de manera dinámica sincronizada con el audio, y la opción B se expande elásticamente.
  */
 export const ComparisonBattle: React.FC<ComparisonBattleProps> = ({
   titleA,
@@ -42,8 +44,10 @@ export const ComparisonBattle: React.FC<ComparisonBattleProps> = ({
   enterFrameB = 30,
   battleFrame = 90,
   accentColor = '#D94E34',
+  currentFrame,
 }) => {
-  const frame = useCurrentFrame();
+  const videoFrame = useCurrentFrame();
+  const frame = currentFrame ?? videoFrame;
   const { fps } = useVideoConfig();
 
   // Entradas escalonadas con spring
@@ -59,13 +63,21 @@ export const ComparisonBattle: React.FC<ComparisonBattleProps> = ({
     config: SPRING_SNAPPY,
   });
 
-  // Estado de la batalla (resolución)
+  // Estado de la batalla (resolución activa vinculada a la voz)
   const isBattled = frame >= battleFrame;
   const battleSpring = spring({
     frame: Math.max(0, frame - battleFrame),
     fps,
     config: SPRING_SNAPPY,
   });
+
+  // Progreso del trazo dinámico de tachado rojo
+  const strikeProgress = interpolate(
+    frame,
+    [battleFrame, battleFrame + 14],
+    [0, 1],
+    CLAMP_EXTRAPOLATION
+  );
 
   // Animación de la barra de progreso de B
   const progressB = spring({
@@ -79,7 +91,7 @@ export const ComparisonBattle: React.FC<ComparisonBattleProps> = ({
       style={{
         display: 'flex',
         flexDirection: 'column',
-        gap: 16,
+        gap: 18,
         width: '100%',
         perspective: 1200,
       }}
@@ -87,11 +99,12 @@ export const ComparisonBattle: React.FC<ComparisonBattleProps> = ({
       {/* 1. Opción A (Perdedora / Error común) */}
       <div
         style={{
+          position: 'relative',
           backgroundColor: '#FFFBEB',
           border: isBattled
-            ? '1.5px solid #CBD5E1'
+            ? '2px solid #CBD5E1'
             : '2px solid #141413',
-          borderRadius: 18,
+          borderRadius: 20,
           padding: '24px 28px',
           boxShadow: isBattled
             ? '0 4px 12px rgba(0, 0, 0, 0.02)'
@@ -99,18 +112,53 @@ export const ComparisonBattle: React.FC<ComparisonBattleProps> = ({
           opacity: interpolate(
             battleSpring,
             [0, 1],
-            [springA, 0.48],
+            [springA, 0.52],
             CLAMP_EXTRAPOLATION
           ),
           transform: `scale(${interpolate(
             battleSpring,
             [0, 1],
-            [springA, 0.96],
+            [springA, 0.97],
             CLAMP_EXTRAPOLATION
           )}) translateY(${(1 - springA) * 30}px)`,
           transformOrigin: 'center center',
+          overflow: 'hidden',
         }}
       >
+        {/* Trazo rojo dinámico de tachado activo (se dibuja en vivo al descartar) */}
+        {strikeProgress > 0 && (
+          <svg
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              pointerEvents: 'none',
+              zIndex: 10,
+            }}
+          >
+            <line
+              x1="24"
+              y1="56%"
+              x2={`${24 + strikeProgress * 88}%`}
+              y2="54%"
+              stroke="#DC2626"
+              strokeWidth={5}
+              strokeLinecap="round"
+            />
+            <line
+              x1="28"
+              y1="58%"
+              x2={`${28 + strikeProgress * 84}%`}
+              y2="57%"
+              stroke="rgba(220, 38, 38, 0.45)"
+              strokeWidth={3}
+              strokeLinecap="round"
+            />
+          </svg>
+        )}
+
         <div
           style={{
             display: 'flex',
@@ -122,10 +170,10 @@ export const ComparisonBattle: React.FC<ComparisonBattleProps> = ({
           <span
             style={{
               fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
-              fontSize: 13,
+              fontSize: 14,
               fontWeight: 800,
               color: isBattled ? '#94A3B8' : '#DC2626',
-              textDecoration: isBattled ? 'line-through' : 'none',
+              letterSpacing: 0.5,
             }}
           >
             {tagA}
@@ -134,12 +182,15 @@ export const ComparisonBattle: React.FC<ComparisonBattleProps> = ({
             <span
               style={{
                 fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
-                fontSize: 12,
-                fontWeight: 800,
+                fontSize: 13,
+                fontWeight: 900,
                 color: '#DC2626',
-                backgroundColor: 'rgba(220, 38, 38, 0.10)',
-                padding: '3px 8px',
-                borderRadius: 4,
+                backgroundColor: 'rgba(220, 38, 38, 0.12)',
+                border: '1.5px solid #DC2626',
+                padding: '4px 10px',
+                borderRadius: 6,
+                transform: `scale(${battleSpring}) rotate(-2deg)`,
+                transformOrigin: 'right center',
               }}
             >
               DESCARTADO ✗
@@ -158,11 +209,11 @@ export const ComparisonBattle: React.FC<ComparisonBattleProps> = ({
             <div
               style={{
                 fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
-                fontSize: 32,
+                fontSize: 34,
                 fontWeight: 800,
                 color: isBattled ? '#64748B' : '#141413',
                 letterSpacing: '-0.02em',
-                textDecoration: isBattled ? 'line-through' : 'none',
+                lineHeight: 1.2,
               }}
             >
               {titleA}
@@ -170,9 +221,10 @@ export const ComparisonBattle: React.FC<ComparisonBattleProps> = ({
             <div
               style={{
                 fontFamily: "'Inter', sans-serif",
-                fontSize: 15,
+                fontSize: 18,
                 color: '#64748B',
-                marginTop: 4,
+                marginTop: 6,
+                lineHeight: 1.35,
               }}
             >
               {subtitleA}
@@ -188,7 +240,7 @@ export const ComparisonBattle: React.FC<ComparisonBattleProps> = ({
                 decimals={metricA.decimals ?? 0}
                 prefix={metricA.prefix ?? ''}
                 suffix={metricA.suffix ?? ''}
-                fontSize={32}
+                fontSize={34}
                 color={isBattled ? '#94A3B8' : '#141413'}
               />
             </div>
@@ -203,16 +255,16 @@ export const ComparisonBattle: React.FC<ComparisonBattleProps> = ({
           border: isBattled
             ? `2.5px solid ${accentColor}`
             : '2px solid #141413',
-          borderRadius: 20,
+          borderRadius: 22,
           padding: '28px 32px',
           boxShadow: isBattled
-            ? `0 20px 45px rgba(217, 78, 52, 0.14), 0 2px 8px rgba(0, 0, 0, 0.04)`
+            ? `0 20px 45px rgba(217, 78, 52, 0.16), 0 2px 8px rgba(0, 0, 0, 0.04)`
             : '0 10px 30px rgba(20, 20, 19, 0.06)',
           opacity: springB,
           transform: `scale(${interpolate(
             battleSpring,
             [0, 1],
-            [springB, 1.04],
+            [springB, 1.03],
             CLAMP_EXTRAPOLATION
           )}) translateY(${(1 - springB) * 35}px)`,
           transformOrigin: 'center center',
@@ -229,9 +281,10 @@ export const ComparisonBattle: React.FC<ComparisonBattleProps> = ({
           <span
             style={{
               fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
-              fontSize: 14,
+              fontSize: 15,
               fontWeight: 800,
               color: accentColor,
+              letterSpacing: 0.5,
             }}
           >
             {tagB}
@@ -240,12 +293,13 @@ export const ComparisonBattle: React.FC<ComparisonBattleProps> = ({
             <span
               style={{
                 fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
-                fontSize: 12,
-                fontWeight: 800,
+                fontSize: 13,
+                fontWeight: 900,
                 color: '#FFFFFF',
                 backgroundColor: accentColor,
-                padding: '4px 10px',
+                padding: '4px 12px',
                 borderRadius: 6,
+                boxShadow: '0 4px 14px rgba(217, 78, 52, 0.35)',
               }}
             >
               EFECTO VERIFICADO ✓
@@ -264,10 +318,11 @@ export const ComparisonBattle: React.FC<ComparisonBattleProps> = ({
             <div
               style={{
                 fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
-                fontSize: 38,
+                fontSize: 40,
                 fontWeight: 900,
                 color: '#141413',
                 letterSpacing: '-0.03em',
+                lineHeight: 1.18,
               }}
             >
               {titleB}
@@ -275,10 +330,11 @@ export const ComparisonBattle: React.FC<ComparisonBattleProps> = ({
             <div
               style={{
                 fontFamily: "'Inter', sans-serif",
-                fontSize: 16,
+                fontSize: 19,
                 color: '#575550',
-                marginTop: 4,
-                fontWeight: 500,
+                marginTop: 6,
+                fontWeight: 600,
+                lineHeight: 1.35,
               }}
             >
               {subtitleB}
@@ -286,7 +342,7 @@ export const ComparisonBattle: React.FC<ComparisonBattleProps> = ({
           </div>
 
           {metricB && (
-            <div style={{ textAlign: 'right' }}>
+            <div style={{ textAlign: 'right', paddingLeft: 12 }}>
               <LiveCounter
                 from={1}
                 to={metricB.value}
@@ -294,7 +350,7 @@ export const ComparisonBattle: React.FC<ComparisonBattleProps> = ({
                 decimals={metricB.decimals ?? 0}
                 prefix={metricB.prefix ?? ''}
                 suffix={metricB.suffix ?? ''}
-                fontSize={48}
+                fontSize={54}
                 color={accentColor}
               />
             </div>
@@ -304,11 +360,11 @@ export const ComparisonBattle: React.FC<ComparisonBattleProps> = ({
         {/* Barra de progreso / aceleración reactiva */}
         <div
           style={{
-            marginTop: 18,
+            marginTop: 20,
             width: '100%',
-            height: 8,
+            height: 10,
             backgroundColor: 'rgba(217, 78, 52, 0.12)',
-            borderRadius: 4,
+            borderRadius: 5,
             overflow: 'hidden',
           }}
         >
@@ -317,7 +373,7 @@ export const ComparisonBattle: React.FC<ComparisonBattleProps> = ({
               width: `${interpolate(progressB, [0, 1], [15, 100], CLAMP_EXTRAPOLATION)}%`,
               height: '100%',
               backgroundColor: accentColor,
-              borderRadius: 4,
+              borderRadius: 5,
             }}
           />
         </div>

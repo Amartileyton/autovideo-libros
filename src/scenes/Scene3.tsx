@@ -87,17 +87,18 @@ const DEFAULT_TRANSFORMATION_NODES: BoundCircuitNode[] = [
 
 /**
  * Scene 3 — La Regla de Oro del Cambio (Motor Híbrido Inteligente + Auto-Binder Semántico)
- * Soporta los 3 presets del cuestionario interactivo:
- * - RULE_TRANSFORM_CIRCUIT (Default): Circuito interactivo de transformación sincronizado a la voz + Cita Editorial
- * - RULE_SUBSTITUTION_DIAGRAM: Diagrama de Sustitución (Rutina Vieja Tachada vs Nueva Rutina) + Cita Editorial
- * - RULE_EXPONENTIAL_EVIDENCE: Gráfico de Progresión Temporal + Tarjeta de Evidencia
+ *
+ * Distribución vertical balanceada que ocupa toda la pantalla (80px a 1520px):
+ * 1. Cita Central Subrayada: top 80px a 290px
+ * 2. ComparisonBattle (Tachado en vivo): top 320px a 880px
+ * 3. Tarjeta de Fórmula Maestra de Housel: top 930px a 1520px (gran presencia vertical)
  */
 export const Scene3: React.FC<Scene3Props> = ({
   canvasOffsetX = 1120,
   canvasOffsetY = 1980,
-  enterFrame = 824,
+  enterFrame = 749,
   visualData,
-  layoutPreset = 'RULE_TRANSFORM_CIRCUIT',
+  layoutPreset = 'RULE_SUBSTITUTION_DIAGRAM',
   wordTimestamps,
 }) => {
   const frame = useCurrentFrame();
@@ -131,25 +132,58 @@ export const Scene3: React.FC<Scene3Props> = ({
     return bindCircuitNodesToAudio(rawNodes, wordTimestamps);
   }, [visualData?.circuitNodes, wordTimestamps]);
 
-  const formulaWindow = useMemo(
+  const mythWindow = useMemo(
     () =>
       findKeywordFrameWindow(
         wordTimestamps,
-        ['recompensa', 'rutina'],
-        280,
-        350
+        ['compararte', 'exito', 'ajeno'],
+        50,
+        95
       ),
     [wordTimestamps]
   );
 
-  // 1. Cita de Oro de Charles Duhigg (frame 30)
+  const strikeWindow = useMemo(
+    () =>
+      findKeywordFrameWindow(
+        wordTimestamps,
+        ['envidia', 'frustracion'],
+        125,
+        155
+      ),
+    [wordTimestamps]
+  );
+
+  const realityWindow = useMemo(
+    () =>
+      findKeywordFrameWindow(
+        wordTimestamps,
+        ['mide', 'progreso', 'exclusivamente'],
+        180,
+        220
+      ),
+    [wordTimestamps]
+  );
+
+  const formulaWindow = useMemo(
+    () =>
+      findKeywordFrameWindow(
+        wordTimestamps,
+        ['eras', 'ayer', 'comparandote'],
+        235,
+        280
+      ),
+    [wordTimestamps]
+  );
+
+  // 1. Cita de Oro (frame 20)
   const quoteEntrance = spring({
-    frame: Math.max(0, localFrame - 30),
+    frame: Math.max(0, localFrame - 20),
     fps,
     config: SPRING_SNAPPY,
   });
 
-  // 2. Entrada de la tarjeta resumen inferior sincronizada
+  // 2. Entrada de la tarjeta resumen inferior sincronizada (frame ~210)
   const summaryEntrance = spring({
     frame: Math.max(0, localFrame - formulaWindow.startFrame),
     fps,
@@ -165,17 +199,16 @@ export const Scene3: React.FC<Scene3Props> = ({
         width: 1080,
         height: 1920,
         pointerEvents: 'none',
-        padding: '0 96px',
         boxSizing: 'border-box',
       }}
     >
-      {/* 1. Tarjeta Cita de Oro de Charles Duhigg (Sin barra de título redundante) */}
+      {/* 1. Tarjeta Cita de Gran Formato y Alta Legibilidad (top: 80px a 290px, left: 54, right: 54) */}
       <div
         style={{
           position: 'absolute',
-          top: 150,
-          left: 96,
-          right: 96,
+          top: 80,
+          left: 54,
+          right: 54,
           opacity: quoteEntrance,
           transform: `scale(${interpolate(quoteEntrance, [0, 1], [0.95, 1], CLAMP_EXTRAPOLATION)})`,
         }}
@@ -184,64 +217,81 @@ export const Scene3: React.FC<Scene3Props> = ({
           enterFrame={0}
           accentBorderColor="#141413"
           badgeColor="#D94E34"
-          padding="26px 32px"
+          padding="32px 40px"
         >
           <div
             style={{
               fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
-              fontSize: 26,
-              fontWeight: 700,
+              fontSize: 32,
+              fontWeight: 800,
               color: '#141413',
-              lineHeight: 1.35,
+              lineHeight: 1.36,
               textAlign: 'center',
             }}
           >
-            «No puedes extinguir un mal hábito; la clave consiste en{' '}
-            <span
-              style={{
-                backgroundColor: 'rgba(217, 78, 52, 0.16)',
-                borderBottom: '3px solid #D94E34',
-                padding: '2px 8px',
-                borderRadius: 4,
-                fontWeight: 800,
-                color: '#D94E34',
-              }}
-            >
-              sustituir la rutina
-            </span>{' '}
-            conservando la misma señal y recompensa.»
+            {visualData?.centralQuote ? (
+              visualData.centralQuote.includes('con quien eras ayer') ? (
+                <>
+                  «Compárate con{' '}
+                  <span
+                    style={{
+                      backgroundColor: 'rgba(217, 78, 52, 0.16)',
+                      borderBottom: '4px solid #D94E34',
+                      padding: '2px 10px',
+                      borderRadius: 6,
+                      fontWeight: 900,
+                      color: '#D94E34',
+                    }}
+                  >
+                    quien eras ayer
+                  </span>
+                  , no con quien es otra persona hoy.»
+                </>
+              ) : (
+                `«${visualData.centralQuote}»`
+              )
+            ) : (
+              '«Compárate con quien eras ayer, no con quien es otra persona hoy.»'
+            )}
           </div>
         </KineticCard>
       </div>
 
-      {/* 2. Bloque Central Gobernado por layoutPreset (Motor Híbrido Inteligente) */}
+      {/* 2. Bloque Central: ComparisonBattle sincronizada palabra por palabra (Tachado activo en envidia/frustración) */}
       <div
         style={{
           position: 'absolute',
-          top: 380,
-          left: 96,
-          right: 96,
+          top: 320,
+          left: 54,
+          right: 54,
         }}
       >
         {layoutPreset === 'RULE_SUBSTITUTION_DIAGRAM' ? (
           <ComparisonBattle
-            titleA="Intentar Suprimir el Hábito"
-            subtitleA="Luchar contra la señal y el anhelo agota la fuerza de voluntad"
-            tagA="FRACASO RECURRENTE"
-            titleB="Sustituir Solo la Rutina"
-            subtitleB="Misma señal + Nueva conducta constructiva = Mismo alivio"
-            tagB="REGLA DE ORO (DUHIGG)"
-            metricB={{ value: 100, suffix: '% EFICAZ' }}
-            enterFrameA={130}
-            enterFrameB={185}
-            battleFrame={240}
+            titleA={visualData?.mythLabel ?? 'Compararte con el Éxito Ajeno'}
+            subtitleA={
+              visualData?.mythSubtitle ??
+              'Envidia y sensación de fracaso al medirte contra las vidas ajenas'
+            }
+            tagA={visualData?.mythTag ?? 'VENENO MENTAL'}
+            titleB={visualData?.realityLabel ?? 'Compararte con Quien Eras Ayer'}
+            subtitleB={
+              visualData?.realitySubtitle ??
+              'El único baremo constructivo: medir tu avance relativo y personal'
+            }
+            tagB={visualData?.realityTag ?? 'PROGRESO REAL (100%)'}
+            metricB={{ value: 100, suffix: '% INTERNO' }}
+            enterFrameA={mythWindow.startFrame}
+            enterFrameB={realityWindow.startFrame}
+            battleFrame={strikeWindow.startFrame}
+            currentFrame={localFrame}
             accentColor="#D94E34"
           />
         ) : layoutPreset === 'RULE_EXPONENTIAL_EVIDENCE' ? (
           <ExponentialGrowthChart
             startFrame={enterFrame + 40}
-            width={888}
-            height={480}
+            width={972}
+            height={520}
             accentColor="#D94E34"
             showTitle={false}
           />
@@ -250,75 +300,149 @@ export const Scene3: React.FC<Scene3Props> = ({
             nodes={boundNodes}
             currentFrame={localFrame}
             accentColor="#D94E34"
-            width={888}
-            height={480}
+            width={972}
+            height={520}
             showTitle={false}
           />
         )}
       </div>
 
-      {/* 3. Tarjeta Inferior de Fórmula Neuroconductual */}
+      {/* 3. Tarjeta Inferior de Fórmula con Gran Legibilidad y Presencia Vertical (top: 920 a 1520) */}
       <div
         style={{
           position: 'absolute',
-          top: 895,
-          left: 96,
-          right: 96,
+          top: 920,
+          left: 54,
+          right: 54,
+          height: 560,
           opacity: summaryEntrance,
           transform: `translateY(${(1 - summaryEntrance) * 20}px)`,
         }}
       >
         <div
           style={{
+            height: '100%',
             backgroundColor: '#FEF9C3',
-            border: '2px solid #141413',
-            borderLeft: '6px solid #D94E34',
-            borderRadius: 16,
-            padding: '18px 24px',
-            boxShadow: '0 8px 24px rgba(20, 20, 19, 0.05)',
+            border: '2.5px solid #141413',
+            borderLeft: '8px solid #D94E34',
+            borderRadius: 26,
+            padding: '38px 44px',
+            boxShadow: '0 16px 44px rgba(20, 20, 19, 0.08), 0 4px 14px rgba(0,0,0,0.04)',
+            boxSizing: 'border-box',
             display: 'flex',
-            alignItems: 'center',
+            flexDirection: 'column',
             justifyContent: 'space-between',
-            gap: 16,
           }}
         >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span
+              style={{
+                backgroundColor: '#D94E34',
+                color: '#FFFFFF',
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                fontSize: 16,
+                fontWeight: 900,
+                padding: '6px 18px',
+                borderRadius: 8,
+                letterSpacing: 0.5,
+              }}
+            >
+              EL BAREMO DE PROGRESO
+            </span>
+
+            <span
+              style={{
+                backgroundColor: '#141413',
+                color: '#FEF9C3',
+                padding: '6px 20px',
+                borderRadius: 12,
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                fontSize: 16,
+                fontWeight: 900,
+              }}
+            >
+              CONTROL INTERNO
+            </span>
+          </div>
+
           <div>
             <div
               style={{
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
-                fontSize: 19,
+                fontSize: 36,
+                fontWeight: 900,
+                color: '#141413',
+                lineHeight: 1.22,
+                letterSpacing: '-0.025em',
+              }}
+            >
+              {visualData?.formulaLabel ??
+                'Tu único rival = Quien eras tú ayer'}
+            </div>
+
+            <div
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontSize: 23,
+                fontWeight: 600,
+                color: '#374151',
+                marginTop: 14,
+                lineHeight: 1.45,
+              }}
+            >
+              {visualData?.formulaSublabel ??
+                'Medir tu avance respecto a tu propio pasado elimina la ansiedad de estatus y te da tracción real.'}
+            </div>
+          </div>
+
+          <div
+            style={{
+              backgroundColor: '#F8F7F4',
+              border: '2px dashed rgba(217, 78, 52, 0.45)',
+              borderRadius: 16,
+              padding: '18px 24px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 8,
+            }}
+          >
+            <div
+              style={{
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                fontSize: 17,
                 fontWeight: 800,
                 color: '#141413',
               }}
             >
-              {visualData?.formulaLabel ??
-                'Misma Señal + Nueva Rutina = Misma Recompensa'}
+              • <strong style={{ color: '#D94E34' }}>Comparación Externa:</strong> Medirte con el éxito ajeno genera envidia y sensación destructiva de fracaso.
             </div>
             <div
               style={{
-                fontFamily: "'Inter', sans-serif",
-                fontSize: 14,
-                color: '#575550',
-                marginTop: 3,
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                fontSize: 17,
+                fontWeight: 800,
+                color: '#141413',
               }}
             >
-              {visualData?.formulaSublabel ??
-                'El principio científico demostrado por Charles Duhigg'}
+              • <strong style={{ color: '#16A34A' }}>Superación Interna:</strong> Mejorar un pequeño porcentaje respecto a quien eras ayer construye autoestima sólida.
             </div>
           </div>
+
           <div
             style={{
-              backgroundColor: '#D94E34',
-              color: '#FFFFFF',
+              alignSelf: 'flex-start',
+              backgroundColor: 'rgba(217, 78, 52, 0.12)',
+              border: '1.5px solid #D94E34',
+              borderRadius: 10,
+              padding: '8px 20px',
               fontFamily: "'Plus Jakarta Sans', sans-serif",
-              fontSize: 13,
-              fontWeight: 800,
-              padding: '8px 14px',
-              borderRadius: 8,
-              whiteSpace: 'nowrap',
+              fontSize: 15,
+              fontWeight: 900,
+              color: '#D94E34',
+              letterSpacing: 0.5,
             }}
           >
-            FÓRMULA 100%
+            REGLA DE VIDA: PROGRESO RELATIVO &gt; COMPARACIÓN SOCIAL
           </div>
         </div>
       </div>

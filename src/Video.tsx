@@ -4,6 +4,7 @@ import {
   Audio,
   Sequence,
   interpolate,
+  spring,
   staticFile,
   useCurrentFrame,
   useVideoConfig,
@@ -54,7 +55,8 @@ export function computeSceneTimeline(
   audioManifest: AudioManifest
 ): ComputedSceneWindow[] {
   const overlap = audioManifest.crossDissolveFrames || 10;
-  let cursor = 0;
+  // 12 fotogramas (400ms) de pre-roll inicial para evitar que se corte la primera sílaba ("¿Por...")
+  let cursor = 12;
 
   return audioManifest.scenes.map((scene, index) => {
     const from = cursor;
@@ -283,11 +285,6 @@ export const Video: React.FC<VideoProps> = ({
         />
       </CameraRig>
 
-      {/* Efecto de sonido de alarma de warning en el inicio de la primera escena */}
-      <Sequence from={0} durationInFrames={26} name="Alarm-Sound">
-        <Audio src={staticFile('audio/alarm.mp3')} volume={0.8} />
-      </Sequence>
-
       {/* Secuencias de audio sincronizadas al fotograma desde public/audio/info.json */}
       {timeline.map((sceneWin) => (
         <Sequence
@@ -318,43 +315,70 @@ export const Video: React.FC<VideoProps> = ({
         />
       )}
 
-      {/* Reloj de 1 Minuto corriendo en solitario con animación ligera (SIN banner inferior) */}
+      {/* Reloj de 1 Minuto: Corre en el footer y asciende suave y tempranamente acoplándose a CtaEndCard */}
       {(() => {
-        const ctaCardFrame = (timeline[4]?.from ?? 1655) + 260;
-        const clockOpacity = interpolate(
+        const scene5Start = timeline[4]?.from ?? 1508;
+        // Comienza la transición del reloj con anticipación suficiente (frame +170 de escena 5)
+        // para un vuelo ultra suave de 82 frames (~2.7 segundos) que concluye exactamente cuando
+        // entra la locución "Guarda este resumen" en frame +252.
+        const ctaFlightTrigger = scene5Start + 170;
+
+        // Suavizado cúbico continuo para máxima fluidez orgánica
+        const flightRaw = interpolate(
           frame,
-          [ctaCardFrame - 20, ctaCardFrame],
-          [1, 0],
+          [ctaFlightTrigger, ctaFlightTrigger + 82],
+          [0, 1],
           CLAMP_EXTRAPOLATION
         );
-        const clockScale = interpolate(
-          frame,
-          [ctaCardFrame - 20, ctaCardFrame],
-          [1, 0.5],
+        const smoothFlight =
+          flightRaw < 0.5
+            ? 4 * flightRaw * flightRaw * flightRaw
+            : 1 - Math.pow(-2 * flightRaw + 2, 3) / 2;
+
+        // Coordenada Y: desde el footer (top: 1788px) hasta la ranura de CtaEndCard (top: 798px)
+        const clockY = interpolate(
+          smoothFlight,
+          [0, 1],
+          [1788, 798],
           CLAMP_EXTRAPOLATION
         );
+
+        // Tamaño del reloj: se expande con calma de 84px a 110px hero
+        const clockSize = interpolate(
+          smoothFlight,
+          [0, 1],
+          [84, 110],
+          CLAMP_EXTRAPOLATION
+        );
+
+        // Modo: transiciona de 'header' a 'hero' cuando la animación supera el 35%
+        const clockMode = smoothFlight > 0.35 ? 'hero' : 'header';
 
         return (
           <div
             style={{
               position: 'absolute',
-              bottom: 48,
+              top: clockY,
               left: 0,
               right: 0,
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              zIndex: 95,
+              zIndex: 100,
               pointerEvents: 'none',
-              opacity: clockOpacity,
-              transform: `scale(${clockScale})`,
             }}
           >
             <OneMinuteStopwatch
-              size={84}
+              size={Math.round(clockSize)}
               currentFrame={frame}
               totalDurationInFrames={totalDurationFrames}
-              mode="header"
+              mode={clockMode}
+              style={{
+                filter:
+                  smoothFlight > 0.05
+                    ? 'drop-shadow(0 12px 28px rgba(217, 78, 52, 0.38))'
+                    : undefined,
+              }}
             />
           </div>
         );

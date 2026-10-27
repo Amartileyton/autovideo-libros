@@ -60,19 +60,52 @@ export const Scene1: React.FC<Scene1Props> = ({
     () =>
       findKeywordFrameWindow(
         wordTimestamps,
-        visualData?.hookTriggerKeyword ?? ['cuarenta', 'porcentaje', 'estudio'],
-        160,
-        198
+        visualData?.hookTriggerKeyword ?? ['felicidad', 'caos', 'perdidos'],
+        120,
+        180
       ),
     [wordTimestamps, visualData?.hookTriggerKeyword]
+  );
+
+  const mythWindow = useMemo(
+    () =>
+      findKeywordFrameWindow(
+        wordTimestamps,
+        ['caos', 'esperando', 'felicidad', 'mito'],
+        175,
+        215
+      ),
+    [wordTimestamps]
+  );
+
+  const strikeWindow = useMemo(
+    () =>
+      findKeywordFrameWindow(
+        wordTimestamps,
+        ['pasiva', 'sino'],
+        245,
+        265
+      ),
+    [wordTimestamps]
+  );
+
+  const realityWindow = useMemo(
+    () =>
+      findKeywordFrameWindow(
+        wordTimestamps,
+        ['asumiendo', 'responsabilidad', 'voluntaria'],
+        268,
+        310
+      ),
+    [wordTimestamps]
   );
 
   const battleWindow = useMemo(
     () =>
       findKeywordFrameWindow(
         wordTimestamps,
-        visualData?.battleTriggerKeyword ?? ['elecciones', 'automaticos'],
-        220,
+        visualData?.battleTriggerKeyword ?? ['pasiva', 'responsabilidad', 'voluntaria'],
+        240,
         295,
         counterWindow.startFrame + 15
       ),
@@ -117,7 +150,6 @@ export const Scene1: React.FC<Scene1Props> = ({
         width: 1080,
         height: 1920,
         pointerEvents: 'none',
-        padding: '0 96px',
         boxSizing: 'border-box',
       }}
     >
@@ -125,30 +157,30 @@ export const Scene1: React.FC<Scene1Props> = ({
       <div
         style={{
           position: 'absolute',
-          top: 150,
-          left: 96,
-          right: 96,
+          top: 90,
+          left: 54,
+          right: 54,
           backgroundColor: '#FEF9C3',
-          border: '2px solid #141413',
-          borderLeft: '6px solid #D94E34',
-          borderRadius: 16,
-          padding: '20px 28px',
-          boxShadow: '0 10px 30px rgba(20, 20, 19, 0.06)',
+          border: '2.5px solid #141413',
+          borderLeft: '8px solid #D94E34',
+          borderRadius: 20,
+          padding: '24px 32px',
+          boxShadow: '0 12px 36px rgba(20, 20, 19, 0.08)',
           opacity: statEntrance,
           transform: `scale(${interpolate(statEntrance, [0, 1], [0.94, 1], CLAMP_EXTRAPOLATION)})`,
           display: 'flex',
           alignItems: 'center',
-          gap: 24,
+          gap: 28,
         }}
       >
-        <div style={{ minWidth: 140 }}>
+        <div style={{ minWidth: 160 }}>
           <LiveCounter
             from={0}
             to={statNumeric}
             startFrame={counterWindow.startFrame}
             durationFrames={35}
             suffix={statSuffix}
-            fontSize={52}
+            fontSize={72}
             color="#D94E34"
           />
         </div>
@@ -156,9 +188,10 @@ export const Scene1: React.FC<Scene1Props> = ({
           <div
             style={{
               fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
-              fontSize: 22,
-              fontWeight: 800,
+              fontSize: 27,
+              fontWeight: 900,
               color: '#141413',
+              lineHeight: 1.25,
             }}
           >
             {statLabel}
@@ -166,9 +199,10 @@ export const Scene1: React.FC<Scene1Props> = ({
           <div
             style={{
               fontFamily: "'Inter', sans-serif",
-              fontSize: 14,
+              fontSize: 16,
+              fontWeight: 600,
               color: '#575550',
-              marginTop: 3,
+              marginTop: 5,
             }}
           >
             {statSource}
@@ -176,13 +210,13 @@ export const Scene1: React.FC<Scene1Props> = ({
         </div>
       </div>
 
-      {/* 2. Portada 2.5D del Libro + 3 Píldoras/Cajas Diferenciadas con Logo Oficial de Goodreads */}
+      {/* 2. Portada 2.5D del Libro + 3 Parches Dinámicos Goodreads */}
       <div
         style={{
           position: 'absolute',
-          top: 290,
-          left: 96,
-          right: 96,
+          top: 250,
+          left: 54,
+          right: 54,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -192,29 +226,29 @@ export const Scene1: React.FC<Scene1Props> = ({
       >
         <BookCover
           bookMetadata={bookMetadata}
-          width={340}
-          height={506}
-          borderRadius={16}
+          width={350}
+          height={510}
+          borderRadius={18}
           variant="hero"
         />
 
-        {/* REGLA INQUEBRANTABLE #5: 3 Píldoras/Cajas diferenciadas con Logo Oficial de Goodreads */}
+        {/* 3 Parches Dinámicos que se estampan progresivamente con inclinación y rebote */}
         <GoodreadsBadgeCluster
-          author={bookMetadata?.author ?? 'Charles Duhigg'}
-          rating={bookMetadata?.rating ?? 4.13}
-          ratingsCount={bookMetadata?.ratingsCount ?? '585K'}
-          startFrame={65}
+          author={bookMetadata?.author ?? 'Morgan Housel'}
+          rating={bookMetadata?.rating ?? 4.38}
+          ratingsCount={bookMetadata?.ratingsCount ?? '1.94M'}
+          startFrame={14}
           currentFrame={localFrame}
         />
       </div>
 
-      {/* 3. Bloque Inferior Dinámico gobernado por layoutPreset (Motor Híbrido Inteligente) */}
+      {/* 3. Bloque Inferior Dinámico con gran presencia visual (top: 960 a 1480, left: 54, right: 54) */}
       <div
         style={{
           position: 'absolute',
-          top: 925,
-          left: 96,
-          right: 96,
+          top: 960,
+          left: 54,
+          right: 54,
         }}
       >
         {layoutPreset === 'HOOK_COVER_QUESTION' ? (
@@ -227,8 +261,8 @@ export const Scene1: React.FC<Scene1Props> = ({
             <div
               style={{
                 fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
-                fontSize: 28,
-                fontWeight: 800,
+                fontSize: 32,
+                fontWeight: 900,
                 color: '#141413',
                 lineHeight: 1.35,
                 textAlign: 'center',
@@ -268,64 +302,65 @@ export const Scene1: React.FC<Scene1Props> = ({
                 <div
                   style={{
                     fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    fontSize: 23,
-                    fontWeight: 800,
+                    fontSize: 28,
+                    fontWeight: 900,
                     color: '#141413',
                   }}
                 >
-                  {visualData?.realityLabel ?? 'Ganglios Basales en Control'}
+                  {visualData?.realityLabel ?? 'Decisiones Emocionales'}
                 </div>
                 <div
                   style={{
                     fontFamily: "'Inter', sans-serif",
-                    fontSize: 15,
+                    fontSize: 18,
                     color: '#575550',
                     marginTop: 6,
                     lineHeight: 1.4,
                   }}
                 >
                   {visualData?.realitySubtitle ??
-                    'Tu cerebro archiva secuencias completas para ahorrar esfuerzo mental.'}
+                    'El éxito depende de tu comportamiento, paciencia y autocontrol.'}
                 </div>
               </div>
               <div
                 style={{
                   backgroundColor: '#141413',
                   color: '#FEF9C3',
-                  padding: '12px 18px',
-                  borderRadius: 12,
+                  padding: '14px 22px',
+                  borderRadius: 14,
                   fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  fontSize: 22,
+                  fontSize: 26,
                   fontWeight: 900,
                   whiteSpace: 'nowrap',
                 }}
               >
                 {statNumeric}
-                {statSuffix} HÁBITOS
+                {statSuffix}
               </div>
             </div>
           </KineticCard>
         ) : (
           <ComparisonBattle
-            titleA={visualData?.mythLabel ?? 'Elección Consciente'}
+            titleA={visualData?.mythLabel ?? 'Mito: Fórmulas Matemáticas'}
             subtitleA={
               visualData?.mythSubtitle ??
-              'Creemos que decidimos cada acción con la mente'
+              'Creer que la riqueza depende de hojas de cálculo y coeficiente intelectual'
             }
-            tagA={visualData?.mythTag ?? 'ILUSIÓN DE CONTROL'}
-            titleB={visualData?.realityLabel ?? 'Piloto Automático'}
+            tagA={visualData?.mythTag ?? 'ERROR TRADICIONAL'}
+            titleB={visualData?.realityLabel ?? 'Realidad: Habilidad Blanda'}
             subtitleB={
               visualData?.realitySubtitle ??
-              'Los ganglios basales ejecutan la conducta sin pensar'
+              'El éxito depende de tu comportamiento, paciencia y autocontrol'
             }
             tagB={
               visualData?.realityTag ??
-              `REALIDAD NEUROLÓGICA (${statNumeric}${statSuffix})`
+              `PSICOLOGÍA REAL (${statNumeric}${statSuffix})`
             }
-            metricB={{ value: statNumeric, suffix: `${statSuffix} DÍA` }}
-            enterFrameA={battleWindow.startFrame}
-            enterFrameB={battleWindow.startFrame + 32}
-            battleFrame={battleWindow.startFrame + 62}
+            metricB={{ value: statNumeric, suffix: `${statSuffix} IMPACTO` }}
+            enterFrameA={mythWindow.startFrame}
+            enterFrameB={realityWindow.startFrame}
+            battleFrame={strikeWindow.startFrame}
+            currentFrame={localFrame}
             accentColor="#D94E34"
           />
         )}

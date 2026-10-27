@@ -9,17 +9,18 @@ export interface ExponentialGrowthChartProps {
   height?: number;
   accentColor?: string;
   showTitle?: boolean;
+  multiplierMax?: number;
+  peakBadgeText?: string;
+  latentLabel?: string;
+  unit?: string;
+  xLabels?: string[];
 }
 
 /**
- * ExponentialGrowthChart — Gráfico Cinético de Crecimiento Exponencial (1.01³⁶⁵)
+ * ExponentialGrowthChart — Gráfico Cinético de Crecimiento Exponencial (Interés Compuesto)
  * Estilo @nuncateloexplicaron + @eldatomanda:
- * - Dibuja en tiempo real la curva matemática del interés compuesto (1.01^t).
- * - Sincronizado exactamente con el audio de Leo:
- *   * Frames 0..60: Entrada de rejilla y ejes técnicos.
- *   * Frames 60..170: "parece invisible" -> la curva avanza casi plana (zona latente).
- *   * Frames 170..240: "interés compuesto" -> empieza a curvarse hacia arriba.
- *   * Frames 240..300: "treinta y siete veces mejor" -> despegue vertical explosivo hasta 37.78x.
+ * - Dibuja en tiempo real la curva matemática del interés compuesto.
+ * - Sincronizado exactamente con el audio de Leo.
  */
 export const ExponentialGrowthChart: React.FC<ExponentialGrowthChartProps> = ({
   startFrame = 0,
@@ -27,6 +28,11 @@ export const ExponentialGrowthChart: React.FC<ExponentialGrowthChartProps> = ({
   height = 520,
   accentColor = '#D94E34',
   showTitle = false,
+  multiplierMax = 37.78,
+  peakBadgeText = '+37.78x MEJORA TOTAL',
+  latentLabel = 'FASE LATENTE (EL CAMBIO ES INVISIBLE)',
+  unit = 'x',
+  xLabels,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -62,11 +68,15 @@ export const ExponentialGrowthChart: React.FC<ExponentialGrowthChartProps> = ({
   const sampleCount = 200;
   const points: { x: number; y: number; val: number; day: number }[] = [];
 
+  const maxVal = multiplierMax;
+  const baseVal = 1.0;
+  const growthRate = Math.pow(maxVal / baseVal, 1 / 365);
+
   for (let i = 0; i <= sampleCount; i++) {
     const t = i / sampleCount;
     const day = t * 365;
-    const multiplier = Math.pow(1.01, day); // 1.0 -> 37.78
-    const normY = (multiplier - 1.0) / (37.78 - 1.0); // 0 -> 1
+    const multiplier = baseVal * Math.pow(growthRate, day);
+    const normY = (multiplier - baseVal) / (maxVal - baseVal);
 
     const px = padLeft + t * plotWidth;
     const py = padTop + plotHeight - normY * plotHeight;
@@ -84,8 +94,8 @@ export const ExponentialGrowthChart: React.FC<ExponentialGrowthChartProps> = ({
   // 4. Posición EXACTA continua del círculo/spark (sin Math.floor ni saltos escalonados)
   const currentT = curveProgress;
   const currentDay = currentT * 365;
-  const currentMultiplier = Math.pow(1.01, currentDay);
-  const currentNormY = (currentMultiplier - 1.0) / (37.78 - 1.0);
+  const currentMultiplier = baseVal * Math.pow(growthRate, currentDay);
+  const currentNormY = (currentMultiplier - baseVal) / (maxVal - baseVal);
   const currentPt = {
     x: padLeft + currentT * plotWidth,
     y: padTop + plotHeight - currentNormY * plotHeight,
@@ -96,12 +106,22 @@ export const ExponentialGrowthChart: React.FC<ExponentialGrowthChartProps> = ({
   // Área sombreada bajo la curva (gradiente)
   const areaD = `${pathD} L ${padLeft + plotWidth} ${padTop + plotHeight} L ${padLeft} ${padTop + plotHeight} Z`;
 
-  // Rebote del badge al coronar 37.78x
+  // Rebote del badge al coronar el pico
   const peakBounce = spring({
     frame: Math.max(0, localFrame - 275),
     fps,
     config: SPRING_SNAPPY,
   });
+
+  const resolvedXLabels =
+    xLabels ?? ['DÍA 0', 'DÍA 100', 'DÍA 200', 'DÍA 300', 'DÍA 365'];
+
+  const yLevels = [
+    Math.round(maxVal * 0.25),
+    Math.round(maxVal * 0.5),
+    Math.round(maxVal * 0.75),
+    maxVal,
+  ];
 
   return (
     <div
@@ -206,9 +226,9 @@ export const ExponentialGrowthChart: React.FC<ExponentialGrowthChartProps> = ({
           opacity={0.7}
         />
 
-        {/* Líneas de guía horizontales de valor (10x, 20x, 30x, 37.78x) */}
-        {[10, 20, 30, 37.78].map((lvl) => {
-          const norm = (lvl - 1.0) / (37.78 - 1.0);
+        {/* Líneas de guía horizontales de valor */}
+        {yLevels.map((lvl) => {
+          const norm = (lvl - baseVal) / (maxVal - baseVal);
           const yPos = padTop + plotHeight - norm * plotHeight;
           return (
             <g key={lvl}>
@@ -227,16 +247,16 @@ export const ExponentialGrowthChart: React.FC<ExponentialGrowthChartProps> = ({
                 fontFamily="'JetBrains Mono', monospace"
                 fontSize={12}
                 fontWeight={700}
-                fill={lvl === 37.78 ? accentColor : '#94A3B8'}
+                fill={lvl === maxVal ? accentColor : '#94A3B8'}
                 textAnchor="end"
               >
-                {lvl}x
+                {lvl}{unit}
               </text>
             </g>
           );
         })}
 
-        {/* Línea base horizontal (1.0x - El estancamiento / sin hábitos) */}
+        {/* Línea base horizontal */}
         <line
           x1={padLeft}
           y1={padTop + plotHeight}
@@ -254,24 +274,25 @@ export const ExponentialGrowthChart: React.FC<ExponentialGrowthChartProps> = ({
           fill="#94A3B8"
           textAnchor="end"
         >
-          1.0x
+          {baseVal}{unit}
         </text>
 
-        {/* Etiquetas del eje X (Días) */}
-        {[0, 100, 200, 300, 365].map((d) => {
-          const xPos = padLeft + (d / 365) * plotWidth;
+        {/* Etiquetas del eje X */}
+        {resolvedXLabels.map((lbl, idx) => {
+          const frac = idx / Math.max(1, resolvedXLabels.length - 1);
+          const xPos = padLeft + frac * plotWidth;
           return (
             <text
-              key={d}
+              key={lbl}
               x={xPos}
               y={padTop + plotHeight + 24}
               fontFamily="'JetBrains Mono', monospace"
               fontSize={11}
               fontWeight={700}
               fill="#64748B"
-              textAnchor={d === 0 ? 'start' : d === 365 ? 'end' : 'middle'}
+              textAnchor={idx === 0 ? 'start' : idx === resolvedXLabels.length - 1 ? 'end' : 'middle'}
             >
-              DÍA {d}
+              {lbl}
             </text>
           );
         })}
@@ -321,7 +342,7 @@ export const ExponentialGrowthChart: React.FC<ExponentialGrowthChartProps> = ({
         )}
       </svg>
 
-      {/* 3. Badge Pop de Victoria Exponencial al llegar a 37.78x */}
+      {/* 3. Badge Pop de Victoria Exponencial al llegar a la cima */}
       {curveProgress > 0.92 && (
         <div
           style={{
@@ -346,7 +367,7 @@ export const ExponentialGrowthChart: React.FC<ExponentialGrowthChartProps> = ({
           }}
         >
           <span>🚀</span>
-          <span>+37.78x MEJORA TOTAL</span>
+          <span>{peakBadgeText}</span>
         </div>
       )}
 
@@ -367,7 +388,7 @@ export const ExponentialGrowthChart: React.FC<ExponentialGrowthChartProps> = ({
           border: '1px solid #E5E2DC',
         }}
       >
-        FASE LATENTE (EL CAMBIO ES INVISIBLE)
+        {latentLabel}
       </div>
     </div>
   );
