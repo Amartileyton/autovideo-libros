@@ -286,7 +286,7 @@ export const Scene2: React.FC<Scene2Props> = ({
                 letterSpacing: 0.5,
               }}
             >
-              BIOLOGÍA CONDUCTUAL
+              {visualData?.growthMetric ?? 'PSICOLOGÍA DEL GASTO'}
             </span>
 
             <span
@@ -300,7 +300,7 @@ export const Scene2: React.FC<Scene2Props> = ({
                 fontWeight: 900,
               }}
             >
-              SEROTONINA ACTIVA
+              {visualData?.formulaLabel ?? 'PARADOJA DEL ESTATUS'}
             </span>
           </div>
 
@@ -317,7 +317,7 @@ export const Scene2: React.FC<Scene2Props> = ({
               }}
             >
               {visualData?.centralQuote ??
-                '«Mantente erguido con los hombros hacia atrás: asume la responsabilidad voluntaria de existir.»'}
+                '«Comprar cosas para impresionar a otros es la forma más rápida de quedarte sin dinero.»'}
             </div>
 
             <div
@@ -332,7 +332,7 @@ export const Scene2: React.FC<Scene2Props> = ({
               }}
             >
               {visualData?.formulaSublabel ??
-                'Adoptar una postura erguida eleva la serotonina, reduce la ansiedad y predispone a tu cerebro a triunfar en la jerarquía.'}
+                'La verdadera riqueza es invisible: consiste en los activos que no gastas y en la libertad que conservas.'}
             </div>
           </div>
 
@@ -350,7 +350,7 @@ export const Scene2: React.FC<Scene2Props> = ({
               letterSpacing: 0.5,
             }}
           >
-            ANTÍDOTO BIOLÓGICO: CUERPO ERGUIDO ➔ CEREBRO FIRME
+            {visualData?.growthFormula ?? 'PARADOJA: COMPRAR ADMIRACIÓN DE EXTRAÑOS'}
           </div>
         </div>
       </div>

@@ -1,88 +1,65 @@
 {
-  "generatedAt": "2026-10-27T12:44:11.039Z",
-  "query": "12 reglas para vivir",
-  "slug": "12-reglas-para-vivir",
+  "generatedAt": "2026-10-28T13:25:00.000Z",
+  "query": "El arte de gastar dinero",
+  "slug": "el-arte-de-gastar-dinero",
   "bookMetadata": {
-    "title": "12 reglas para vivir",
-    "originalTitle": "12 Rules for Life: An Antidote to Chaos",
-    "author": "Jordan B. Peterson",
-    "publishYear": 2018,
-    "pages": 512,
-    "readingTimeHours": 6.2,
-    "rating": 3.9,
-    "ratingsCount": "240K",
-    "coverImage": "assets/books/12-reglas-para-vivir-cover.jpg",
-    "fallbackCoverImage": "assets/books/12-reglas-para-vivir-cover.svg",
-    "coverSource": "local-cache-hd",
-    "categoryTag": "PSICOLOGÍA CONDUCTUAL · RESPONSABILIDAD",
-    "goodreadsUrl": "https://www.goodreads.com/book/show/42263558"
+    "title": "El arte de gastar dinero",
+    "originalTitle": "The Art of Spending Money: Simple Choices for a Richer Life",
+    "author": "Morgan Housel",
+    "publishYear": 2025,
+    "pages": 256,
+    "readingTimeHours": 3.8,
+    "rating": 4.15,
+    "ratingsCount": "+45K",
+    "coverImage": "assets/books/el-arte-de-gastar-dinero-cover.jpg",
+    "fallbackCoverImage": "assets/books/el-arte-de-gastar-dinero-cover.svg",
+    "coverSource": "penguinrandomhouse-hd",
+    "categoryTag": "FINANZAS · PSICOLOGÍA",
+    "goodreadsUrl": "https://www.goodreads.com/book/show/231148075-the-art-of-spending-money"
   },
-  "synopsisCondensed": "El sufrimiento y el caos son inevitables, pero el antídoto no es culpar al mundo ni esperar la felicidad pasiva, sino asumir la máxima responsabilidad individual sobre tu propia vida.",
+  "synopsisCondensed": "Morgan Housel desmantela la obsesión exclusiva por acumular para abordar la gran paradoja financiera: ganar dinero es una habilidad técnica, pero gastarlo para conseguir verdadera felicidad, autonomía y serenidad es un arte psicológico que casi nadie domina.",
   "mythVsReality": {
-    "mythLabel": "VICTIMISMO PASIVO",
-    "realityLabel": "RESPONSABILIDAD TOTAL",
-    "mythExplanation": "Culpar al sistema o al azar y esperar que el entorno cambie",
-    "realityExplanation": "Asumir la carga voluntaria de ordenar tu propia vida antes de opinar"
+    "mythLabel": "MITO",
+    "realityLabel": "TESIS",
+    "mythExplanation": "Gastar en lujo visible demuestra éxito y genera satisfacción duradera.",
+    "realityExplanation": "El mayor dividendo del dinero es invisible: comprar tiempo, autonomía y paz mental."
   },
   "mathematicalProof": {
     "dailyGainPct": 1,
-    "annualMultiplier": 12,
-    "declineMultiplier": 0.1,
-    "formulaLabel": "ORDEN = CARGA VOLUNTARIA DEL CAOS"
+    "annualMultiplier": 37.78,
+    "declineMultiplier": 0.03,
+    "formulaLabel": "Autonomía > Estatus"
   },
   "verifiedQuotes": [
-    {
-      "text": "Mantén la espalda erguida y los hombros hacia atrás. Asumir la carga de tu vida transforma tu propia neurobiología.",
-      "highlightPhrases": [
-        "espalda erguida",
-        "hombros hacia atrás",
-        "transforma tu propia neurobiología"
-      ],
-      "chapter": "Regla 1 · Mantente erguido con los hombros hacia atrás"
-    },
-    {
-      "text": "Compárate con quien eras ayer, no con quien es otra persona hoy.",
-      "highlightPhrases": [
-        "con quien eras ayer",
-        "no con quien es otra persona hoy"
-      ],
-      "chapter": "Regla 4 · Compárate con quien eras tú ayer"
-    },
-    {
-      "text": "Pon tu casa en perfecto orden antes de criticar al mundo.",
-      "highlightPhrases": [
-        "tu casa en perfecto orden",
-        "antes de criticar al mundo"
-      ],
-      "chapter": "Regla 6 · Pon tu casa en perfecto orden"
-    }
+    "El mayor dividendo que paga el dinero es la capacidad de controlar tu propio tiempo.",
+    "Gastar dinero para impresionar a gente que no te importa es la forma más rápida de quedarte sin dinero."
   ],
   "actionableLaws": [
     {
-      "index": "REGLA 01",
-      "title": "Espalda Erguida (Serotonina)",
-      "rule": "Tu postura corporal envía señales directas a tu cerebro: asumir el combate aumenta tu estatus biológico.",
+      "index": "LEY 01",
+      "title": "Marcador Interno",
+      "rule": "Gasta según lo que te aporta calma a ti, nunca para impresionar a los demás.",
       "impactPct": 92,
       "highlight": true
     },
     {
-      "index": "REGLA 04",
-      "title": "Tu Propio Baremo de Progreso",
-      "rule": "La comparación externa es veneno; mide únicamente tu avance relativo respecto a tu versión de ayer.",
+      "index": "LEY 02",
+      "title": "Compra de Tiempo",
+      "rule": "Usa tu dinero para eliminar tareas que odias y ganar horas de libertad.",
       "impactPct": 95,
       "highlight": true
     },
     {
-      "index": "REGLA 06",
-      "title": "Ordena tu Casa Primero",
-      "rule": "Antes de intentar arreglar la sociedad, arregla tu propia habitación y asume la responsabilidad de tus actos.",
-      "impactPct": 96,
-      "highlight": true
+      "index": "LEY 03",
+      "title": "Freno a la Inflación de Vida",
+      "rule": "Protege los placeres simples antes de que el lujo se vuelva tu nueva obligación.",
+      "impactPct": 89,
+      "highlight": false
     }
   ],
   "tokenOptimizationStats": {
     "rawScrapedTokensApprox": 8400,
-    "normalizedDossierTokens": 801,
-    "savingsPercentage": 90.5
+    "normalizedDossierTokens": 650,
+    "savingsPercentage": 92.3
   }
 }

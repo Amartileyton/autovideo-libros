@@ -132,6 +132,14 @@ export type SceneCustomBlock = z.infer<typeof SceneCustomBlockSchema>;
 
 export const BookVisualDataSchema = z
   .object({
+    provocativeQuestion: z.string().optional(),
+    provocativeHighlight: z.string().optional(),
+    bookKeywords: z.array(z.string()).optional(),
+    growthMetric: z.string().optional(),
+    growthFormula: z.string().optional(),
+    mythTriggerKeyword: z.union([z.string(), z.array(z.string())]).optional(),
+    strikeTriggerKeyword: z.union([z.string(), z.array(z.string())]).optional(),
+    realityTriggerKeyword: z.union([z.string(), z.array(z.string())]).optional(),
     hookStat: z.string().optional(),
     hookNumericValue: z.number().optional(),
     hookUnit: z.string().optional(),

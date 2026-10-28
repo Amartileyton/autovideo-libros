@@ -52,14 +52,14 @@ export const Scene5: React.FC<Scene5Props> = ({
   const { fps } = useVideoConfig();
   const localFrame = Math.max(0, frame - enterFrame);
 
-  // Ventana para el bloque del libro (frame ~170-240 cuando se menciona el libro)
+  // Ventana para el bloque del libro (frame ~150-230 cuando se menciona el libro)
   const bookWindow = useMemo(
     () =>
       findKeywordFrameWindow(
         wordTimestamps,
-        ['doce', 'reglas', 'vivir', 'jordan', 'peterson'],
-        170,
-        250
+        ['arte', 'gastar', 'dinero', 'morgan', 'housel', 'doce', 'reglas'],
+        150,
+        230
       ),
     [wordTimestamps]
   );
@@ -117,7 +117,23 @@ export const Scene5: React.FC<Scene5Props> = ({
             }}
           >
             {visualData?.identityQuote ? (
-              visualData.identityQuote.includes('antídoto real frente al caos') ? (
+              visualData.identityQuote.includes('el dinero no te controle') ? (
+                <>
+                  «Ser rico es tener dinero; ser libre es que{' '}
+                  <span
+                    style={{
+                      backgroundColor: 'rgba(217, 78, 52, 0.16)',
+                      padding: '2px 12px',
+                      borderRadius: 6,
+                      color: '#D94E34',
+                      fontWeight: 900,
+                    }}
+                  >
+                    el dinero no te controle
+                  </span>
+                  .»
+                </>
+              ) : visualData.identityQuote.includes('antídoto real frente al caos') ? (
                 <>
                   «Asumir la carga de tu propio destino es el{' '}
                   <span
@@ -137,7 +153,7 @@ export const Scene5: React.FC<Scene5Props> = ({
                 `«${visualData.identityQuote}»`
               )
             ) : (
-              '«Asumir la carga de tu propio destino es el único antídoto real frente al caos.»'
+              '«Ser rico es tener dinero; ser libre es que el dinero no te controle.»'
             )}
           </blockquote>
         </KineticCard>
@@ -282,13 +298,13 @@ export const Scene5: React.FC<Scene5Props> = ({
         <CtaEndCard
           enterFrame={ctaCardEntranceFrame}
           handle={BRAND_CONFIG.channelHandle}
-          ctaText="Guarda este resumen para cuando el caos apriete"
-          ctaActionLabel={visualData?.ctaActionText ?? "GUARDA ESTE RESUMEN PARA CUANDO EL CAOS APRIETE"}
+          ctaText={visualData?.ctaActionText ?? "Guarda este resumen para cuando la presión social te empuje a gastar"}
+          ctaActionLabel={visualData?.ctaActionText ?? "GUARDA ESTE RESUMEN PARA CUANDO LA PRESIÓN SOCIAL TE EMPUJE A GASTAR"}
           brandPromise={visualData?.brandPromise ?? "1 libro clave cada día en 60s"}
           showCommunityQuestion={visualData?.showCommunityQuestion ?? true}
           questionText={
             visualData?.ctaPrompt ??
-            'Para empezar hoy mismo tras guardar el resumen: ¿cuál es el rincón de tu vida o habitación que vas a poner en orden hoy?'
+            'Para reflexionar tras guardar el resumen: ¿cuál es ese gasto que hiciste solo por aparentar y del que hoy te arrepientes?'
           }
           showInternalStopwatch={false}
         />

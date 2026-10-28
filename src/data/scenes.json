@@ -1,34 +1,34 @@
 {
-  "projectTitle": "12 reglas para vivir — Jordan B. Peterson (Resumen 65s)",
+  "projectTitle": "El arte de gastar dinero — Morgan Housel (Resumen 65s)",
   "fps": 30,
   "width": 1080,
   "height": 1920,
   "crossDissolveFrames": 10,
   "bookMetadata": {
-    "title": "12 reglas para vivir",
-    "originalTitle": "12 Rules for Life: An Antidote to Chaos",
-    "author": "Jordan B. Peterson",
-    "publishYear": 2018,
-    "pages": 512,
-    "readingTimeHours": 6.2,
-    "rating": 3.90,
-    "ratingsCount": "240K",
-    "salesCopies": "+5M",
-    "coverImage": "assets/books/12-reglas-para-vivir-cover.jpg",
-    "fallbackCoverImage": "assets/books/12-reglas-para-vivir-cover.svg",
-    "categoryTag": "PSICOLOGÍA CONDUCTUAL · RESPONSABILIDAD",
-    "goodreadsUrl": "https://www.goodreads.com/book/show/42263558",
-    "coverSource": "local-cache-hd"
+    "title": "El arte de gastar dinero",
+    "originalTitle": "The Art of Spending Money: Simple Choices for a Richer Life",
+    "author": "Morgan Housel",
+    "publishYear": 2025,
+    "pages": 256,
+    "readingTimeHours": 3.8,
+    "rating": 4.15,
+    "ratingsCount": "+45K",
+    "salesCopies": "+1M",
+    "coverImage": "assets/books/el-arte-de-gastar-dinero-cover.jpg",
+    "fallbackCoverImage": "assets/books/el-arte-de-gastar-dinero-cover.svg",
+    "categoryTag": "FINANZAS · PSICOLOGÍA",
+    "goodreadsUrl": "https://www.goodreads.com/book/show/231148075-the-art-of-spending-money",
+    "coverSource": "penguinrandomhouse-hd"
   },
   "scenes": [
     {
       "id": "scene-1",
-      "title": "EL ANTÍDOTO AL CAOS",
-      "text": "¿Por qué nos sentimos perdidos en un mundo lleno de comodidades? [PAUSA 0.4s] Jordan Peterson demuestra que el caos no se vence esperando la felicidad pasiva, sino asumiendo responsabilidad voluntaria.",
+      "title": "LA GRAN PARADOJA DEL DINERO",
+      "text": "¿Por qué acumular dinero no te hace sentir más libre? [PAUSA 0.4s] Morgan Housel revela que ganar dinero es una habilidad técnica, pero gastarlo con sabiduría es un arte emocional que casi nadie domina.",
       "characterPreset": "dramatic",
       "blueprintMode": "EDITORIAL_PAPER",
-      "layoutPreset": "HOOK_COVER_BATTLE",
-      "visualCue": "Portada editorial 2.5D de 12 reglas para vivir de Jordan Peterson con 3 píldoras GoodreadsBadgeCluster (Jordan B. Peterson, Logo Goodreads ★ 3.90, +240K Lectores) y ComparisonBattle (Victimismo Pasivo vs Responsabilidad Total).",
+      "layoutPreset": "HOOK_COVER_QUESTION",
+      "visualCue": "Portada editorial 2.5D de El arte de gastar dinero de Morgan Housel con 3 píldoras GoodreadsBadgeCluster (Morgan Housel, Logo Goodreads ★ 4.15, +45K Lectores) y Pregunta Provocadora Subrayada Editorial.",
       "cameraTarget": {
         "x": 0,
         "y": 0,
@@ -37,36 +37,38 @@
       },
       "metrics": {
         "label": "VALORACIÓN GOODREADS",
-        "numericValue": 3.90,
+        "numericValue": 4.15,
         "unit": "★"
       },
       "bookVisualData": {
+        "provocativeQuestion": "¿Gastas tu dinero para disfrutar de tu vida o para impresionar a gente que ni siquiera conoces?",
+        "provocativeHighlight": "impresionar a gente",
         "hookStat": "100%",
         "hookNumericValue": 100,
         "hookUnit": "%",
-        "hookLabel": "De tu vida mejora cuando asumes tu responsabilidad",
-        "hookSource": "12 Reglas para Vivir · Jordan Peterson",
-        "hookTriggerKeyword": ["felicidad", "caos", "perdidos"],
-        "battleTriggerKeyword": ["pasiva", "responsabilidad", "voluntaria"],
-        "mythLabel": "Mito: Victimismo Pasivo",
-        "mythSubtitle": "Culpar al sistema o al azar y esperar que el entorno cambie por ti",
-        "mythTag": "TRAMPA DEL CAOS",
-        "realityLabel": "Realidad: Responsabilidad Total",
-        "realitySubtitle": "Asumir la carga voluntaria y poner en orden tu vida antes de criticar",
-        "realityTag": "EL ANTÍDOTO REAL",
-        "goodreadsRating": "★ 3.90",
-        "goodreadsReviews": "240K valoraciones",
-        "rulerLabel": "512 PÁGINAS · 240K LECTORES EN GOODREADS"
+        "hookLabel": "De tu bienestar depende de cómo gastas, no de cuánto acumulas",
+        "hookSource": "El Arte de Gastar Dinero · Morgan Housel",
+        "hookTriggerKeyword": ["acumular", "libre", "dinero"],
+        "battleTriggerKeyword": ["habilidad", "sabiduria", "emocional"],
+        "mythLabel": "Mito: Gasto de Estatus",
+        "mythSubtitle": "Comprar bienes visibles para impresionar a desconocidos",
+        "mythTag": "TRAMPA FINANCIERA",
+        "realityLabel": "Tesis: Comprar Libertad",
+        "realitySubtitle": "Usar el dinero para ganar control sobre tu propio tiempo",
+        "realityTag": "EL ARTE REAL (100%)",
+        "goodreadsRating": "★ 4.15",
+        "goodreadsReviews": "+45K lectores",
+        "rulerLabel": "256 PÁGINAS · +45K LECTORES EN GOODREADS"
       }
     },
     {
       "id": "scene-2",
-      "title": "LA NEUROBIOLOGÍA DE LA POSTURA",
-      "text": "La primera regla esconde una verdad biológica: [PAUSA 0.4s] mantenerte erguido con los hombros hacia atrás altera tus niveles de serotonina y le indica a tu cerebro que estás listo para ganar.",
+      "title": "EL CIRCUITO DEL ESTATUS",
+      "text": "La gran paradoja del gasto: [PAUSA 0.4s] casi todas las compras de lujo no buscan satisfacción propia, sino comprar la admiración de personas que ni siquiera conocemos.",
       "characterPreset": "narrator",
       "blueprintMode": "EDITORIAL_PAPER",
       "layoutPreset": "THESIS_LOOP_CIRCUIT",
-      "visualCue": "Circuito vectorial VectorLoopCircuit de 4 fases (Postura Erguida ➔ Serotonina ➔ Confianza ➔ Jerarquía) con activación sincronizada a la voz y tarjeta en amarillo pálido #FEF9C3.",
+      "visualCue": "Circuito vectorial VectorLoopCircuit de 4 fases (Compra de Lujo ➔ Búsqueda de Envidia ➔ Admiración Falsa ➔ Vacío Emocional) con activación sincronizada a la voz y tarjeta en amarillo pálido #FEF9C3.",
       "cameraTarget": {
         "x": 1120,
         "y": 0,
@@ -74,66 +76,66 @@
         "rotateDeg": 0
       },
       "metrics": {
-        "label": "NEUROBIOLOGÍA DE LA POSTURA",
+        "label": "TRAMPA DEL ESTATUS",
         "numericValue": 1,
-        "unit": "REGLA"
+        "unit": "PARADOJA"
       },
       "bookVisualData": {
-        "hookTriggerKeyword": ["primera", "regla", "biologica"],
-        "growthMetric": "REGLA 01",
-        "growthFormula": "Postura Erguida = +Serotonina Cerebral",
-        "formulaLabel": "REGLA 1 · SEROTONINA Y JERARQUÍA",
+        "hookTriggerKeyword": ["gran", "paradoja", "gasto"],
+        "growthMetric": "PARADOJA 01",
+        "growthFormula": "Lujo Visible ≠ Felicidad Real",
+        "formulaLabel": "PARADOJA · COMPRAR ADMIRACIÓN",
         "loopSteps": [
-          "POSTURA ERGUIDA",
-          "SEROTONINA",
-          "CONFIANZA",
-          "JERARQUÍA"
+          "COMPRA DE LUJO",
+          "BÚSQUEDA DE ENVIDIA",
+          "ADMIRACIÓN FALSA",
+          "VACÍO EMOCIONAL"
         ],
         "circuitNodes": [
           {
-            "id": "posture",
+            "id": "luxury",
             "num": "01",
-            "label": "POSTURA ERGUIDA",
-            "sublabel": "Espalda recta y hombros hacia atrás",
-            "triggerKeyword": ["erguido", "hombros", "espalda"]
+            "label": "COMPRA DE LUJO",
+            "sublabel": "Gasto impulsado por imagen externa",
+            "triggerKeyword": ["compras", "lujo"]
           },
           {
-            "id": "serotonin",
+            "id": "envy",
             "num": "02",
-            "label": "SEROTONINA",
-            "sublabel": "Elevación neuroquímica biológica",
-            "triggerKeyword": ["serotonina", "niveles"]
+            "label": "ENVIDIA AJENA",
+            "sublabel": "Confundir envidia con respeto",
+            "triggerKeyword": ["satisfaccion", "propia"]
           },
           {
-            "id": "confidence",
+            "id": "admiration",
             "num": "03",
-            "label": "CONFIANZA",
-            "sublabel": "Señal interna de calma y seguridad",
-            "triggerKeyword": ["cerebro", "indica"]
+            "label": "ADMIRACIÓN FALSA",
+            "sublabel": "La gente admira el objeto, no a ti",
+            "triggerKeyword": ["admiracion", "personas"]
           },
           {
-            "id": "victory",
+            "id": "emptiness",
             "num": "04",
-            "label": "JERARQUÍA",
-            "sublabel": "Predisposición activa para triunfar",
-            "triggerKeyword": ["ganar", "listo"]
+            "label": "VACÍO EMOCIONAL",
+            "sublabel": "La euforia material se evapora rápido",
+            "triggerKeyword": ["conocemos", "siquiera"]
           }
         ],
-        "centralQuote": "«Mantente erguido con los hombros hacia atrás: asume la responsabilidad voluntaria de existir.»",
+        "centralQuote": "«Comprar cosas para impresionar a otros es la forma más rápida de quedarte sin dinero.»",
         "highlightWords": [
-          "niveles de serotonina",
-          "listo para ganar"
+          "admiración de personas",
+          "satisfacción propia"
         ]
       }
     },
     {
       "id": "scene-3",
-      "title": "TU PROPIO BAREMO",
-      "text": "La gran advertencia del libro: [PAUSA 0.4s] compararte con el éxito ajeno solo genera envidia y frustración. [PAUSA 0.4s] Mide tu progreso exclusivamente comparándote con quien eras tú ayer.",
+      "title": "TU MARCADOR INTERNO",
+      "text": "La regla de oro de Housel: [PAUSA 0.4s] cambia tu marcador externo por un baremo interno. [PAUSA 0.4s] El mayor dividendo que paga el dinero no son los lujos, es la autonomía total sobre tu tiempo.",
       "characterPreset": "expert",
       "blueprintMode": "EDITORIAL_PAPER",
       "layoutPreset": "RULE_SUBSTITUTION_DIAGRAM",
-      "visualCue": "Tarjeta de Cita Subrayada (KineticCard) con contraste radical: tachado de la comparación ajena frente al baremo interno de superarte respecto a quien eras ayer.",
+      "visualCue": "Tarjeta de Cita Subrayada (KineticCard) con contraste radical: sustitución del marcador externo de estatus por el dividendo de autonomía y tiempo.",
       "cameraTarget": {
         "x": 1120,
         "y": 1980,
@@ -141,64 +143,64 @@
         "rotateDeg": 0
       },
       "metrics": {
-        "label": "BAREMO DE PROGRESO",
+        "label": "DIVIDENDO DE VIDA",
         "numericValue": 100,
-        "unit": "% INTERNO"
+        "unit": "% AUTONOMÍA"
       },
       "bookVisualData": {
-        "mythLabel": "Compararte con el Éxito Ajeno",
-        "mythSubtitle": "Envidia y sensación de fracaso al medirte contra las vidas ajenas",
-        "mythTag": "VENENO MENTAL",
-        "realityLabel": "Compararte con Quien Eras Ayer",
-        "realitySubtitle": "El único baremo constructivo: medir tu avance relativo y personal",
-        "realityTag": "PROGRESO REAL (100%)",
+        "mythLabel": "Marcador Externo de Estatus",
+        "mythSubtitle": "Vivir endeudado para validar tu valía frente al juicio de terceros",
+        "mythTag": "ESCLAVITUD MODERNA",
+        "realityLabel": "Marcador Interno de Autonomía",
+        "realitySubtitle": "Comprar tiempo libre, tranquilidad financiera e independencia",
+        "realityTag": "DIVIDENDO SUPREMO (100%)",
         "circuitNodes": [
           {
-            "id": "comparacion",
+            "id": "marcador_ext",
             "num": "01",
-            "label": "ÉXITO AJENO",
-            "sublabel": "Comparación tóxica externa",
-            "triggerKeyword": ["ajeno", "compararte"]
+            "label": "MARCADOR EXTERNO",
+            "sublabel": "Estatus y validación ajena",
+            "triggerKeyword": ["marcador", "externo"]
           },
           {
-            "id": "frustracion",
+            "id": "baremo_int",
             "num": "02",
-            "label": "FRUSTRACIÓN",
-            "sublabel": "Trampa destructiva de envidia",
-            "triggerKeyword": ["envidia", "frustracion"]
+            "label": "BAREMO INTERNO",
+            "sublabel": "Tus valores auténticos",
+            "triggerKeyword": ["baremo", "interno"]
           },
           {
-            "id": "progreso_interno",
+            "id": "dividendo",
             "num": "03",
-            "label": "TU PROPIA VERSIÓN",
-            "sublabel": "El único punto de partida real",
-            "triggerKeyword": ["exclusivamente", "progreso"]
+            "label": "MAYOR DIVIDENDO",
+            "sublabel": "No cosas materiales",
+            "triggerKeyword": ["dividendo", "paga"]
           },
           {
-            "id": "ayer",
+            "id": "autonomia",
             "num": "04",
-            "label": "QUIEN ERAS AYER",
-            "sublabel": "Superación personal continua",
-            "triggerKeyword": ["eras", "ayer"]
+            "label": "AUTONOMÍA TOTAL",
+            "sublabel": "Dueño absoluto de tu tiempo",
+            "triggerKeyword": ["autonomia", "tiempo"]
           }
         ],
-        "centralQuote": "Compárate con quien eras ayer, no con quien es otra persona hoy.",
+        "centralQuote": "El mayor dividendo que paga el dinero es la capacidad de levantarte cada mañana y decidir qué hacer con tu día.",
         "highlightWords": [
-          "envidia y frustración",
-          "quien eras tú ayer"
+          "marcador externo por un baremo interno",
+          "autonomía total sobre tu tiempo"
         ],
-        "formulaLabel": "Tu único rival = Quien eras tú ayer",
-        "formulaSublabel": "Medir el avance propio elimina la ansiedad del estatus social"
+        "formulaLabel": "Riqueza Invisible > Lujo Visible",
+        "formulaSublabel": "El valor del dinero se mide en horas libres, no en posesiones"
       }
     },
     {
       "id": "scene-4",
-      "title": "TRES LEYES CONTRA EL CAOS",
-      "text": "Aplica tres principios fundamentales: [PAUSA 0.4s] uno, pon tu casa en perfecto orden antes de criticar al mundo. [PAUSA 0.4s] Dos, di la verdad siempre. [PAUSA 0.4s] Y tres, busca lo que tiene significado profundo.",
+      "title": "TRES LEYES DEL GASTO INTELIGENTE",
+      "text": "Aplica tres leyes fundamentales: [PAUSA 0.4s] uno, compra tiempo eliminando tareas que odias. [PAUSA 0.4s] Dos, no generes deuda social para encajar. [PAUSA 0.4s] Y tres, protege tus placeres simples.",
       "characterPreset": "narrator",
       "blueprintMode": "EDITORIAL_PAPER",
       "layoutPreset": "LAWS_DOMINO_CASCADE",
-      "visualCue": "Cascada vertical de 3 Leyes en tarjetas amarillo pálido (#FEF9C3) con barras de impacto y flujo descendente de estabilidad personal.",
+      "visualCue": "Cascada vertical de 3 Leyes en tarjetas amarillo pálido (#FEF9C3) con barras de impacto y flujo descendente de libertad financiera.",
       "cameraTarget": {
         "x": 0,
         "y": 1980,
@@ -206,54 +208,54 @@
         "rotateDeg": 0
       },
       "metrics": {
-        "label": "PRINCIPIOS CLAVE",
+        "label": "LEYES DEL GASTO",
         "numericValue": 3,
-        "unit": "REGLAS"
+        "unit": "LEYES"
       },
       "bookVisualData": {
-        "dominoTriggerKeyword": ["principios", "fundamentales", "aplica"],
+        "dominoTriggerKeyword": ["leyes", "fundamentales", "aplica"],
         "actionableLaws": [
           {
             "index": "01",
-            "title": "ORDENA TU CASA PRIMERO",
-            "rule": "Arregla tu propia habitación y asume la responsabilidad de tus actos antes de juzgar.",
+            "title": "COMPRA TIEMPO",
+            "rule": "Paga para eliminar fricción y delegar obligaciones que consumen tu energía vital.",
             "impactPct": 96,
             "highlight": true,
-            "triggerKeyword": ["casa", "orden", "criticar"]
+            "triggerKeyword": ["tiempo", "eliminando", "odias"]
           },
           {
             "index": "02",
-            "title": "DI LA VERDAD SIEMPRE",
-            "rule": "La mentira deforma tu conciencia; la honestidad radical es tu ancla contra el caos.",
+            "title": "CERO DEUDA SOCIAL",
+            "rule": "Nunca compres cosas caras para mantener apariencias con amigos o vecinos.",
             "impactPct": 93,
             "highlight": false,
-            "triggerKeyword": ["verdad", "siempre"]
+            "triggerKeyword": ["deuda", "social", "encajar"]
           },
           {
             "index": "03",
-            "title": "BUSCA LO SIGNIFICATIVO",
-            "rule": "Persigue lo que otorga sentido trascendente a tu vida, no el placer fácil e inmediato.",
+            "title": "PROTEGE PLACERES SIMPLES",
+            "rule": "Evita que la inflación de estilo de vida destruya tu capacidad de disfrutar lo cotidiano.",
             "impactPct": 95,
             "highlight": true,
-            "triggerKeyword": ["significado", "profundo", "busca"]
+            "triggerKeyword": ["protege", "placeres", "simples"]
           }
         ],
         "dominoSteps": [
-          { "label": "Casa en Orden", "sub": "Paso 1" },
-          { "label": "Verdad Radical", "sub": "Paso 2" },
-          { "label": "Sentido Trascendente", "sub": "Paso 3" },
-          { "label": "Firmeza Vital", "sub": "Meta" }
+          { "label": "Compra Tiempo", "sub": "Ley 1" },
+          { "label": "Cero Deuda Social", "sub": "Ley 2" },
+          { "label": "Placeres Simples", "sub": "Ley 3" },
+          { "label": "Libertad Real", "sub": "Meta" }
         ]
       }
     },
     {
       "id": "scene-5",
       "title": "EL MANIFIESTO",
-      "text": "Asumir la carga de tu propio destino es el único antídoto real frente al caos. [PAUSA 0.5s] Doce reglas para vivir, de Jordan Peterson. [PAUSA 0.4s] Guarda este resumen para cuando el caos apriete, y sigue a en un minuto punto es para dominar un libro clave cada día.",
+      "text": "Ser rico es tener dinero; ser libre es que el dinero no te controle. [PAUSA 0.4s] El arte de gastar dinero, de Morgan Housel. [PAUSA 0.4s] Guarda este resumen para cuando la presión social te empuje a gastar, y sigue a en un minuto punto es para dominar un libro clave cada día.",
       "characterPreset": "conversational",
       "blueprintMode": "EDITORIAL_PAPER",
       "layoutPreset": "CTA_MANIFESTO_GOODREADS",
-      "visualCue": "Cita Manifiesto (KineticCard) + Ficha oficial Goodreads con Mini-Portada + CtaEndCard con Cronómetro Hero y doble llamada a la acción (guardado psicológico + promesa de marca).",
+      "visualCue": "Cita Manifiesto (KineticCard) + Ficha oficial Goodreads con Mini-Portada + CtaEndCard con Cronómetro Hero y doble llamada a la acción (guardado psicológico + promesa de marca para conseguir seguidores).",
       "cameraTarget": {
         "x": 560,
         "y": 3960,
@@ -262,18 +264,18 @@
       },
       "metrics": {
         "label": "VALORACIÓN",
-        "numericValue": 3.90,
+        "numericValue": 4.15,
         "unit": "★"
       },
       "bookVisualData": {
-        "identityQuote": "Asumir la responsabilidad de tu propio destino es el único antídoto real frente al caos de la vida.",
-        "highlightWords": ["antídoto real frente al caos"],
-        "ctaPrompt": "Para empezar hoy mismo tras guardar el resumen: ¿cuál es el rincón de tu vida o habitación que vas a poner en orden hoy?",
-        "ctaActionText": "GUARDA ESTE RESUMEN PARA CUANDO EL CAOS APRIETE",
+        "identityQuote": "Ser rico es tener dinero; ser libre es que el dinero no te controle.",
+        "highlightWords": ["el dinero no te controle"],
+        "ctaPrompt": "Para reflexionar tras guardar el resumen: ¿cuál es ese gasto que hiciste solo por aparentar y del que hoy te arrepientes?",
+        "ctaActionText": "GUARDA ESTE RESUMEN PARA CUANDO LA PRESIÓN SOCIAL TE EMPUJE A GASTAR",
         "brandPromise": "1 libro clave cada día en 60s",
         "showCommunityQuestion": true,
         "ctaHandle": "@en1minuto.es",
-        "verdictBadge": "FENÓMENO GLOBAL · +5M COPIAS VENDIDAS"
+        "verdictBadge": "NUEVO BESTSELLER · MORGAN HOUSEL"
       }
     }
   ]

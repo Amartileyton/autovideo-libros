@@ -140,7 +140,7 @@ export const Scene4: React.FC<Scene4Props> = ({
               letterSpacing: '-0.02em',
             }}
           >
-            3 PRINCIPIOS CONTRA EL CAOS
+            {visualData?.rulerLabel ?? '3 LEYES DEL GASTO INTELIGENTE'}
           </div>
           <div
             style={{
@@ -151,7 +151,7 @@ export const Scene4: React.FC<Scene4Props> = ({
               marginTop: 2,
             }}
           >
-            Flujo secuencial para ordenar tu vida y fortalecer tu carácter
+            Flujo secuencial para comprar tiempo, evitar deudas y vivir con libertad
           </div>
         </div>
 
@@ -218,7 +218,7 @@ export const Scene4: React.FC<Scene4Props> = ({
                   borderRadius: 8,
                 }}
               >
-                REGLA 01 · FUNDACIÓN
+                LEY 01 · PRIORIDAD
               </span>
               <span
                 style={{
@@ -229,11 +229,11 @@ export const Scene4: React.FC<Scene4Props> = ({
                   letterSpacing: 0.5,
                 }}
               >
-                RESPONSABILIDAD PRIMERO
+                COMPRA TIEMPO
               </span>
             </div>
 
-            <span style={{ fontSize: 26 }}>🏠</span>
+            <span style={{ fontSize: 26 }}>⏱️</span>
           </div>
 
           <div
@@ -246,7 +246,7 @@ export const Scene4: React.FC<Scene4Props> = ({
               lineHeight: 1.2,
             }}
           >
-            01 · {visualData?.actionableLaws?.[0]?.title ?? 'ORDENA TU CASA PRIMERO'}
+            01 · {visualData?.actionableLaws?.[0]?.title ?? 'COMPRA TIEMPO'}
           </div>
 
           <div
@@ -260,7 +260,7 @@ export const Scene4: React.FC<Scene4Props> = ({
             }}
           >
             {visualData?.actionableLaws?.[0]?.rule ??
-              'Arregla tu propia habitación y asume la responsabilidad de tus actos antes de criticar al mundo.'}
+              'Paga para eliminar tareas que odias y ganar horas de libertad cada semana.'}
           </div>
         </div>
 
@@ -278,12 +278,12 @@ export const Scene4: React.FC<Scene4Props> = ({
             letterSpacing: 0.5,
           }}
         >
-          REGLA DE ORO: LO CERCANO ES TU PRIORIDAD
+          DIVIDENDO SUPREMO: EL TIEMPO VALE MÁS QUE LAS COSAS
         </div>
       </div>
 
       {/* ======================================================== */}
-      {/* INDICADOR DE FLUJO 1: Del centro de Card 1 hacia Card 2 */}
+      {/* CONECTOR TRIANGULAR 1: Del centro de Card 1 hacia Card 2 */}
       {/* ======================================================== */}
       {flow1Progress > 0 && (
         <div
@@ -297,59 +297,56 @@ export const Scene4: React.FC<Scene4Props> = ({
             zIndex: 10,
             display: 'flex',
             justifyContent: 'center',
+            alignItems: 'center',
+            opacity: flow1Progress,
+            transform: `scale(${interpolate(flow1Progress, [0, 1], [0.75, 1], CLAMP_EXTRAPOLATION)})`,
           }}
         >
-          <svg width={100} height={90} style={{ overflow: 'visible' }}>
-            <defs>
-              <marker
-                id="flowArrowDown1"
-                viewBox="0 0 10 10"
-                refX="5"
-                refY="5"
-                markerWidth="8"
-                markerHeight="8"
-                orient="auto"
-              >
-                <path d="M 1 2 L 5 8 L 9 2 z" fill="#D94E34" />
-              </marker>
-            </defs>
-
-            {/* Círculo origen anclado al centro inferior de Card 1 */}
-            <circle cx="50" cy="2" r="5" fill="#D94E34" />
-
-            {/* Línea vertical descendente animada de arriba hacia abajo */}
-            <line
-              x1="50"
-              y1="4"
-              x2="50"
-              y2={4 + flow1Progress * 76}
-              stroke="#D94E34"
-              strokeWidth={4}
-              strokeDasharray="6 4"
-              markerEnd={flow1Progress > 0.88 ? 'url(#flowArrowDown1)' : undefined}
-            />
-          </svg>
-
-          {/* Pastilla técnica de flujo */}
-          <div
+          <svg
+            width={70}
+            height={90}
+            viewBox="0 0 70 90"
             style={{
-              position: 'absolute',
-              top: 28,
-              backgroundColor: '#141413',
-              color: '#FEF9C3',
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
-              fontSize: 13,
-              fontWeight: 900,
-              padding: '3px 12px',
-              borderRadius: 12,
-              border: '1.5px solid #D94E34',
-              boxShadow: '0 4px 10px rgba(0,0,0,0.12)',
-              opacity: flow1Progress,
-              transform: `scale(${flow1Progress})`,
+              overflow: 'visible',
+              filter: 'drop-shadow(0 6px 14px rgba(20, 20, 19, 0.12))',
             }}
           >
-            SIGUIENTE ▼
-          </div>
+            {/* Línea vertical de guía */}
+            <line
+              x1="35"
+              y1="0"
+              x2="35"
+              y2="26"
+              stroke="#D94E34"
+              strokeWidth={3}
+              strokeDasharray="5 3"
+            />
+            <line
+              x1="35"
+              y1="62"
+              x2="35"
+              y2="90"
+              stroke="#D94E34"
+              strokeWidth={3}
+              strokeDasharray="5 3"
+            />
+
+            {/* Triángulo exterior editorial (apuntando hacia abajo, sin texto) */}
+            <polygon
+              points="14,26 56,26 35,62"
+              fill="#FEF9C3"
+              stroke="#141413"
+              strokeWidth={2.8}
+              strokeLinejoin="round"
+            />
+
+            {/* Triángulo interior terracota */}
+            <polygon
+              points="23,33 47,33 35,53"
+              fill="#D94E34"
+              strokeLinejoin="round"
+            />
+          </svg>
         </div>
       )}
 
@@ -399,7 +396,7 @@ export const Scene4: React.FC<Scene4Props> = ({
                   borderRadius: 8,
                 }}
               >
-                REGLA 02 · INTEGRIDAD
+                LEY 02 · BLINDAJE
               </span>
               <span
                 style={{
@@ -410,11 +407,11 @@ export const Scene4: React.FC<Scene4Props> = ({
                   letterSpacing: 0.5,
                 }}
               >
-                VERDAD RADICAL
+                CERO DEUDA SOCIAL
               </span>
             </div>
 
-            <span style={{ fontSize: 26 }}>⚖️</span>
+            <span style={{ fontSize: 26 }}>🛡️</span>
           </div>
 
           <div
@@ -427,7 +424,7 @@ export const Scene4: React.FC<Scene4Props> = ({
               lineHeight: 1.2,
             }}
           >
-            02 · {visualData?.actionableLaws?.[1]?.title ?? 'DI LA VERDAD SIEMPRE'}
+            02 · {visualData?.actionableLaws?.[1]?.title ?? 'CERO DEUDA SOCIAL'}
           </div>
 
           <div
@@ -441,7 +438,7 @@ export const Scene4: React.FC<Scene4Props> = ({
             }}
           >
             {visualData?.actionableLaws?.[1]?.rule ??
-              'La mentira deforma tu conciencia; la honestidad radical es tu ancla inamovible contra el caos.'}
+              'Nunca compres cosas caras para mantener apariencias con amigos o vecinos.'}
           </div>
         </div>
 
@@ -459,12 +456,12 @@ export const Scene4: React.FC<Scene4Props> = ({
             letterSpacing: 0.5,
           }}
         >
-          PRINCIPIO: LA HONESTIDAD TE BLINDA DEL CAOS
+          PRINCIPIO: NO TE ENDEUDES PARA IMPRESIONAR A EXTRAÑOS
         </div>
       </div>
 
       {/* ======================================================== */}
-      {/* INDICADOR DE FLUJO 2: Del centro de Card 2 hacia Card 3 */}
+      {/* CONECTOR TRIANGULAR 2: Del centro de Card 2 hacia Card 3 */}
       {/* ======================================================== */}
       {flow2Progress > 0 && (
         <div
@@ -478,59 +475,56 @@ export const Scene4: React.FC<Scene4Props> = ({
             zIndex: 10,
             display: 'flex',
             justifyContent: 'center',
+            alignItems: 'center',
+            opacity: flow2Progress,
+            transform: `scale(${interpolate(flow2Progress, [0, 1], [0.75, 1], CLAMP_EXTRAPOLATION)})`,
           }}
         >
-          <svg width={100} height={90} style={{ overflow: 'visible' }}>
-            <defs>
-              <marker
-                id="flowArrowDown2"
-                viewBox="0 0 10 10"
-                refX="5"
-                refY="5"
-                markerWidth="8"
-                markerHeight="8"
-                orient="auto"
-              >
-                <path d="M 1 2 L 5 8 L 9 2 z" fill="#16A34A" />
-              </marker>
-            </defs>
-
-            {/* Círculo origen anclado al centro inferior de Card 2 */}
-            <circle cx="50" cy="2" r="5" fill="#16A34A" />
-
-            {/* Línea vertical descendente animada de arriba hacia abajo */}
-            <line
-              x1="50"
-              y1="4"
-              x2="50"
-              y2={4 + flow2Progress * 76}
-              stroke="#16A34A"
-              strokeWidth={4}
-              strokeDasharray="6 4"
-              markerEnd={flow2Progress > 0.88 ? 'url(#flowArrowDown2)' : undefined}
-            />
-          </svg>
-
-          {/* Pastilla técnica de flujo */}
-          <div
+          <svg
+            width={70}
+            height={90}
+            viewBox="0 0 70 90"
             style={{
-              position: 'absolute',
-              top: 28,
-              backgroundColor: '#141413',
-              color: '#FEF9C3',
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
-              fontSize: 13,
-              fontWeight: 900,
-              padding: '3px 12px',
-              borderRadius: 12,
-              border: '1.5px solid #16A34A',
-              boxShadow: '0 4px 10px rgba(0,0,0,0.12)',
-              opacity: flow2Progress,
-              transform: `scale(${flow2Progress})`,
+              overflow: 'visible',
+              filter: 'drop-shadow(0 6px 14px rgba(20, 20, 19, 0.12))',
             }}
           >
-            ESCUDO ▼
-          </div>
+            {/* Línea vertical de guía */}
+            <line
+              x1="35"
+              y1="0"
+              x2="35"
+              y2="26"
+              stroke="#D97706"
+              strokeWidth={3}
+              strokeDasharray="5 3"
+            />
+            <line
+              x1="35"
+              y1="62"
+              x2="35"
+              y2="90"
+              stroke="#D97706"
+              strokeWidth={3}
+              strokeDasharray="5 3"
+            />
+
+            {/* Triángulo exterior editorial (apuntando hacia abajo, sin texto) */}
+            <polygon
+              points="14,26 56,26 35,62"
+              fill="#FEF9C3"
+              stroke="#141413"
+              strokeWidth={2.8}
+              strokeLinejoin="round"
+            />
+
+            {/* Triángulo interior ámbar */}
+            <polygon
+              points="23,33 47,33 35,53"
+              fill="#D97706"
+              strokeLinejoin="round"
+            />
+          </svg>
         </div>
       )}
 
@@ -580,7 +574,7 @@ export const Scene4: React.FC<Scene4Props> = ({
                   borderRadius: 8,
                 }}
               >
-                REGLA 03 · PROPÓSITO
+                LEY 03 · DISFRUTE
               </span>
               <span
                 style={{
@@ -591,7 +585,7 @@ export const Scene4: React.FC<Scene4Props> = ({
                   letterSpacing: 0.5,
                 }}
               >
-                SENTIDO PROFUNDO
+                PLACERES SIMPLES
               </span>
             </div>
 
@@ -602,7 +596,7 @@ export const Scene4: React.FC<Scene4Props> = ({
                 display: 'inline-block',
               }}
             >
-              🧭
+              ☕
             </span>
           </div>
 
@@ -616,7 +610,7 @@ export const Scene4: React.FC<Scene4Props> = ({
               lineHeight: 1.2,
             }}
           >
-            03 · {visualData?.actionableLaws?.[2]?.title ?? 'BUSCA LO SIGNIFICATIVO'}
+            03 · {visualData?.actionableLaws?.[2]?.title ?? 'PROTEGE PLACERES SIMPLES'}
           </div>
 
           <div
@@ -630,7 +624,7 @@ export const Scene4: React.FC<Scene4Props> = ({
             }}
           >
             {visualData?.actionableLaws?.[2]?.rule ??
-              'Persigue lo que otorga sentido trascendente a tu vida, no el placer fácil e inmediato.'}
+              'Protege los placeres cotidianos antes de que el lujo se vuelva tu nueva obligación.'}
           </div>
         </div>
 
@@ -648,7 +642,7 @@ export const Scene4: React.FC<Scene4Props> = ({
             letterSpacing: 0.5,
           }}
         >
-          META VITAL: SENTIDO TRANSCENDENTE &gt; PLACER INMEDIATO
+          META VITAL: LA INFLACIÓN DE ESTILO DE VIDA NO TE ATRAPA
         </div>
       </div>
     </div>

@@ -134,12 +134,12 @@ export const Scene1: React.FC<Scene1Props> = ({
     CLAMP_EXTRAPOLATION
   );
 
-  const statNumeric = visualData?.hookNumericValue ?? 40;
+  const statNumeric = visualData?.hookNumericValue ?? 100;
   const statSuffix = visualData?.hookUnit ?? '%';
   const statLabel =
-    visualData?.hookLabel ?? 'De tus acciones son hábitos automáticos';
+    visualData?.hookLabel ?? 'De tu bienestar depende de cómo gastas, no de cuánto acumulas';
   const statSource =
-    visualData?.hookSource ?? 'Estudio de la Universidad de Duke';
+    visualData?.hookSource ?? 'El Arte de Gastar Dinero · Morgan Housel';
 
   return (
     <div
@@ -261,26 +261,51 @@ export const Scene1: React.FC<Scene1Props> = ({
             <div
               style={{
                 fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
-                fontSize: 32,
+                fontSize: 30,
                 fontWeight: 900,
                 color: '#141413',
                 lineHeight: 1.35,
                 textAlign: 'center',
               }}
             >
-              ¿Tomas decisiones conscientes o vives en{' '}
-              <span
-                style={{
-                  backgroundColor: 'rgba(217, 78, 52, 0.16)',
-                  borderBottom: '3px solid #D94E34',
-                  padding: '2px 8px',
-                  borderRadius: 4,
-                  color: '#D94E34',
-                }}
-              >
-                piloto automático
-              </span>{' '}
-              el {statNumeric}% del día?
+              {visualData?.provocativeQuestion ? (
+                visualData.provocativeHighlight &&
+                visualData.provocativeQuestion.includes(visualData.provocativeHighlight) ? (
+                  <>
+                    {visualData.provocativeQuestion.split(visualData.provocativeHighlight)[0]}
+                    <span
+                      style={{
+                        backgroundColor: 'rgba(217, 78, 52, 0.16)',
+                        borderBottom: '4px solid #D94E34',
+                        padding: '2px 8px',
+                        borderRadius: 6,
+                        color: '#D94E34',
+                      }}
+                    >
+                      {visualData.provocativeHighlight}
+                    </span>
+                    {visualData.provocativeQuestion.split(visualData.provocativeHighlight)[1]}
+                  </>
+                ) : (
+                  visualData.provocativeQuestion
+                )
+              ) : (
+                <>
+                  ¿Tomas decisiones conscientes o vives en{' '}
+                  <span
+                    style={{
+                      backgroundColor: 'rgba(217, 78, 52, 0.16)',
+                      borderBottom: '3px solid #D94E34',
+                      padding: '2px 8px',
+                      borderRadius: 4,
+                      color: '#D94E34',
+                    }}
+                  >
+                    piloto automático
+                  </span>{' '}
+                  el {statNumeric}% del día?
+                </>
+              )}
             </div>
           </KineticCard>
         ) : layoutPreset === 'HOOK_COVER_STAT' ? (

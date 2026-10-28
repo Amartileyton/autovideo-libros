@@ -136,7 +136,7 @@ export const Scene3: React.FC<Scene3Props> = ({
     () =>
       findKeywordFrameWindow(
         wordTimestamps,
-        ['compararte', 'exito', 'ajeno'],
+        ['marcador', 'externo', 'compararte', 'exito', 'ajeno'],
         50,
         95
       ),
@@ -147,9 +147,9 @@ export const Scene3: React.FC<Scene3Props> = ({
     () =>
       findKeywordFrameWindow(
         wordTimestamps,
-        ['envidia', 'frustracion'],
-        125,
-        155
+        ['lujos', 'envidia', 'frustracion'],
+        210,
+        240
       ),
     [wordTimestamps]
   );
@@ -158,9 +158,9 @@ export const Scene3: React.FC<Scene3Props> = ({
     () =>
       findKeywordFrameWindow(
         wordTimestamps,
-        ['mide', 'progreso', 'exclusivamente'],
-        180,
-        220
+        ['baremo', 'interno', 'mide', 'progreso'],
+        100,
+        135
       ),
     [wordTimestamps]
   );
@@ -169,9 +169,9 @@ export const Scene3: React.FC<Scene3Props> = ({
     () =>
       findKeywordFrameWindow(
         wordTimestamps,
-        ['eras', 'ayer', 'comparandote'],
-        235,
-        280
+        ['autonomia', 'tiempo', 'eras', 'ayer'],
+        255,
+        295
       ),
     [wordTimestamps]
   );
@@ -230,7 +230,24 @@ export const Scene3: React.FC<Scene3Props> = ({
             }}
           >
             {visualData?.centralQuote ? (
-              visualData.centralQuote.includes('con quien eras ayer') ? (
+              visualData.centralQuote.includes('autonomía') ? (
+                <>
+                  «El mayor dividendo del dinero es la{' '}
+                  <span
+                    style={{
+                      backgroundColor: 'rgba(217, 78, 52, 0.16)',
+                      borderBottom: '4px solid #D94E34',
+                      padding: '2px 10px',
+                      borderRadius: 6,
+                      fontWeight: 900,
+                      color: '#D94E34',
+                    }}
+                  >
+                    autonomía sobre tu tiempo
+                  </span>
+                  .»
+                </>
+              ) : visualData.centralQuote.includes('con quien eras ayer') ? (
                 <>
                   «Compárate con{' '}
                   <span
@@ -414,7 +431,7 @@ export const Scene3: React.FC<Scene3Props> = ({
                 color: '#141413',
               }}
             >
-              • <strong style={{ color: '#D94E34' }}>Comparación Externa:</strong> Medirte con el éxito ajeno genera envidia y sensación destructiva de fracaso.
+              • <strong style={{ color: '#D94E34' }}>{visualData?.mythLabel ?? 'Marcador Externo'}:</strong> {visualData?.mythSubtitle ?? 'Gastar para aparentar crea esclavitud financiera.'}
             </div>
             <div
               style={{
@@ -424,7 +441,7 @@ export const Scene3: React.FC<Scene3Props> = ({
                 color: '#141413',
               }}
             >
-              • <strong style={{ color: '#16A34A' }}>Superación Interna:</strong> Mejorar un pequeño porcentaje respecto a quien eras ayer construye autoestima sólida.
+              • <strong style={{ color: '#16A34A' }}>{visualData?.realityLabel ?? 'Marcador Interno'}:</strong> {visualData?.realitySubtitle ?? 'Comprar autonomía otorga paz mental y libertad real.'}
             </div>
           </div>
 
