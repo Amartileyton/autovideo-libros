@@ -11,6 +11,8 @@ export interface CtaEndCardProps {
   ctaText?: string;
   /** Acción principal destacada que coincide literalmente con el audio */
   ctaActionLabel?: string;
+  /** Promesa de valor recurrente del canal */
+  brandPromise?: string;
   /** Si se muestra o no la tarjeta interactiva de pregunta a la comunidad */
   showCommunityQuestion?: boolean;
   /** Si la tarjeta dibuja su propio reloj interno (false cuando Video.tsx orquesta el reloj volador) */
@@ -32,9 +34,10 @@ export interface CtaEndCardProps {
 export const CtaEndCard: React.FC<CtaEndCardProps> = ({
   enterFrame = 0,
   handle = '@en1minuto.es',
-  questionText = 'Para empezar hoy mismo tras guardar el resumen: ¿cuál es el gasto de apariencia que vas a eliminar?',
-  ctaText = 'Guarda este resumen y empieza hoy mismo',
-  ctaActionLabel = 'GUARDA ESTE RESUMEN Y EMPIEZA HOY MISMO',
+  questionText = 'Para empezar hoy mismo tras guardar el resumen: ¿cuál es el rincón de tu vida que vas a poner en orden?',
+  ctaText = 'Guarda este resumen para cuando el caos apriete',
+  ctaActionLabel = 'GUARDA ESTE RESUMEN',
+  brandPromise = '1 libro clave cada día en 60s',
   showCommunityQuestion = true,
   showInternalStopwatch = false,
 }) => {
@@ -117,33 +120,48 @@ export const CtaEndCard: React.FC<CtaEndCardProps> = ({
         {ctaText}
       </h3>
 
-      {/* Botón Principal de Seguir a @en1minuto.es con Pulso */}
+      {/* Botón Principal de Seguir a @en1minuto.es con Pulso y Promesa de Valor */}
       <div
         style={{
           display: 'inline-flex',
+          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: 14,
+          gap: 6,
           backgroundColor: '#D94E34',
           color: '#FFFFFF',
-          padding: '18px 46px',
-          borderRadius: 20,
-          boxShadow: '0 10px 28px rgba(217, 78, 52, 0.38)',
+          padding: '16px 42px 14px',
+          borderRadius: 22,
+          boxShadow: '0 12px 32px rgba(217, 78, 52, 0.40)',
           transform: `scale(${pulseScale})`,
           transformOrigin: 'center center',
-          margin: '10px auto 22px',
+          margin: '8px auto 22px',
         }}
       >
-        <span style={{ fontSize: 26 }}>🔔</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <span style={{ fontSize: 26 }}>🔔</span>
+          <span
+            style={{
+              fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
+              fontSize: 24,
+              fontWeight: 900,
+              letterSpacing: 0.5,
+            }}
+          >
+            SÍGUENOS EN {handle.toUpperCase()}
+          </span>
+        </div>
         <span
           style={{
             fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
-            fontSize: 23,
-            fontWeight: 900,
-            letterSpacing: 0.5,
+            fontSize: 13,
+            fontWeight: 800,
+            color: '#FEF9C3',
+            letterSpacing: 1.0,
+            textTransform: 'uppercase',
           }}
         >
-          SÍGUENOS EN {handle.toUpperCase()}
+          {brandPromise}
         </span>
       </div>
 

@@ -172,6 +172,7 @@ export const BookVisualDataSchema = z
     verdictBadge: z.string().optional(),
     ctaPrompt: z.string().optional(),
     ctaActionText: z.string().optional(),
+    brandPromise: z.string().optional(),
     showCommunityQuestion: z.boolean().optional(),
     ctaHandle: z.string().optional(),
     executiveSummaryPoints: z.array(z.string()).optional(),

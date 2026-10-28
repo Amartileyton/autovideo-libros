@@ -77,9 +77,19 @@ Estas mejoras visuales están integradas en el núcleo del proyecto y **NUNCA** 
      2. **Caja 2 Protagonista (Goodreads Oficial)**: Logotipo oficial `public/assets/branding/goodreads-logo.png` + divisor + cápsula oscura `#141413` con estrella dorada `★ rating` y pulso de énfasis elástico.
      3. **Caja 3 (Lectores)**: Cifra destacada en terracota (`+585K`) + `lectores`.
    - En la Escena 5 (`Scene5.tsx`), la ficha de reconocimiento del libro también separa la caja de la mini-portada y la caja oficial de Goodreads con el logo `assets/branding/goodreads-logo.png`.
-6. **Coherencia Narrativa Estricta 1:1 del CTA Final y Pregunta a la Comunidad**:
-   - En la última diapositiva (`Scene5.tsx` y `CtaEndCard`), el botón de acción principal **DEBE coincidir literalmente palabra por palabra con la locución de cierre de ElevenLabs** (ej. si el locutor dice *"Guarda este resumen y empieza hoy mismo"*, la micro-acción debe decir literalmente `GUARDA ESTE RESUMEN Y EMPIEZA HOY MISMO`).
-   - **Prohibido incluir etiquetas meta como `"VÍNCULO CTA"`** o badges redundantes como `"TIEMPO CUMPLIDO · 1 MINUTO DESTILADO"`. La pregunta comunitaria debe ligar directamente la acción: *"Para empezar hoy mismo tras guardar el resumen: ¿cuál es el mal hábito que vas a sustituir?"*, en tipografía limpia y sin cajas de texto sobrantes.
+6. **Fórmula Maestra Obligatoria del CTA Final (Opción 1 + Opción 2 Combinadas: Promesa de Marca + Anclaje Psicológico de Guardado)**:
+   - **Cero CTAs genéricos o pasivos**: Queda terminantemente prohibido usar cierres débiles como *"Guarda este resumen y empieza hoy mismo"* o peticiones aisladas como *"Síguenos en..."* sin incentivo egoísta directo para el espectador.
+   - **Fórmula de Locución de Cierre Obligatoria (Escena 5 en ElevenLabs)**: Toda locución final debe componerse estrictamente de dos partes coordinadas:
+     1. **Anclaje Psicológico de Guardado (Opción 2)**: *"Guarda este resumen para cuando [anclaje de necesidad futura o momento de duda/caos/pereza],..."*
+     2. **Promesa de Marca de Alto Valor (Opción 1)**: *"...y sigue a en un minuto punto es para dominar un libro clave cada día."*
+     - *Ejemplo (12 Reglas para Vivir)*: *"Guarda este resumen para cuando el caos apriete, y sigue a en un minuto punto es para dominar un libro clave cada día."*
+     - *Ejemplo (Hábitos Atómicos)*: *"Guarda este resumen para cuando la pereza aparezca, y sigue a en un minuto punto es para dominar un libro clave cada día."*
+     - *Ejemplo (Psicología del Dinero)*: *"Guarda este resumen para cuando la tentación de gastar te ciegue, y sigue a en un minuto punto es para dominar un libro clave cada día."*
+   - **Composición Visual Obligatoria de `CtaEndCard` (Coherencia Narrativa 1:1)**:
+     - **Titular Hero H3**: Anclaje directo del beneficio o promesa: `GUARDA ESTE RESUMEN PARA CUANDO EL CAOS APRIETE` (o `UN LIBRO CLAVE CADA DÍA EN 60 SEGUNDOS`).
+     - **Botón Primario de Seguimiento con Pulso Terracota (`#D94E34`)**: Despliega `🔔 SÍGUENOS EN @EN1MINUTO.ES` acompañado siempre de la propuesta de valor clara: `1 LIBRO CLAVE CADA DÍA EN 60 SEGUNDOS`.
+     - **Micro-Acción de Guardado**: Coincide palabra por palabra con el anclaje de audio: `🔖 GUARDA EL RESUMEN`.
+     - **Caja de Pregunta Comunitaria Limpia**: Sin etiquetas de relleno (`"VÍNCULO CTA"` ni `"TIEMPO CUMPLIDO"`), conectando directamente la tesis del libro con el espectador en tipografía limpia.
 7. **Ascenso Dinámico del Reloj Footer a la Tarjeta Final (Hero Stopwatch Docking)**:
    - El cronómetro circular del footer **NO** debe desvanecerse con un fade-out estático. En la Escena 5, el reloj inicia su vuelo con anticipación (~80-85 frames antes de concluir el vídeo) con un suave suavizado cúbico continuo, ascendiendo desde `bottom: 48px` (`Y = 1788px`) hasta acoplarse con precisión milimétrica en la ranura superior de `CtaEndCard` (`clockY = 603px`), expandiendo su tamaño de `84px` a `110px` y activando su modo `hero` (relleno al 100% de $360^\circ$) exactamente en el fotograma en que el locutor dice la primera palabra del CTA ("Guarda este resumen...").
 8. **Tamaño, Anchura y Protagonismo Máximo de Tarjetas (Anti-Microtexto en Móvil)**:

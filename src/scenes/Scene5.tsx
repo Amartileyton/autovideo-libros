@@ -282,8 +282,9 @@ export const Scene5: React.FC<Scene5Props> = ({
         <CtaEndCard
           enterFrame={ctaCardEntranceFrame}
           handle={BRAND_CONFIG.channelHandle}
-          ctaText="Guarda este resumen y empieza hoy mismo"
-          ctaActionLabel={visualData?.ctaActionText ?? "GUARDA ESTE RESUMEN Y EMPIEZA HOY MISMO"}
+          ctaText="Guarda este resumen para cuando el caos apriete"
+          ctaActionLabel={visualData?.ctaActionText ?? "GUARDA ESTE RESUMEN PARA CUANDO EL CAOS APRIETE"}
+          brandPromise={visualData?.brandPromise ?? "1 libro clave cada día en 60s"}
           showCommunityQuestion={visualData?.showCommunityQuestion ?? true}
           questionText={
             visualData?.ctaPrompt ??

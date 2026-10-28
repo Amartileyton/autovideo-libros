@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-10-27T12:47:13.854Z",
+  "generatedAt": "2026-10-28T06:34:34.099Z",
   "voiceId": "RwzBDEn5f6FIgpAjH9YN",
   "voiceName": "Gabriel Blanco (Voz Canónica de Leo)",
   "fps": 30,
   "crossDissolveFrames": 10,
-  "totalDurationInFrames": 1782,
-  "totalDurationSeconds": 59.4,
+  "totalDurationInFrames": 1908,
+  "totalDurationSeconds": 63.6,
   "backgroundMusicFile": null,
   "scenes": [
     {
@@ -901,9 +901,9 @@
       "id": "scene-5",
       "audioFile": "audio/scene-5.mp3",
       "characterPreset": "conversational",
-      "actualDuration": 12.028,
-      "durationInFrames": 371,
-      "wordsPerSecond": 2.58,
+      "actualDuration": 16.208,
+      "durationInFrames": 497,
+      "wordsPerSecond": 2.9,
       "leadingSilenceMs": 0,
       "trailingSilenceMs": 0,
       "trimOffsetMs": 0,
@@ -926,13 +926,13 @@
         {
           "word": "carga",
           "startMs": 569,
-          "endMs": 848,
+          "endMs": 836,
           "startFrame": 17,
           "endFrame": 26
         },
         {
           "word": "de",
-          "startMs": 848,
+          "startMs": 836,
           "endMs": 940,
           "startFrame": 25,
           "endFrame": 29
@@ -940,15 +940,15 @@
         {
           "word": "tu",
           "startMs": 940,
-          "endMs": 1068,
+          "endMs": 1057,
           "startFrame": 28,
-          "endFrame": 33
+          "endFrame": 32
         },
         {
           "word": "propio",
-          "startMs": 1068,
+          "startMs": 1057,
           "endMs": 1382,
-          "startFrame": 32,
+          "startFrame": 31,
           "endFrame": 42
         },
         {
@@ -968,163 +968,275 @@
         {
           "word": "el",
           "startMs": 2090,
-          "endMs": 2218,
+          "endMs": 2229,
           "startFrame": 62,
           "endFrame": 67
         },
         {
           "word": "único",
-          "startMs": 2218,
-          "endMs": 2519,
+          "startMs": 2229,
+          "endMs": 2531,
           "startFrame": 66,
           "endFrame": 76
         },
         {
           "word": "antídoto",
-          "startMs": 2519,
-          "endMs": 3088,
+          "startMs": 2531,
+          "endMs": 3065,
           "startFrame": 75,
-          "endFrame": 93
+          "endFrame": 92
         },
         {
           "word": "real",
-          "startMs": 3088,
-          "endMs": 3367,
-          "startFrame": 92,
-          "endFrame": 102
+          "startMs": 3065,
+          "endMs": 3355,
+          "startFrame": 91,
+          "endFrame": 101
         },
         {
           "word": "frente",
-          "startMs": 3367,
-          "endMs": 3680,
-          "startFrame": 101,
+          "startMs": 3355,
+          "endMs": 3669,
+          "startFrame": 100,
           "endFrame": 111
         },
         {
           "word": "al",
-          "startMs": 3680,
-          "endMs": 3796,
+          "startMs": 3669,
+          "endMs": 3773,
           "startFrame": 110,
           "endFrame": 114
         },
         {
           "word": "caos.",
-          "startMs": 3796,
-          "endMs": 4563,
+          "startMs": 3773,
+          "endMs": 4412,
           "startFrame": 113,
-          "endFrame": 137
+          "endFrame": 133
         },
         {
           "word": "...",
-          "startMs": 4563,
-          "endMs": 5224,
-          "startFrame": 136,
-          "endFrame": 157
+          "startMs": 4412,
+          "endMs": 5155,
+          "startFrame": 132,
+          "endFrame": 155
         },
         {
           "word": "Doce",
-          "startMs": 5921,
-          "endMs": 6293,
-          "startFrame": 177,
-          "endFrame": 189
+          "startMs": 5596,
+          "endMs": 5968,
+          "startFrame": 167,
+          "endFrame": 180
         },
         {
           "word": "reglas",
-          "startMs": 6293,
-          "endMs": 6653,
-          "startFrame": 188,
-          "endFrame": 200
+          "startMs": 5968,
+          "endMs": 6327,
+          "startFrame": 179,
+          "endFrame": 190
         },
         {
           "word": "para",
-          "startMs": 6653,
-          "endMs": 6850,
-          "startFrame": 199,
-          "endFrame": 206
+          "startMs": 6327,
+          "endMs": 6525,
+          "startFrame": 189,
+          "endFrame": 196
         },
         {
           "word": "vivir,",
-          "startMs": 6850,
-          "endMs": 7430,
-          "startFrame": 205,
-          "endFrame": 223
+          "startMs": 6525,
+          "endMs": 7059,
+          "startFrame": 195,
+          "endFrame": 212
         },
         {
           "word": "de",
-          "startMs": 7430,
-          "endMs": 7581,
-          "startFrame": 222,
-          "endFrame": 228
+          "startMs": 7059,
+          "endMs": 7210,
+          "startFrame": 211,
+          "endFrame": 217
         },
         {
           "word": "Jordan",
-          "startMs": 7581,
-          "endMs": 7988,
-          "startFrame": 227,
-          "endFrame": 240
+          "startMs": 7210,
+          "endMs": 7581,
+          "startFrame": 216,
+          "endFrame": 228
         },
         {
           "word": "Peterson.",
-          "startMs": 7988,
-          "endMs": 8696,
-          "startFrame": 239,
-          "endFrame": 261
+          "startMs": 7581,
+          "endMs": 8243,
+          "startFrame": 227,
+          "endFrame": 248
         },
         {
           "word": ",",
-          "startMs": 9137,
-          "endMs": 9311,
-          "startFrame": 274,
-          "endFrame": 280
+          "startMs": 8684,
+          "endMs": 8882,
+          "startFrame": 260,
+          "endFrame": 267
         },
         {
           "word": "Guarda",
-          "startMs": 9311,
-          "endMs": 9671,
-          "startFrame": 279,
-          "endFrame": 291
+          "startMs": 8882,
+          "endMs": 9230,
+          "startFrame": 266,
+          "endFrame": 277
         },
         {
           "word": "este",
-          "startMs": 9671,
-          "endMs": 9868,
-          "startFrame": 290,
-          "endFrame": 297
+          "startMs": 9230,
+          "endMs": 9427,
+          "startFrame": 276,
+          "endFrame": 283
         },
         {
           "word": "resumen",
-          "startMs": 9868,
-          "endMs": 10368,
-          "startFrame": 296,
-          "endFrame": 312
+          "startMs": 9427,
+          "endMs": 9868,
+          "startFrame": 282,
+          "endFrame": 297
         },
         {
-          "word": "y",
-          "startMs": 10368,
-          "endMs": 10495,
-          "startFrame": 311,
+          "word": "para",
+          "startMs": 9868,
+          "endMs": 10066,
+          "startFrame": 296,
+          "endFrame": 302
+        },
+        {
+          "word": "cuando",
+          "startMs": 10066,
+          "endMs": 10356,
+          "startFrame": 301,
+          "endFrame": 311
+        },
+        {
+          "word": "el",
+          "startMs": 10356,
+          "endMs": 10472,
+          "startFrame": 310,
           "endFrame": 315
         },
         {
-          "word": "empieza",
-          "startMs": 10495,
-          "endMs": 11041,
+          "word": "caos",
+          "startMs": 10472,
+          "endMs": 10762,
           "startFrame": 314,
-          "endFrame": 332
+          "endFrame": 323
         },
         {
-          "word": "hoy",
-          "startMs": 11041,
-          "endMs": 11320,
-          "startFrame": 331,
-          "endFrame": 340
+          "word": "apriete,",
+          "startMs": 10762,
+          "endMs": 11401,
+          "startFrame": 322,
+          "endFrame": 343
         },
         {
-          "word": "mismo.",
-          "startMs": 11320,
-          "endMs": 12028,
-          "startFrame": 339,
-          "endFrame": 361
+          "word": "y",
+          "startMs": 11401,
+          "endMs": 11587,
+          "startFrame": 342,
+          "endFrame": 348
+        },
+        {
+          "word": "sigue",
+          "startMs": 11587,
+          "endMs": 11981,
+          "startFrame": 347,
+          "endFrame": 360
+        },
+        {
+          "word": "a",
+          "startMs": 11981,
+          "endMs": 12179,
+          "startFrame": 359,
+          "endFrame": 366
+        },
+        {
+          "word": "en",
+          "startMs": 12179,
+          "endMs": 12411,
+          "startFrame": 365,
+          "endFrame": 373
+        },
+        {
+          "word": "un",
+          "startMs": 12411,
+          "endMs": 12516,
+          "startFrame": 372,
+          "endFrame": 376
+        },
+        {
+          "word": "minuto",
+          "startMs": 12516,
+          "endMs": 12980,
+          "startFrame": 375,
+          "endFrame": 390
+        },
+        {
+          "word": "punto",
+          "startMs": 13421,
+          "endMs": 13804,
+          "startFrame": 402,
+          "endFrame": 415
+        },
+        {
+          "word": "es",
+          "startMs": 13804,
+          "endMs": 13920,
+          "startFrame": 414,
+          "endFrame": 418
+        },
+        {
+          "word": "para",
+          "startMs": 13920,
+          "endMs": 14106,
+          "startFrame": 417,
+          "endFrame": 424
+        },
+        {
+          "word": "dominar",
+          "startMs": 14106,
+          "endMs": 14571,
+          "startFrame": 423,
+          "endFrame": 438
+        },
+        {
+          "word": "un",
+          "startMs": 14571,
+          "endMs": 14721,
+          "startFrame": 437,
+          "endFrame": 442
+        },
+        {
+          "word": "libro",
+          "startMs": 14721,
+          "endMs": 15023,
+          "startFrame": 441,
+          "endFrame": 451
+        },
+        {
+          "word": "clave",
+          "startMs": 15023,
+          "endMs": 15337,
+          "startFrame": 450,
+          "endFrame": 461
+        },
+        {
+          "word": "cada",
+          "startMs": 15337,
+          "endMs": 15604,
+          "startFrame": 460,
+          "endFrame": 469
+        },
+        {
+          "word": "día.",
+          "startMs": 15604,
+          "endMs": 16208,
+          "startFrame": 468,
+          "endFrame": 487
         }
       ]
     }

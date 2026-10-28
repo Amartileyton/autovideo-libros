@@ -249,11 +249,11 @@
     {
       "id": "scene-5",
       "title": "EL MANIFIESTO",
-      "text": "Asumir la carga de tu propio destino es el único antídoto real frente al caos. [PAUSA 0.5s] Doce reglas para vivir, de Jordan Peterson. [PAUSA 0.4s] Guarda este resumen y empieza hoy mismo.",
+      "text": "Asumir la carga de tu propio destino es el único antídoto real frente al caos. [PAUSA 0.5s] Doce reglas para vivir, de Jordan Peterson. [PAUSA 0.4s] Guarda este resumen para cuando el caos apriete, y sigue a en un minuto punto es para dominar un libro clave cada día.",
       "characterPreset": "conversational",
       "blueprintMode": "EDITORIAL_PAPER",
       "layoutPreset": "CTA_MANIFESTO_GOODREADS",
-      "visualCue": "Cita Manifiesto (KineticCard) + Ficha oficial Goodreads con Mini-Portada + CtaEndCard con Cronómetro Hero y pregunta comunitaria coordinada.",
+      "visualCue": "Cita Manifiesto (KineticCard) + Ficha oficial Goodreads con Mini-Portada + CtaEndCard con Cronómetro Hero y doble llamada a la acción (guardado psicológico + promesa de marca).",
       "cameraTarget": {
         "x": 560,
         "y": 3960,
@@ -269,7 +269,8 @@
         "identityQuote": "Asumir la responsabilidad de tu propio destino es el único antídoto real frente al caos de la vida.",
         "highlightWords": ["antídoto real frente al caos"],
         "ctaPrompt": "Para empezar hoy mismo tras guardar el resumen: ¿cuál es el rincón de tu vida o habitación que vas a poner en orden hoy?",
-        "ctaActionText": "GUARDA ESTE RESUMEN Y EMPIEZA HOY MISMO",
+        "ctaActionText": "GUARDA ESTE RESUMEN PARA CUANDO EL CAOS APRIETE",
+        "brandPromise": "1 libro clave cada día en 60s",
         "showCommunityQuestion": true,
         "ctaHandle": "@en1minuto.es",
         "verdictBadge": "FENÓMENO GLOBAL · +5M COPIAS VENDIDAS"
