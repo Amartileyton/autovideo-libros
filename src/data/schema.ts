@@ -44,6 +44,10 @@ export const BookMetadataSchema = z.object({
   coverSource: z.string().optional(),
   categoryTag: z.string(),
   goodreadsUrl: z.string().optional(),
+  /** Fuente REAL de la valoración ('Google Books', 'Open Library', 'Goodreads'...). Se muestra en pantalla. */
+  ratingSource: z.string().optional(),
+  /** Fecha de captura del dato (YYYY-MM) */
+  ratingDate: z.string().optional(),
 });
 
 export type BookMetadata = z.infer<typeof BookMetadataSchema>;
@@ -65,6 +69,8 @@ export const BookActionableLawSchema = z.object({
   rule: z.string(),
   impactPct: z.number(),
   highlight: z.boolean().optional(),
+  /** Versión corta de la regla (≤ 6 palabras) para la tarjeta grande */
+  shortRule: z.string().optional(),
   triggerKeyword: z.union([z.string(), z.array(z.string())]).optional(),
 });
 
@@ -132,6 +138,39 @@ export type SceneCustomBlock = z.infer<typeof SceneCustomBlockSchema>;
 
 export const BookVisualDataSchema = z
   .object({
+    // ── Kit BIG v3 (menos palabras, tarjetas grandes) ─────────────────────────
+    /** Escena 1: frase gancho en pantalla desde el fotograma 0 (≤ 9 palabras) */
+    hookText: z.string().optional(),
+    hookHighlight: z.array(z.string()).optional(),
+    /** Escena 1: duelo final A (lo fácil) vs B (lo difícil) con etiquetas cortas */
+    duelALabel: z.string().optional(),
+    duelAValue: z.string().optional(),
+    duelATrigger: z.union([z.string(), z.array(z.string())]).optional(),
+    duelBLabel: z.string().optional(),
+    duelBValue: z.string().optional(),
+    duelBTrigger: z.union([z.string(), z.array(z.string())]).optional(),
+    duelBTag: z.string().optional(),
+    duelTagTrigger: z.union([z.string(), z.array(z.string())]).optional(),
+    /** Escena 2: titular corto en tarjeta (≤ 4 palabras) */
+    thesisHeadline: z.string().optional(),
+    thesisHighlight: z.array(z.string()).optional(),
+    /** Escena 3: sustitución (de → a) y remate (viejo tachado → nuevo) */
+    swapFrom: z.string().optional(),
+    swapFromTrigger: z.union([z.string(), z.array(z.string())]).optional(),
+    swapTo: z.string().optional(),
+    swapToTrigger: z.union([z.string(), z.array(z.string())]).optional(),
+    payoffLead: z.string().optional(),
+    payoffLeadTrigger: z.union([z.string(), z.array(z.string())]).optional(),
+    payoffOld: z.string().optional(),
+    payoffOldTrigger: z.union([z.string(), z.array(z.string())]).optional(),
+    payoffNew: z.string().optional(),
+    payoffNewTrigger: z.union([z.string(), z.array(z.string())]).optional(),
+    payoffTail: z.string().optional(),
+    payoffTailTrigger: z.union([z.string(), z.array(z.string())]).optional(),
+    /** Escena 5: titular del CTA y pregunta comunitaria cortos */
+    ctaHeadline: z.string().optional(),
+    communityQuestion: z.string().optional(),
+    // ── Campos heredados ──────────────────────────────────────────────────────
     provocativeQuestion: z.string().optional(),
     provocativeHighlight: z.string().optional(),
     bookKeywords: z.array(z.string()).optional(),
@@ -245,6 +284,20 @@ export const ScenesFileSchema = z.object({
   height: z.number().default(1920),
   crossDissolveFrames: z.number().default(10),
   bookMetadata: BookMetadataSchema.optional(),
+  /** Música de fondo de marca (ver public/audio/music/music-catalog.json) */
+  music: z
+    .object({
+      file: z.string(),
+      title: z.string(),
+      artist: z.string(),
+      license: z.string(),
+      attribution: z.string(),
+      /** Volumen base (0-1) cuando NO habla la voz */
+      volume: z.number().default(0.16),
+      /** Volumen bajo la voz (ducking) */
+      duckedVolume: z.number().default(0.07),
+    })
+    .optional(),
   scenes: z.array(SceneInputSchema),
 });
 
@@ -290,7 +343,7 @@ export const VideoPropsSchema = z.object({
     .default('Hábitos Atómicos — James Clear (Resumen Vectorial 65s)'),
   surfaceColor: z.string().default('#111111'),
   enableCaptions: z.boolean().default(true),
-  enableBackgroundMusic: z.boolean().default(false),
+  enableBackgroundMusic: z.boolean().default(true),
 });
 
 export type VideoProps = z.infer<typeof VideoPropsSchema>;

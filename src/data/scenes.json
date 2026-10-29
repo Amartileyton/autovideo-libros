@@ -18,7 +18,9 @@
     "fallbackCoverImage": "assets/books/el-arte-de-gastar-dinero-cover.svg",
     "categoryTag": "FINANZAS · PSICOLOGÍA",
     "goodreadsUrl": "https://www.goodreads.com/book/show/231148075-the-art-of-spending-money",
-    "coverSource": "penguinrandomhouse-hd"
+    "coverSource": "penguinrandomhouse-hd",
+    "ratingSource": "Goodreads",
+    "ratingDate": "2026-10"
   },
   "scenes": [
     {
@@ -48,8 +50,16 @@
         "hookUnit": "%",
         "hookLabel": "De tu bienestar depende de cómo gastas, no de cuánto acumulas",
         "hookSource": "El Arte de Gastar Dinero · Morgan Housel",
-        "hookTriggerKeyword": ["acumular", "libre", "dinero"],
-        "battleTriggerKeyword": ["habilidad", "sabiduria", "emocional"],
+        "hookTriggerKeyword": [
+          "acumular",
+          "libre",
+          "dinero"
+        ],
+        "battleTriggerKeyword": [
+          "habilidad",
+          "sabiduria",
+          "emocional"
+        ],
         "mythLabel": "Mito: Gasto de Estatus",
         "mythSubtitle": "Comprar bienes visibles para impresionar a desconocidos",
         "mythTag": "TRAMPA FINANCIERA",
@@ -58,7 +68,30 @@
         "realityTag": "EL ARTE REAL (100%)",
         "goodreadsRating": "★ 4.15",
         "goodreadsReviews": "+45K lectores",
-        "rulerLabel": "256 PÁGINAS · +45K LECTORES EN GOODREADS"
+        "rulerLabel": "256 PÁGINAS · +45K LECTORES EN GOODREADS",
+        "hookText": "¿Por qué acumular dinero no te hace sentir más libre?",
+        "hookHighlight": [
+          "acumular dinero",
+          "más libre"
+        ],
+        "duelALabel": "LO TÉCNICO",
+        "duelAValue": "GANAR DINERO",
+        "duelATrigger": [
+          "ganar",
+          "habilidad"
+        ],
+        "duelBLabel": "EL ARTE REAL",
+        "duelBValue": "SABER GASTARLO",
+        "duelBTrigger": [
+          "gastarlo",
+          "sabiduria",
+          "arte"
+        ],
+        "duelBTag": "ARTE EMOCIONAL",
+        "duelTagTrigger": [
+          "emocional",
+          "domina"
+        ]
       }
     },
     {
@@ -81,7 +114,11 @@
         "unit": "PARADOJA"
       },
       "bookVisualData": {
-        "hookTriggerKeyword": ["gran", "paradoja", "gasto"],
+        "hookTriggerKeyword": [
+          "gran",
+          "paradoja",
+          "gasto"
+        ],
         "growthMetric": "PARADOJA 01",
         "growthFormula": "Lujo Visible ≠ Felicidad Real",
         "formulaLabel": "PARADOJA · COMPRAR ADMIRACIÓN",
@@ -97,34 +134,50 @@
             "num": "01",
             "label": "COMPRA DE LUJO",
             "sublabel": "Gasto impulsado por imagen externa",
-            "triggerKeyword": ["compras", "lujo"]
+            "triggerKeyword": [
+              "compras",
+              "lujo"
+            ]
           },
           {
             "id": "envy",
             "num": "02",
             "label": "ENVIDIA AJENA",
             "sublabel": "Confundir envidia con respeto",
-            "triggerKeyword": ["satisfaccion", "propia"]
+            "triggerKeyword": [
+              "satisfaccion",
+              "propia"
+            ]
           },
           {
             "id": "admiration",
             "num": "03",
             "label": "ADMIRACIÓN FALSA",
             "sublabel": "La gente admira el objeto, no a ti",
-            "triggerKeyword": ["admiracion", "personas"]
+            "triggerKeyword": [
+              "admiracion",
+              "personas"
+            ]
           },
           {
             "id": "emptiness",
             "num": "04",
             "label": "VACÍO EMOCIONAL",
             "sublabel": "La euforia material se evapora rápido",
-            "triggerKeyword": ["conocemos", "siquiera"]
+            "triggerKeyword": [
+              "conocemos",
+              "siquiera"
+            ]
           }
         ],
         "centralQuote": "«Comprar cosas para impresionar a otros es la forma más rápida de quedarte sin dinero.»",
         "highlightWords": [
           "admiración de personas",
           "satisfacción propia"
+        ],
+        "thesisHeadline": "EL CIRCUITO DEL ESTATUS",
+        "thesisHighlight": [
+          "ESTATUS"
         ]
       }
     },
@@ -160,28 +213,40 @@
             "num": "01",
             "label": "MARCADOR EXTERNO",
             "sublabel": "Estatus y validación ajena",
-            "triggerKeyword": ["marcador", "externo"]
+            "triggerKeyword": [
+              "marcador",
+              "externo"
+            ]
           },
           {
             "id": "baremo_int",
             "num": "02",
             "label": "BAREMO INTERNO",
             "sublabel": "Tus valores auténticos",
-            "triggerKeyword": ["baremo", "interno"]
+            "triggerKeyword": [
+              "baremo",
+              "interno"
+            ]
           },
           {
             "id": "dividendo",
             "num": "03",
             "label": "MAYOR DIVIDENDO",
             "sublabel": "No cosas materiales",
-            "triggerKeyword": ["dividendo", "paga"]
+            "triggerKeyword": [
+              "dividendo",
+              "paga"
+            ]
           },
           {
             "id": "autonomia",
             "num": "04",
             "label": "AUTONOMÍA TOTAL",
             "sublabel": "Dueño absoluto de tu tiempo",
-            "triggerKeyword": ["autonomia", "tiempo"]
+            "triggerKeyword": [
+              "autonomia",
+              "tiempo"
+            ]
           }
         ],
         "centralQuote": "El mayor dividendo que paga el dinero es la capacidad de levantarte cada mañana y decidir qué hacer con tu día.",
@@ -190,7 +255,34 @@
           "autonomía total sobre tu tiempo"
         ],
         "formulaLabel": "Riqueza Invisible > Lujo Visible",
-        "formulaSublabel": "El valor del dinero se mide en horas libres, no en posesiones"
+        "formulaSublabel": "El valor del dinero se mide en horas libres, no en posesiones",
+        "swapFrom": "MARCADOR EXTERNO",
+        "swapFromTrigger": [
+          "marcador",
+          "externo"
+        ],
+        "swapTo": "BAREMO INTERNO",
+        "swapToTrigger": [
+          "baremo",
+          "interno"
+        ],
+        "payoffLead": "EL MAYOR DIVIDENDO",
+        "payoffLeadTrigger": [
+          "dividendo",
+          "paga"
+        ],
+        "payoffOld": "LUJOS",
+        "payoffOldTrigger": [
+          "lujos"
+        ],
+        "payoffNew": "AUTONOMÍA TOTAL",
+        "payoffNewTrigger": [
+          "autonomia"
+        ],
+        "payoffTail": "DUEÑO DE TU TIEMPO",
+        "payoffTailTrigger": [
+          "tiempo"
+        ]
       }
     },
     {
@@ -213,7 +305,11 @@
         "unit": "LEYES"
       },
       "bookVisualData": {
-        "dominoTriggerKeyword": ["leyes", "fundamentales", "aplica"],
+        "dominoTriggerKeyword": [
+          "leyes",
+          "fundamentales",
+          "aplica"
+        ],
         "actionableLaws": [
           {
             "index": "01",
@@ -221,7 +317,12 @@
             "rule": "Paga para eliminar fricción y delegar obligaciones que consumen tu energía vital.",
             "impactPct": 96,
             "highlight": true,
-            "triggerKeyword": ["tiempo", "eliminando", "odias"]
+            "triggerKeyword": [
+              "tiempo",
+              "eliminando",
+              "odias"
+            ],
+            "shortRule": "Paga para eliminar tareas que odias"
           },
           {
             "index": "02",
@@ -229,7 +330,12 @@
             "rule": "Nunca compres cosas caras para mantener apariencias con amigos o vecinos.",
             "impactPct": 93,
             "highlight": false,
-            "triggerKeyword": ["deuda", "social", "encajar"]
+            "triggerKeyword": [
+              "deuda",
+              "social",
+              "encajar"
+            ],
+            "shortRule": "Cero deuda para encajar o aparentar"
           },
           {
             "index": "03",
@@ -237,14 +343,31 @@
             "rule": "Evita que la inflación de estilo de vida destruya tu capacidad de disfrutar lo cotidiano.",
             "impactPct": 95,
             "highlight": true,
-            "triggerKeyword": ["protege", "placeres", "simples"]
+            "triggerKeyword": [
+              "protege",
+              "placeres",
+              "simples"
+            ],
+            "shortRule": "Protege tus placeres cotidianos simples"
           }
         ],
         "dominoSteps": [
-          { "label": "Compra Tiempo", "sub": "Ley 1" },
-          { "label": "Cero Deuda Social", "sub": "Ley 2" },
-          { "label": "Placeres Simples", "sub": "Ley 3" },
-          { "label": "Libertad Real", "sub": "Meta" }
+          {
+            "label": "Compra Tiempo",
+            "sub": "Ley 1"
+          },
+          {
+            "label": "Cero Deuda Social",
+            "sub": "Ley 2"
+          },
+          {
+            "label": "Placeres Simples",
+            "sub": "Ley 3"
+          },
+          {
+            "label": "Libertad Real",
+            "sub": "Meta"
+          }
         ]
       }
     },
@@ -269,14 +392,27 @@
       },
       "bookVisualData": {
         "identityQuote": "Ser rico es tener dinero; ser libre es que el dinero no te controle.",
-        "highlightWords": ["el dinero no te controle"],
+        "highlightWords": [
+          "el dinero no te controle"
+        ],
         "ctaPrompt": "Para reflexionar tras guardar el resumen: ¿cuál es ese gasto que hiciste solo por aparentar y del que hoy te arrepientes?",
         "ctaActionText": "GUARDA ESTE RESUMEN PARA CUANDO LA PRESIÓN SOCIAL TE EMPUJE A GASTAR",
         "brandPromise": "1 libro clave cada día en 60s",
         "showCommunityQuestion": true,
         "ctaHandle": "@en1minuto.es",
-        "verdictBadge": "NUEVO BESTSELLER · MORGAN HOUSEL"
+        "verdictBadge": "NUEVO BESTSELLER · MORGAN HOUSEL",
+        "ctaHeadline": "GUARDA ESTE RESUMEN PARA CUANDO LA PRESIÓN SOCIAL TE EMPUJE A GASTAR",
+        "communityQuestion": "¿Qué gasto hiciste solo por aparentar y del que hoy te arrepientes?"
       }
     }
-  ]
+  ],
+  "music": {
+    "file": "audio/music/vibing-over-venus.mp3",
+    "title": "Vibing Over Venus",
+    "artist": "Kevin MacLeod",
+    "license": "CC BY 4.0",
+    "attribution": "\"Vibing Over Venus\" Kevin MacLeod (incompetech.com) Licensed under CC BY 4.0",
+    "volume": 0.16,
+    "duckedVolume": 0.06
+  }
 }

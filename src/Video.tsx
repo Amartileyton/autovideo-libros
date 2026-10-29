@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+﻿import React, { useMemo } from 'react';
 import {
   AbsoluteFill,
   Audio,
@@ -34,6 +34,7 @@ import {
   CLAMP_EXTRAPOLATION,
   SAFE_ZONE,
 } from './theme/motion';
+import { CTA_LAYOUT } from './components/big';
 
 const manifest = audioManifestJson as AudioManifest;
 const scenesJson = scenesJsonRaw as unknown as ScenesFile;
@@ -55,7 +56,7 @@ export function computeSceneTimeline(
   audioManifest: AudioManifest
 ): ComputedSceneWindow[] {
   const overlap = audioManifest.crossDissolveFrames || 10;
-  // 12 fotogramas (400ms) de pre-roll inicial para evitar que se corte la primera sílaba ("¿Por...")
+  // 12 fotogramas (400ms) de pre-roll inicial para evitar que se corte la primera sÃ­laba ("Â¿Por...")
   let cursor = 12;
 
   return audioManifest.scenes.map((scene, index) => {
@@ -76,7 +77,7 @@ export function computeSceneTimeline(
 export const Video: React.FC<VideoProps> = ({
   surfaceColor = BLUEPRINT_THEMES.EDITORIAL_PAPER.surface,
   enableCaptions = true,
-  enableBackgroundMusic = false,
+  enableBackgroundMusic = true,
 }) => {
   const frame = useCurrentFrame();
   const { fps, durationInFrames: totalDurationFrames } = useVideoConfig();
@@ -85,7 +86,7 @@ export const Video: React.FC<VideoProps> = ({
 
   /**
    * Stream unificado de palabras a nivel global (arquitectura Leo + @resultaaquee):
-   * evita cortes o solapamientos de subtítulos durante las transiciones entre escenas.
+   * evita cortes o solapamientos de subtÃ­tulos durante las transiciones entre escenas.
    */
   const globalWordTimestamps: WordTimestamp[] = useMemo(() => {
     const merged: WordTimestamp[] = [];
@@ -105,7 +106,7 @@ export const Video: React.FC<VideoProps> = ({
   }, [timeline, fps]);
 
   /**
-   * Keyframes de cámara continua sincronizados al fotograma de inicio de cada escena en info.json
+   * Keyframes de cÃ¡mara continua sincronizados al fotograma de inicio de cada escena en info.json
    */
   const cameraKeyframes: CameraKeyframe[] = useMemo(() => {
     const defaultCoords = [
@@ -134,12 +135,12 @@ export const Video: React.FC<VideoProps> = ({
   }, [timeline]);
 
   /**
-   * Modo de superficie editorial constante en todo el vídeo (sin cambios de color de fondo)
+   * Modo de superficie editorial constante en todo el vÃ­deo (sin cambios de color de fondo)
    */
   const activeBlueprintMode: BlueprintModeId = 'EDITORIAL_PAPER';
 
   /**
-   * Curva de Audio Ducking automática para la pista opcional de música de fondo
+   * Curva de Audio Ducking automÃ¡tica para la pista opcional de mÃºsica de fondo
    */
   const isVoiceSpeaking = useMemo(() => {
     return globalWordTimestamps.some(
@@ -150,12 +151,40 @@ export const Video: React.FC<VideoProps> = ({
   const bgmVolume = interpolate(
     isVoiceSpeaking ? 1 : 0,
     [0, 1],
-    [0.32, 0.12],
+    [scenesJson.music?.volume ?? 0.16, scenesJson.music?.duckedVolume ?? 0.06],
     CLAMP_EXTRAPOLATION
   );
 
   return (
     <AbsoluteFill style={{ backgroundColor: surfaceColor }}>
+      {/* Fuentes oficiales cargadas desde almacenamiento estático local para renderizado offline */}
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 700 900;
+  font-display: swap;
+  src: url('${staticFile('fonts/plusjakartasans-800.woff2')}') format('woff2');
+}
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700 900;
+  font-display: swap;
+  src: url('${staticFile('fonts/nunito-800.woff2')}') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500 800;
+  font-display: swap;
+  src: url('${staticFile('fonts/inter-700.woff2')}') format('woff2');
+}
+          `,
+        }}
+      />
       {/* Lienzo continuo de 5 escenas gobernado por CameraRig + Rack-Focus Blur */}
       <CameraRig
         keyframes={cameraKeyframes}
@@ -163,7 +192,7 @@ export const Video: React.FC<VideoProps> = ({
         blueprintMode={activeBlueprintMode}
         rackFocusBlur={true}
       >
-        {/* Conectores de ingeniería editorial entre los 5 cuadrantes del lienzo continuo */}
+        {/* Conectores de ingenierÃ­a editorial entre los 5 cuadrantes del lienzo continuo */}
         <svg
           width={2400}
           height={6000}
@@ -315,15 +344,15 @@ export const Video: React.FC<VideoProps> = ({
         />
       )}
 
-      {/* Reloj de 1 Minuto: Corre en el footer y asciende suave y tempranamente acoplándose a CtaEndCard */}
+      {/* Reloj de 1 Minuto: Corre en el footer y asciende suave y tempranamente acoplÃ¡ndose a CtaEndCard */}
       {(() => {
         const scene5Start = timeline[4]?.from ?? 1508;
-        // Comienza la transición del reloj con anticipación suficiente (frame +170 de escena 5)
+        // Comienza la transiciÃ³n del reloj con anticipaciÃ³n suficiente (frame +170 de escena 5)
         // para un vuelo ultra suave de 82 frames (~2.7 segundos) que concluye exactamente cuando
-        // entra la locución "Guarda este resumen" en frame +252.
+        // entra la locuciÃ³n "Guarda este resumen" en frame +252.
         const ctaFlightTrigger = scene5Start + 170;
 
-        // Suavizado cúbico continuo para máxima fluidez orgánica
+        // Suavizado cÃºbico continuo para mÃ¡xima fluidez orgÃ¡nica
         const flightRaw = interpolate(
           frame,
           [ctaFlightTrigger, ctaFlightTrigger + 82],
@@ -339,19 +368,19 @@ export const Video: React.FC<VideoProps> = ({
         const clockY = interpolate(
           smoothFlight,
           [0, 1],
-          [1788, 798],
+          [1788, CTA_LAYOUT.clockTop],
           CLAMP_EXTRAPOLATION
         );
 
-        // Tamaño del reloj: se expande con calma de 84px a 110px hero
+        // TamaÃ±o del reloj: se expande con calma de 84px a 110px hero
         const clockSize = interpolate(
           smoothFlight,
           [0, 1],
-          [84, 110],
+          [84, CTA_LAYOUT.clockSize],
           CLAMP_EXTRAPOLATION
         );
 
-        // Modo: transiciona de 'header' a 'hero' cuando la animación supera el 35%
+        // Modo: transiciona de 'header' a 'hero' cuando la animaciÃ³n supera el 35%
         const clockMode = smoothFlight > 0.35 ? 'hero' : 'header';
 
         return (
@@ -384,7 +413,7 @@ export const Video: React.FC<VideoProps> = ({
         );
       })()}
 
-      {/* Subtítulos en el tercio inferior para no interferir con titulares ni animaciones */}
+      {/* SubtÃ­tulos en el tercio inferior para no interferir con titulares ni animaciones */}
       {enableCaptions ? (
         <DynamicCaptions
           wordTimestamps={globalWordTimestamps}
@@ -395,15 +424,15 @@ export const Video: React.FC<VideoProps> = ({
         />
       ) : null}
 
-      {/* Pista opcional de música de fondo con curva de audio ducking automática */}
-      {enableBackgroundMusic && manifest.backgroundMusicFile ? (
+      {/* Pista opcional de mÃºsica de fondo con curva de audio ducking automÃ¡tica */}
+      {enableBackgroundMusic && (manifest.backgroundMusicFile || scenesJson.music?.file || true) ? (
         <Audio
-          src={staticFile(manifest.backgroundMusicFile)}
+          src={staticFile(manifest.backgroundMusicFile || scenesJson.music?.file || 'audio/music/vibing-over-venus.mp3')}
           volume={bgmVolume}
         />
       ) : null}
 
-      {/* Línea guía sutil de Zona Segura Vertical (288px inferiores reservados para UI 9:16) */}
+      {/* LÃ­nea guÃ­a sutil de Zona Segura Vertical (288px inferiores reservados para UI 9:16) */}
       <div
         style={{
           position: 'absolute',

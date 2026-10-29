@@ -1,7 +1,7 @@
 {
   "name": "autovideo-libros",
   "version": "1.0.0",
-  "description": "Motor especializado en Shorts verticales (60s) de resúmenes de libros con scraping multi-fuente, guionista Gemini, voz oficial de Leo en ElevenLabs y animación Remotion",
+  "description": "Motor especializado en Shorts verticales (60s) de resÃºmenes de libros con scraping multi-fuente, guionista Gemini, voz oficial de Leo en ElevenLabs y animaciÃ³n Remotion",
   "private": true,
   "scripts": {
     "dev": "remotion studio --port 3000",
@@ -13,7 +13,12 @@
     "sync:audio": "node scripts/elevenlabs-sync.mjs",
     "qa:gate": "node scripts/promptible-gate.mjs",
     "session:restore": "node scripts/restore-session.mjs",
-    "typecheck": "tsc --noEmit"
+    "auth:youtube": "node scripts/auth-youtube.mjs",
+    "publish:youtube": "node scripts/publish-youtube.mjs",
+    "typecheck": "tsc --noEmit",
+    "publish:instagram": "node scripts/publish-instagram.mjs",
+    "check:instagram": "node scripts/publish-instagram.mjs --check",
+    "publish:all": "node scripts/publish.mjs"
   },
   "dependencies": {
     "@react-three/fiber": "8.17.10",
@@ -34,6 +39,7 @@
     "d3-delaunay": "6.0.4",
     "dotenv": "^16.4.7",
     "flubber": "0.4.2",
+    "googleapis": "^188.0.0",
     "lucide-react": "^0.475.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

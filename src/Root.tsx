@@ -1,30 +1,10 @@
 import React from 'react';
 import { Composition } from 'remotion';
-import { loadFont as loadPlusJakartaSans } from '@remotion/google-fonts/PlusJakartaSans';
-import { loadFont as loadInter } from '@remotion/google-fonts/Inter';
-import { loadFont as loadNunito } from '@remotion/google-fonts/Nunito';
 import audioManifestJson from '../public/audio/info.json';
 import scenesJson from './data/scenes.json';
 import { VideoPropsSchema, type AudioManifest } from './data/schema';
 import { BLUEPRINT_THEMES, VIDEO_CONFIG } from './theme/motion';
 import { Video } from './Video';
-
-// Cargar fuentes oficiales con pesos optimizados
-loadPlusJakartaSans('normal', {
-  weights: ['700', '800'],
-  subsets: ['latin'],
-  ignoreTooManyRequestsWarning: true,
-});
-loadInter('normal', {
-  weights: ['500', '700', '800'],
-  subsets: ['latin'],
-  ignoreTooManyRequestsWarning: true,
-});
-loadNunito('normal', {
-  weights: ['700', '800'],
-  subsets: ['latin'],
-  ignoreTooManyRequestsWarning: true,
-});
 
 const manifest = audioManifestJson as AudioManifest;
 
@@ -68,7 +48,7 @@ export const RemotionRoot: React.FC = () => {
             '12 reglas para vivir — Jordan B. Peterson (Resumen 65s)',
           surfaceColor: BLUEPRINT_THEMES.EDITORIAL_PAPER.surface,
           enableCaptions: true,
-          enableBackgroundMusic: false,
+          enableBackgroundMusic: true,
         }}
       />
     </>

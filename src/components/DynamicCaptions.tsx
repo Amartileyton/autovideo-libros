@@ -101,15 +101,24 @@ export const DynamicCaptions: React.FC<DynamicCaptionsProps> = ({
       if (isOnlyPunctuation) {
         if (list.length > 0) {
           // Fusionar signo de puntuación con la palabra previa para evitar palabra huérfana
+          const prev = list[list.length - 1];
+          const punct = item.word.trim();
+          const cleanPunct = (w: string) =>
+            w.replace(/([:.,;!?])\s*([,;])/g, '$1').replace(/\.{4,}/g, '...');
+          const merged =
+            /[:.,;!?]$/.test(prev.word) && /^[,;]/.test(punct)
+              ? prev.word
+              : cleanPunct(`${prev.word}${punct}`);
           list[list.length - 1] = {
-            ...list[list.length - 1],
-            word: `${list[list.length - 1].word}${item.word.trim()}`,
-            endMs: Math.max(list[list.length - 1].endMs, item.endMs),
-            endFrame: Math.max(list[list.length - 1].endFrame, item.endFrame),
+            ...prev,
+            word: merged,
+            endMs: Math.max(prev.endMs, item.endMs),
+            endFrame: Math.max(prev.endFrame, item.endFrame),
           };
         }
       } else {
-        list.push({ ...item });
+        const cleanWord = item.word.replace(/([:.,;!?])\s*([,;])/g, '$1');
+        list.push({ ...item, word: cleanWord });
       }
     }
     return list;

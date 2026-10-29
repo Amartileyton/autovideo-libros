@@ -10,7 +10,7 @@
 > **REGLA DE ORO DEL WORKFLOW DE LIBROS (PROHIBIDO SALTARSE EL CUESTIONARIO)**:
 > Cuando el usuario solicite crear un vídeo de un libro (enviando el **título del libro y/o su enlace de Goodreads** `https://www.goodreads.com/book/show/...`), está **TERMINANTEMENTE PROHIBIDO** pasar directamente a programar las escenas (`Scene1..5.tsx`) o renderizar el MP4 sin antes ejecutar el **Cuestionario Visual Interactivo (`ask_question`)** para decidir con el usuario qué gráficos y componentes visuales integrar en cada diapositiva.
 
-### 0.1 Las 5 Fases Secuenciales Obligatorias del Pipeline de Libros
+### 0.1 Las 6 Fases Secuenciales Obligatorias del Pipeline de Libros (De la Ingesta a la Publicación Multiplataforma)
 Todo vídeo de resumen de libro debe seguir estrictamente este orden secuencial:
 
 1. **FASE 1 — Ingesta Automática desde Goodreads (`scripts/book-ingest.mjs`)**:
@@ -57,6 +57,22 @@ Todo vídeo de resumen de libro debe seguir estrictamente este orden secuencial:
    - Ejecutar `npm.cmd run typecheck` y `npm.cmd run qa:gate` (16/16 checks en verde).
    - Renderizar fotogramas clave (`npx.cmd remotion still`) o pedir confirmación antes de lanzar el render completo de vídeo MP4.
 
+6. **FASE 6 — Publicación y Planificación Automatizada Multiplataforma (YouTube Shorts + Instagram Reels)**:
+   - **Post-Render & Aprobación Humana**: Tras finalizar el render de vídeo MP4 en la Fase 5 y validar las correcciones visuales con el usuario, el agente activa el pipeline de publicación y programación.
+   - **Paso 6.1 — Generación y Previsualización de Metadatos Coordinados**:
+     - Ejecutar: `node scripts/publish.mjs --platforms yt,ig --dry-run`
+     - Se extraen de forma automatizada desde `src/data/scenes.json`, `src/data/book-dossier.json` y `public/audio/music/music-catalog.json`:
+       - **YouTube Shorts**: Título editorial ($\le 95$ caracteres con `#Shorts`), descripción estructurada con propuesta de valor de `@en1minuto.es`, etiquetas (`tags`) educativas y bloque de atribución de música oficial (Kevin MacLeod / CC BY 4.0).
+       - **Instagram Reels**: Portada/caption con gancho provocador (`hookText`), síntesis de valor en puntos, anclaje psicológico de guardado, llamada a seguir a `@en1minuto.es`, créditos de audio y hashtags de alta indexación.
+   - **Paso 6.2 — Protocolos de Envío 100% Locales (Sin Servidores Externos ni Costes de Infraestructura)**:
+     - **YouTube Shorts (`scripts/publish-youtube.mjs`)**: API oficial YouTube Data v3 mediante flujo OAuth 2.0 local con token renovable (`.secrets/youtube-token.json`). Permite subidas privadas (`--privacy private`), ocultas (`--privacy unlisted`), públicas (`--privacy public`) o programación directa en servidores de Google (`--schedule <YYYY-MM-DDTHH:MM:SSZ>`).
+     - **Instagram Reels (`scripts/publish-instagram.mjs`)**: Meta Graph API v21.0 mediante el protocolo oficial de **Resumable Upload** (`rupload.facebook.com` con `upload_type=resumable` y cabeceras `Authorization: OAuth`, `offset: 0`, `file_size`). Permite subir el archivo binario MP4 directamente desde el disco duro local a los servidores de Meta sin necesidad de contratar buckets S3/R2 ni pagar servidores intermedios. Incluye sondeo automático de procesamiento (`status_code: FINISHED`) y publicación directa en el feed.
+   - **Paso 6.3 — Despacho Unificado y Planificación**:
+     - Despachador: `node scripts/publish.mjs --platforms yt,ig [--schedule <ISO_DATE>] [--privacy <mode>] --confirm`
+     - Horas recomendadas de publicación: Franja de máxima audiencia para formato libro/desarrollo personal: **19:00 a 21:00 CET** (o programación diferida con `--schedule`).
+   - **Paso 6.4 — Trazabilidad e Idempotencia en `publish-log.json`**:
+     - Cada subida exitosa se registra en `out/publish/publish-log.json` guardando: timestamp ISO, plataforma (`youtube` / `instagram`), ID de vídeo (`videoId` / `mediaId`), enlaces directos (`shortsUrl`, `videoUrl`, `permalink`) y fichero fuente, previniendo duplicidades y facilitando el seguimiento de analíticas.
+
 ### 0.2 Las 6 Reglas Visuales Inquebrantables de `@en1minuto.es` (Anti-Regresión)
 Estas mejoras visuales están integradas en el núcleo del proyecto y **NUNCA** deben revertirse:
 1. **PROHIBIDO el Banner Inferior (`Dock Inferior`) y PROHIBIDO CUALQUIER PITIDO O ALARMA AL INICIO**:
@@ -92,13 +108,21 @@ Estas mejoras visuales están integradas en el núcleo del proyecto y **NUNCA** 
      - **Caja de Pregunta Comunitaria Limpia**: Sin etiquetas de relleno (`"VÍNCULO CTA"` ni `"TIEMPO CUMPLIDO"`), conectando directamente la tesis del libro con el espectador en tipografía limpia.
 7. **Ascenso Dinámico del Reloj Footer a la Tarjeta Final (Hero Stopwatch Docking)**:
    - El cronómetro circular del footer **NO** debe desvanecerse con un fade-out estático. En la Escena 5, el reloj inicia su vuelo con anticipación (~80-85 frames antes de concluir el vídeo) con un suave suavizado cúbico continuo, ascendiendo desde `bottom: 48px` (`Y = 1788px`) hasta acoplarse con precisión milimétrica en la ranura superior de `CtaEndCard` (`clockY = 603px`), expandiendo su tamaño de `84px` a `110px` y activando su modo `hero` (relleno al 100% de $360^\circ$) exactamente en el fotograma en que el locutor dice la primera palabra del CTA ("Guarda este resumen...").
-8. **Tamaño, Anchura y Protagonismo Máximo de Tarjetas (Anti-Microtexto en Móvil)**:
-   - Las tarjetas de contenido (`KineticCard`, `ComparisonBattle`, `ExponentialGrowthChart`, `CtaEndCard`) ocupan **protagonismo dominante en pantalla** con márgenes de seguridad de `left: 54px, right: 54px` (ancho neto de **972px** en el lienzo 9:16).
-   - Prohibido el texto enano: los cuerpos de texto deben tener entre `20px` y `24px` con peso `600/700`, los títulos `28px` a `36px` (`fontWeight: 800/900`) y las métricas numéricas `60px` a `76px`.
+8. **Kit BIG v3: Tarjetas Grandes, Pocas Palabras, Mucha Animación y Tipografía Móvil Legible**:
+   - Las tarjetas de contenido (`PaleCard`, `KineticWords`, `ComparisonBattle`, `VectorLoopCircuit`, `CtaEndCard`) ocupan el **ancho neto completo de 972px** (`left: 54px, right: 54px`).
+   - **Tipografía Mínima Legible en Móvil (Kit BIG)**: En pantalla de teléfono (render 1080px escalado a ~390pt), el texto de 20-24px es ilegible. La nueva norma estricta es:
+     - **Métricas numéricas y numerales**: `104px` a `124px`.
+     - **Títulos y conceptos clave**: `64px` a `88px` (máximo 2 a 4 palabras por titular).
+     - **Cuerpo y reglas accionables**: `38px` a `44px` (máximo 6 palabras por línea).
+     - **Etiquetas y stickers secundarios**: `30px` a `34px`.
+     - **TERMINANTEMENTE PROHIBIDO**: cualquier texto inferior a `30px`.
+   - **Menos palabras, más dinamismo**: Eliminar párrafos explicativos en tarjetas; utilizar titulares sintéticos de impacto sincronizados palabra a palabra con la voz (`KineticWords`).
 9. **Sincronización Estricta del Tachado Editorial (Anti-Tachado Prematuro)**:
    - En componentes de confrontación o descarte (`ComparisonBattle`), la opción descartada debe permanecer completamente limpia y legible desde su entrada. El tachado dinámico en rojo y el sello `DESCARTADO ✗` deben activarse **única y exclusivamente en el fotograma exacto en que la voz pronuncia la palabra clave de descarte** (usando `currentFrame` relativo a la escena).
-10. **Parches Dinámicos / Stickers con Rebote en la Escena 1**:
-    - Para evitar aperturas estáticas en los primeros segundos del vídeo, las insignias de autor, valoración de Goodreads y comunidad de lectores se estampan como parches editoriales escalonados (con inclinaciones sutiles tipo sticker `[-2.5°, +3.2°, -2°]` y rebote de impacto `scale(1.45) ➔ scale(1.0)`).
+10. **Gancho Inmediato desde el Fotograma 0 y Portada en Fase 2 (Anti-Arranque Inerte)**:
+    - **Cero Fotogramas Vacíos**: Está terminantemente prohibido arrancar con el lienzo vacío o esperar 2 segundos para mostrar el valor. En el fotograma 0 (aprovechando el pre-roll de 12 frames), la **frase gancho provocadora** ya está visible en pantalla en tipografía gigante (72px-104px) sobre tarjeta `PaleCard` en modo *karaoke* (el texto se enciende con rebote a medida que el locutor pronuncia cada palabra).
+    - **Transición a Fase 2 (Portada + Stickers)**: Una vez concluida la frase gancho (~fotograma 80-90), el gancho se compacta hacia la cabecera superior y despliega la portada del libro a gran formato (440x650px) junto a los 3 parches/stickers dinámicos (autor, valoración con fuente y lectores) con rebote `scale(1.45 ➔ 1.0)`.
+    - **Fase 3 (Duelo A vs B a Pantalla Completa)**: Duelo de conceptos clave a pantalla completa con tarjetas de 88px sincronizadas a la locución.
 11. **Diagramas de Flujo Verticales Descendentes con Conectores Triangulares Geométricos (Sin Texto) para Leyes**:
     - En la presentación de leyes o principios accionables (Escena 4), queda descartado el dominó horizontal y las flechas curvadas/feas; se implementa una estructura vertical descendente de arriba hacia abajo (Ley 01 Arriba ➔ Ley 02 Centro ➔ Ley 03 Abajo).
     - **PROHIBIDO el uso de flechas convencionales y pastillas de texto intermedias**: Queda terminantemente prohibido incluir textos como `"SIGUIENTE ▼"`, `"PASO ▼"` o `"ESCUDO ▼"`, así como puntas de flecha de trazo estándar o flechas complejas que ensucien el diseño.
@@ -107,10 +131,20 @@ Estas mejoras visuales están integradas en el núcleo del proyecto y **NUNCA** 
       - **Polígono triangular exterior**: fondo amarillo pálido `#FEF9C3` con borde nítido carbón `2.8px solid #141413`, esquinas redondeadas (`strokeLinejoin="round"`) y sombra suave (`drop-shadow(0 6px 14px rgba(20, 20, 19, 0.12))`).
       - **Polígono triangular interior**: relleno sólido en terracota `#D94E34` (Paso 1 ➔ 2) o ámbar `#D97706` (Paso 2 ➔ 3), apuntando limpio y verticalmente hacia abajo.
       - Animación de entrada con interpolación de escala elástica `scale(0.75 ➔ 1.0)` y opacidad `0 ➔ 1` sincronizada al momento en que la voz pasa al siguiente principio.
-12. **Llenado Vertical Equilibrado del Lienzo 9:16 (Anti-Concentración Superior)**:
-    - Queda estrictamente prohibido apelotonar los elementos en el tercio o mitad superior de la pantalla dejando un vacío en la zona inferior. En todas las escenas, el contenido debe distribuirse de forma armónica desde `top: 70–90px` hasta `top: 1300–1340px`, dejando el margen de seguridad para los subtítulos dinámicos (`1442px`).
+12. **Llenado Vertical Equilibrado del Lienzo 9:16 (Anti-Mitades Vacías)**:
+    - Queda estrictamente prohibido concentrar los elementos en el 40-50% superior dejando un abismo vacío antes de los subtítulos. En todas las escenas (1 a 5), el contenido gráfico y las tarjetas se extienden de manera armónica desde `top: 70px` hasta `top: 1390px`, respetando la zona segura de subtítulos (`1442px`).
 13. **Pre-Roll de Audio de 12 Fotogramas (Anti-Clipping de Audio Inicial)**:
-    - Para garantizar que la primera sílaba o palabra inicial (ej. "¿Por qué...") nunca sea cercenada por retardos de buffer de audio de los motores de renderizado, el timeline maestro en `Root.tsx` y `Video.tsx` debe iniciar con un margen de pre-roll de 12 fotogramas (`initialLead = 12`), desplazando suavemente la entrada del audio y los subtítulos para una audición cristalina.
+    - Para garantizar que la primera sílaba o palabra inicial nunca sea cercenada por retardos de buffer de audio, el timeline maestro inicia con un margen de pre-roll de 12 fotogramas (`initialLead = 12`), con la tarjeta de gancho ya presente en pantalla desde el fotograma 0.
+14. **Música de Fondo Oficial con Audio Ducking Automático y Atribución**:
+    - **Música de fondo obligatoria y activa por defecto** (`enableBackgroundMusic = true`): Se utiliza música reconocible, elegante y de libre acceso (ej. `Vibing Over Venus` de Kevin MacLeod bajo licencia CC BY 4.0, o biblioteca de audio de YouTube).
+    - **Curva de Audio Ducking Dinámica**: El volumen de la música baja suavemente a `0.06` durante la locución y asciende a `0.16` en pausas y transiciones.
+    - **Atribución Transparente**: Se incluye el bloque de atribución de la licencia en la descripción de cada publicación según `public/audio/music/music-catalog.json`.
+15. **Transparencia y Verificación de Fuentes en Metadatos**:
+    - Toda calificación se presenta en pantalla como "Valoración de lectores" indicando la fuente real (`Goodreads`, `Google Books`, `Open Library`) y fecha de toma del dato (`ratingSource` y `ratingDate`).
+    - Prohibido inventar porcentajes o estadísticas en el guion sin respaldo empírico. Las citas deben ser literales con fuente verificable o declaradas explícitamente como tesis del autor.
+16. **Pipeline de Publicación Idempotente y Cero Fugas de Credenciales**:
+    - **Protección Estricta de Secretos**: Queda terminantemente prohibido imprimir credenciales, tokens OAuth de Google, tokens de Meta Graph API o claves de API en las respuestas de chat o persistirlos fuera de `.secrets/` y `.env`.
+    - **Idempotencia y Trazabilidad Obligatoria**: Toda publicación debe ejecutarse a través de los scripts del sistema (`publish.mjs`, `publish-youtube.mjs`, `publish-instagram.mjs`) y quedar registrada en `out/publish/publish-log.json`. Antes de subir cualquier vídeo, el sistema verifica que no haya sido publicado previamente con éxito para prevenir publicaciones duplicadas en los feeds.
 
 ---
 
@@ -169,3 +203,4 @@ Importadas exclusivamente desde `src/theme/motion.ts`:
 | **SLOT 3** | `self` (*Builder Impar*) | `share` | Programa exclusivamente las escenas impares usando tarjetas en amarillo pálido `#FEF9C3` y los componentes elegidos en el cuestionario. | `src/scenes/Scene1.tsx`<br>`src/scenes/Scene3.tsx`<br>`src/scenes/Scene5.tsx`<br>`src/components/RoughCard.tsx` |
 | **SLOT 4** | `self` (*Builder Par*) | `share` | Programa exclusivamente las escenas pares, el aparejo de cámara continua y los subtítulos dinámicos. | `src/scenes/Scene2.tsx`<br>`src/scenes/Scene4.tsx`<br>`src/components/CameraRig.tsx`<br>`src/components/DynamicCaptions.tsx`<br>`src/components/blueprints/ResultaaqueeBlueprints.tsx` |
 | **SLOT 5** | `browser` | `/browser` | Abre `http://localhost:3000` o inspecciona fotogramas con `remotion still`, audita los 16 puntos de calidad y ejecuta el **Critic Gate** ($\ge 8.0$ por dimensión, $\ge 8.5$ de media antes de emitir `DELIVERY AUTHORIZED`). | `references/LESSONS.md`<br>Artefactos de QA / Capturas |
+

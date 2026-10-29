@@ -148,17 +148,18 @@ export const CHARACTER_PRESETS = {
 export function cleanPauseMarkers(text, replaceWithPunctuation = true) {
   if (!text) return '';
   let cleaned = text.replace(
-    /\[PAUSA(?:\s*[:=-]?\s*([0-9.,]*)\s*s?)?\]/gi,
-    (_match, durRaw) => {
-      if (!replaceWithPunctuation) return ' ';
+    /([:.,;!?])?\s*\[PAUSA(?:\s*[:=-]?\s*([0-9.,]*)\s*s?)?\]/gi,
+    (_match, prevPunct, durRaw) => {
       const normalized = (durRaw || '').trim().replace(',', '.');
       const dur = normalized ? parseFloat(normalized) : 0.4;
-      if (!Number.isNaN(dur) && dur >= 0.5) {
-        return '... ';
+      if (!replaceWithPunctuation) return prevPunct ? `${prevPunct} ` : ' ';
+      if (prevPunct) {
+        return dur >= 0.5 && prevPunct === '.' ? '... ' : `${prevPunct} `;
       }
-      return ', ';
+      return dur >= 0.5 ? '... ' : ', ';
     }
   );
+  cleaned = cleaned.replace(/([:.,;!?])\s*([,;])/g, '$1');
   cleaned = cleaned.replace(/\s*,\s*,+/g, ',');
   cleaned = cleaned.replace(/\s*\.{4,}/g, '...');
   cleaned = cleaned.replace(/\s+/g, ' ').trim();
