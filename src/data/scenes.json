@@ -1,36 +1,36 @@
 {
-  "projectTitle": "El arte de gastar dinero — Morgan Housel (Resumen 65s)",
+  "projectTitle": "Las 48 leyes del poder — Robert Greene (Resumen 65s)",
   "fps": 30,
   "width": 1080,
   "height": 1920,
   "crossDissolveFrames": 10,
   "bookMetadata": {
-    "title": "El arte de gastar dinero",
-    "originalTitle": "The Art of Spending Money: Simple Choices for a Richer Life",
-    "author": "Morgan Housel",
-    "publishYear": 2025,
-    "pages": 256,
-    "readingTimeHours": 3.8,
-    "rating": 4.15,
-    "ratingsCount": "+45K",
-    "salesCopies": "+1M",
-    "coverImage": "assets/books/el-arte-de-gastar-dinero-cover.jpg",
-    "fallbackCoverImage": "assets/books/el-arte-de-gastar-dinero-cover.svg",
-    "categoryTag": "FINANZAS · PSICOLOGÍA",
-    "goodreadsUrl": "https://www.goodreads.com/book/show/231148075-the-art-of-spending-money",
-    "coverSource": "penguinrandomhouse-hd",
+    "title": "Las 48 leyes del poder",
+    "originalTitle": "The 48 Laws of Power",
+    "author": "Robert Greene",
+    "publishYear": 1998,
+    "pages": 452,
+    "readingTimeHours": 4.2,
+    "rating": 4.07,
+    "ratingsCount": "+250K",
+    "salesCopies": "+1.2M",
+    "coverImage": "assets/books/las-48-leyes-del-poder-cover.jpg",
+    "fallbackCoverImage": "assets/books/las-48-leyes-del-poder-cover.svg",
+    "categoryTag": "PSICOLOGÍA · PODER",
+    "goodreadsUrl": "https://www.goodreads.com/book/show/1303.The_48_Laws_of_Power?ref=rae_3",
+    "coverSource": "goodreads-hd",
     "ratingSource": "Goodreads",
-    "ratingDate": "2026-10"
+    "ratingDate": "2026-11"
   },
   "scenes": [
     {
       "id": "scene-1",
-      "title": "LA GRAN PARADOJA DEL DINERO",
-      "text": "¿Por qué acumular dinero no te hace sentir más libre? [PAUSA 0.4s] Morgan Housel revela que ganar dinero es una habilidad técnica, pero gastarlo con sabiduría es un arte emocional que casi nadie domina.",
+      "title": "EL GRAN ERROR SOBRE EL PODER",
+      "text": "¿Crees que la honestidad y el talento bastan para triunfar? [PAUSA 0.4s] Robert Greene demuestra que el poder tiene reglas invisibles. Quien las ignora se convierte en presa.",
       "characterPreset": "dramatic",
       "blueprintMode": "EDITORIAL_PAPER",
-      "layoutPreset": "HOOK_COVER_QUESTION",
-      "visualCue": "Portada editorial 2.5D de El arte de gastar dinero de Morgan Housel con 3 píldoras GoodreadsBadgeCluster (Morgan Housel, Logo Goodreads ★ 4.15, +45K Lectores) y Pregunta Provocadora Subrayada Editorial.",
+      "layoutPreset": "HOOK_COVER_BATTLE",
+      "visualCue": "Portada editorial 2.5D de Las 48 leyes del poder de Robert Greene con stickers oficiales GoodreadsBadgeCluster y Duelo A vs B (Honestidad Ingenua vs Leyes del Poder).",
       "cameraTarget": {
         "x": 0,
         "y": 0,
@@ -39,69 +39,64 @@
       },
       "metrics": {
         "label": "VALORACIÓN GOODREADS",
-        "numericValue": 4.15,
+        "numericValue": 4.07,
         "unit": "★"
       },
       "bookVisualData": {
-        "provocativeQuestion": "¿Gastas tu dinero para disfrutar de tu vida o para impresionar a gente que ni siquiera conoces?",
-        "provocativeHighlight": "impresionar a gente",
-        "hookStat": "100%",
-        "hookNumericValue": 100,
-        "hookUnit": "%",
-        "hookLabel": "De tu bienestar depende de cómo gastas, no de cuánto acumulas",
-        "hookSource": "El Arte de Gastar Dinero · Morgan Housel",
+        "provocativeQuestion": "¿Crees que el talento basta o aprendes las reglas que mueven el mundo?",
+        "provocativeHighlight": "reglas que mueven",
+        "hookStat": "48",
+        "hookNumericValue": 48,
+        "hookUnit": "LEYES",
+        "hookLabel": "Para dominar el juego psicológico de la influencia y la autoridad",
+        "hookSource": "Las 48 Leyes del Poder · Robert Greene",
         "hookTriggerKeyword": [
-          "acumular",
-          "libre",
-          "dinero"
+          "honestidad",
+          "talento",
+          "triunfar"
         ],
         "battleTriggerKeyword": [
-          "habilidad",
-          "sabiduria",
-          "emocional"
+          "reglas",
+          "invisibles",
+          "presa"
         ],
-        "mythLabel": "Mito: Gasto de Estatus",
-        "mythSubtitle": "Comprar bienes visibles para impresionar a desconocidos",
-        "mythTag": "TRAMPA FINANCIERA",
-        "realityLabel": "Tesis: Comprar Libertad",
-        "realitySubtitle": "Usar el dinero para ganar control sobre tu propio tiempo",
-        "realityTag": "EL ARTE REAL (100%)",
-        "goodreadsRating": "★ 4.15",
-        "goodreadsReviews": "+45K lectores",
-        "rulerLabel": "256 PÁGINAS · +45K LECTORES EN GOODREADS",
-        "hookText": "¿Por qué acumular dinero no te hace sentir más libre?",
+        "goodreadsRating": "★ 4.07",
+        "goodreadsReviews": "+250K lectores",
+        "rulerLabel": "452 PÁGINAS · +250K LECTORES EN GOODREADS",
+        "hookText": "¿Crees que el talento basta para triunfar?",
         "hookHighlight": [
-          "acumular dinero",
-          "más libre"
+          "talento basta",
+          "para triunfar"
         ],
-        "duelALabel": "LO TÉCNICO",
-        "duelAValue": "GANAR DINERO",
+        "duelALabel": "EL MITO",
+        "duelAValue": "HONESTIDAD INGENUA",
         "duelATrigger": [
-          "ganar",
-          "habilidad"
+          "honestidad",
+          "talento",
+          "bastan"
         ],
-        "duelBLabel": "EL ARTE REAL",
-        "duelBValue": "SABER GASTARLO",
+        "duelBLabel": "LA REALIDAD",
+        "duelBValue": "LEYES DEL PODER",
         "duelBTrigger": [
-          "gastarlo",
-          "sabiduria",
-          "arte"
+          "poder",
+          "reglas",
+          "invisibles"
         ],
-        "duelBTag": "ARTE EMOCIONAL",
+        "duelBTag": "DOMINAR EL JUEGO",
         "duelTagTrigger": [
-          "emocional",
-          "domina"
+          "invisibles",
+          "presa"
         ]
       }
     },
     {
       "id": "scene-2",
-      "title": "EL CIRCUITO DEL ESTATUS",
-      "text": "La gran paradoja del gasto: [PAUSA 0.4s] casi todas las compras de lujo no buscan satisfacción propia, sino comprar la admiración de personas que ni siquiera conocemos.",
+      "title": "LA GRAVEDAD DEL PODER",
+      "text": "El poder es como la gravedad: opera aunque decidas ignorarlo. [PAUSA 0.4s] Fingir desinterés no te salva; dominar tus emociones y leer las intenciones ajenas es tu única defensa real.",
       "characterPreset": "narrator",
       "blueprintMode": "EDITORIAL_PAPER",
       "layoutPreset": "THESIS_LOOP_CIRCUIT",
-      "visualCue": "Circuito vectorial VectorLoopCircuit de 4 fases (Compra de Lujo ➔ Búsqueda de Envidia ➔ Admiración Falsa ➔ Vacío Emocional) con activación sincronizada a la voz y tarjeta en amarillo pálido #FEF9C3.",
+      "visualCue": "Circuito vectorial de 4 fases mostrando el ciclo de dominio del poder: ignorar el juego, fingir desinterés, leer intenciones y autocontrol emocional.",
       "cameraTarget": {
         "x": 1120,
         "y": 0,
@@ -109,86 +104,83 @@
         "rotateDeg": 0
       },
       "metrics": {
-        "label": "TRAMPA DEL ESTATUS",
-        "numericValue": 1,
-        "unit": "PARADOJA"
+        "label": "REGLAS CLAVE",
+        "numericValue": 48,
+        "unit": "LEYES"
       },
       "bookVisualData": {
         "hookTriggerKeyword": [
-          "gran",
-          "paradoja",
-          "gasto"
+          "poder",
+          "gravedad",
+          "emociones"
         ],
-        "growthMetric": "PARADOJA 01",
-        "growthFormula": "Lujo Visible ≠ Felicidad Real",
-        "formulaLabel": "PARADOJA · COMPRAR ADMIRACIÓN",
-        "loopSteps": [
-          "COMPRA DE LUJO",
-          "BÚSQUEDA DE ENVIDIA",
-          "ADMIRACIÓN FALSA",
-          "VACÍO EMOCIONAL"
-        ],
+        "growthMetric": "TESIS CENTRAL",
+        "growthFormula": "Autocontrol ➔ Dominio Estratégico",
+        "formulaLabel": "EL CIRCUITO DEL PODER",
         "circuitNodes": [
           {
-            "id": "luxury",
+            "id": "ingenuidad",
             "num": "01",
-            "label": "COMPRA DE LUJO",
-            "sublabel": "Gasto impulsado por imagen externa",
+            "label": "IGNORAR EL JUEGO",
+            "sublabel": "Creer que el entorno es desinteresado",
             "triggerKeyword": [
-              "compras",
-              "lujo"
+              "gravedad",
+              "opera",
+              "ignorarlo"
             ]
           },
           {
-            "id": "envy",
+            "id": "desinteres",
             "num": "02",
-            "label": "ENVIDIA AJENA",
-            "sublabel": "Confundir envidia con respeto",
+            "label": "FALSA VIRTUD",
+            "sublabel": "Fingir no jugar te vuelve vulnerable",
             "triggerKeyword": [
-              "satisfaccion",
-              "propia"
+              "fingir",
+              "desinteres",
+              "salva"
             ]
           },
           {
-            "id": "admiration",
+            "id": "autocontrol",
             "num": "03",
-            "label": "ADMIRACIÓN FALSA",
-            "sublabel": "La gente admira el objeto, no a ti",
+            "label": "AUTOCONTROL EMOCIONAL",
+            "sublabel": "Quien se enoja pierde la ventaja",
             "triggerKeyword": [
-              "admiracion",
-              "personas"
+              "dominar",
+              "emociones"
             ]
           },
           {
-            "id": "emptiness",
+            "id": "defensa",
             "num": "04",
-            "label": "VACÍO EMOCIONAL",
-            "sublabel": "La euforia material se evapora rápido",
+            "label": "LEER INTENCIONES",
+            "sublabel": "Anticipar jugadas antes de actuar",
             "triggerKeyword": [
-              "conocemos",
-              "siquiera"
+              "intenciones",
+              "ajenas",
+              "defensa"
             ]
           }
         ],
-        "centralQuote": "«Comprar cosas para impresionar a otros es la forma más rápida de quedarte sin dinero.»",
+        "centralQuote": "«Quien no domina sus emociones regala el control de su vida a los demás.»",
         "highlightWords": [
-          "admiración de personas",
-          "satisfacción propia"
+          "gravedad",
+          "dominar tus emociones"
         ],
-        "thesisHeadline": "EL CIRCUITO DEL ESTATUS",
+        "thesisHeadline": "LA GRAVEDAD DEL PODER",
         "thesisHighlight": [
-          "ESTATUS"
+          "GRAVEDAD"
         ]
       }
     },
     {
       "id": "scene-3",
-      "title": "TU MARCADOR INTERNO",
-      "text": "La regla de oro de Housel: [PAUSA 0.4s] cambia tu marcador externo por un baremo interno. [PAUSA 0.4s] El mayor dividendo que paga el dinero no son los lujos, es la autonomía total sobre tu tiempo.",
+      "title": "NUNCA ECLIPSES AL MAESTRO",
+      "text": "Aplica la regla de oro: nunca eclipses a tu superior. [PAUSA 0.4s] Demostrar brillantez despierta envidia y miedo. Haz que los que están arriba brillen para consolidar tu propia posición.",
       "characterPreset": "expert",
       "blueprintMode": "EDITORIAL_PAPER",
       "layoutPreset": "RULE_SUBSTITUTION_DIAGRAM",
-      "visualCue": "Tarjeta de Cita Subrayada (KineticCard) con contraste radical: sustitución del marcador externo de estatus por el dividendo de autonomía y tiempo.",
+      "visualCue": "Diagrama de sustitución tachando el error de opacar al jefe y mostrando la regla de oro: hacer brillar a tus superiores para garantizar tu ascenso.",
       "cameraTarget": {
         "x": 1120,
         "y": 1980,
@@ -196,103 +188,54 @@
         "rotateDeg": 0
       },
       "metrics": {
-        "label": "DIVIDENDO DE VIDA",
-        "numericValue": 100,
-        "unit": "% AUTONOMÍA"
+        "label": "LEY NÚMERO UNO",
+        "numericValue": 1,
+        "unit": "LEY"
       },
       "bookVisualData": {
-        "mythLabel": "Marcador Externo de Estatus",
-        "mythSubtitle": "Vivir endeudado para validar tu valía frente al juicio de terceros",
-        "mythTag": "ESCLAVITUD MODERNA",
-        "realityLabel": "Marcador Interno de Autonomía",
-        "realitySubtitle": "Comprar tiempo libre, tranquilidad financiera e independencia",
-        "realityTag": "DIVIDENDO SUPREMO (100%)",
-        "circuitNodes": [
-          {
-            "id": "marcador_ext",
-            "num": "01",
-            "label": "MARCADOR EXTERNO",
-            "sublabel": "Estatus y validación ajena",
-            "triggerKeyword": [
-              "marcador",
-              "externo"
-            ]
-          },
-          {
-            "id": "baremo_int",
-            "num": "02",
-            "label": "BAREMO INTERNO",
-            "sublabel": "Tus valores auténticos",
-            "triggerKeyword": [
-              "baremo",
-              "interno"
-            ]
-          },
-          {
-            "id": "dividendo",
-            "num": "03",
-            "label": "MAYOR DIVIDENDO",
-            "sublabel": "No cosas materiales",
-            "triggerKeyword": [
-              "dividendo",
-              "paga"
-            ]
-          },
-          {
-            "id": "autonomia",
-            "num": "04",
-            "label": "AUTONOMÍA TOTAL",
-            "sublabel": "Dueño absoluto de tu tiempo",
-            "triggerKeyword": [
-              "autonomia",
-              "tiempo"
-            ]
-          }
-        ],
-        "centralQuote": "El mayor dividendo que paga el dinero es la capacidad de levantarte cada mañana y decidir qué hacer con tu día.",
-        "highlightWords": [
-          "marcador externo por un baremo interno",
-          "autonomía total sobre tu tiempo"
-        ],
-        "formulaLabel": "Riqueza Invisible > Lujo Visible",
-        "formulaSublabel": "El valor del dinero se mide en horas libres, no en posesiones",
-        "swapFrom": "MARCADOR EXTERNO",
+        "swapFrom": "OPACAR AL JEFE",
         "swapFromTrigger": [
-          "marcador",
-          "externo"
+          "demostrar",
+          "brillantez",
+          "envidia"
         ],
-        "swapTo": "BAREMO INTERNO",
+        "swapTo": "HACERLOS BRILLAR",
         "swapToTrigger": [
-          "baremo",
-          "interno"
+          "arriba",
+          "brillen",
+          "consolidar"
         ],
-        "payoffLead": "EL MAYOR DIVIDENDO",
+        "payoffLead": "LA LEY FUNDAMENTAL",
         "payoffLeadTrigger": [
-          "dividendo",
-          "paga"
+          "aplica",
+          "regla",
+          "oro"
         ],
-        "payoffOld": "LUJOS",
+        "payoffOld": "ALARDE DE BRILLANTEZ",
         "payoffOldTrigger": [
-          "lujos"
+          "eclipses",
+          "superior"
         ],
-        "payoffNew": "AUTONOMÍA TOTAL",
+        "payoffNew": "LEY 01: ELOGIO SUTIL",
         "payoffNewTrigger": [
-          "autonomia"
+          "arriba",
+          "brillen"
         ],
-        "payoffTail": "DUEÑO DE TU TIEMPO",
+        "payoffTail": "SEGURIDAD Y ASCENSO TÁCTICO",
         "payoffTailTrigger": [
-          "tiempo"
+          "propia",
+          "posicion"
         ]
       }
     },
     {
       "id": "scene-4",
-      "title": "TRES LEYES DEL GASTO INTELIGENTE",
-      "text": "Aplica tres leyes fundamentales: [PAUSA 0.4s] uno, compra tiempo eliminando tareas que odias. [PAUSA 0.4s] Dos, no generes deuda social para encajar. [PAUSA 0.4s] Y tres, protege tus placeres simples.",
+      "title": "TRES LEYES ESENCIALES",
+      "text": "Aplica tres leyes clave: [PAUSA 0.4s] primera, di siempre menos de lo necesario; segunda, protege tu reputación como un tesoro; [PAUSA 0.4s] y tercera, actúa siempre con absoluta audacia.",
       "characterPreset": "narrator",
       "blueprintMode": "EDITORIAL_PAPER",
       "layoutPreset": "LAWS_DOMINO_CASCADE",
-      "visualCue": "Cascada vertical de 3 Leyes en tarjetas amarillo pálido (#FEF9C3) con barras de impacto y flujo descendente de libertad financiera.",
+      "visualCue": "Cascada vertical descendente de 3 leyes en tarjetas amarillo pálido unidas por prismas triangulares: 1. Discreción verbal (Ley 4), 2. Reputación blindada (Ley 5), 3. Audacia total (Ley 28).",
       "cameraTarget": {
         "x": 0,
         "y": 1980,
@@ -300,73 +243,52 @@
         "rotateDeg": 0
       },
       "metrics": {
-        "label": "LEYES DEL GASTO",
+        "label": "LEYES MAESTRAS",
         "numericValue": 3,
         "unit": "LEYES"
       },
       "bookVisualData": {
-        "dominoTriggerKeyword": [
-          "leyes",
-          "fundamentales",
-          "aplica"
-        ],
         "actionableLaws": [
           {
             "index": "01",
-            "title": "COMPRA TIEMPO",
-            "rule": "Paga para eliminar fricción y delegar obligaciones que consumen tu energía vital.",
+            "title": "DISCRECIÓN TOTAL",
+            "rule": "Di siempre menos de lo necesario para mantener la ventaja.",
             "impactPct": 96,
             "highlight": true,
             "triggerKeyword": [
-              "tiempo",
-              "eliminando",
-              "odias"
+              "primera",
+              "menos",
+              "necesario"
             ],
-            "shortRule": "Paga para eliminar tareas que odias"
+            "shortRule": "Di siempre menos de lo necesario"
           },
           {
             "index": "02",
-            "title": "CERO DEUDA SOCIAL",
-            "rule": "Nunca compres cosas caras para mantener apariencias con amigos o vecinos.",
-            "impactPct": 93,
-            "highlight": false,
+            "title": "BLINDA TU REPUTACIÓN",
+            "rule": "Tu reputación es el pilar de tu influencia; defiéndela sin tregua.",
+            "impactPct": 99,
+            "highlight": true,
             "triggerKeyword": [
-              "deuda",
-              "social",
-              "encajar"
+              "segunda",
+              "protege",
+              "reputacion",
+              "tesoro"
             ],
-            "shortRule": "Cero deuda para encajar o aparentar"
+            "shortRule": "Protege tu reputación como un tesoro"
           },
           {
             "index": "03",
-            "title": "PROTEGE PLACERES SIMPLES",
-            "rule": "Evita que la inflación de estilo de vida destruya tu capacidad de disfrutar lo cotidiano.",
-            "impactPct": 95,
-            "highlight": true,
+            "title": "ENTRA CON AUDACIA",
+            "rule": "Cualquier error por timidez se repara con absoluta audacia.",
+            "impactPct": 94,
+            "highlight": false,
             "triggerKeyword": [
-              "protege",
-              "placeres",
-              "simples"
+              "tercera",
+              "actua",
+              "absoluta",
+              "audacia"
             ],
-            "shortRule": "Protege tus placeres cotidianos simples"
-          }
-        ],
-        "dominoSteps": [
-          {
-            "label": "Compra Tiempo",
-            "sub": "Ley 1"
-          },
-          {
-            "label": "Cero Deuda Social",
-            "sub": "Ley 2"
-          },
-          {
-            "label": "Placeres Simples",
-            "sub": "Ley 3"
-          },
-          {
-            "label": "Libertad Real",
-            "sub": "Meta"
+            "shortRule": "Actúa siempre con absoluta audacia"
           }
         ]
       }
@@ -374,11 +296,11 @@
     {
       "id": "scene-5",
       "title": "EL MANIFIESTO",
-      "text": "Ser rico es tener dinero; ser libre es que el dinero no te controle. [PAUSA 0.4s] El arte de gastar dinero, de Morgan Housel. [PAUSA 0.4s] Guarda este resumen para cuando la presión social te empuje a gastar y sigue la cuenta de en un minuto para dominar un libro clave cada día.",
+      "text": "Quien no domina sus emociones regala el control de su vida. [PAUSA 0.4s] Las cuarenta y ocho leyes del poder, de Robert Greene. [PAUSA 0.4s] Guarda este resumen para cuando sientas que intentan manipularte y sigue la cuenta de En Un Minuto punto es para dominar un libro clave cada día.",
       "characterPreset": "conversational",
       "blueprintMode": "EDITORIAL_PAPER",
       "layoutPreset": "CTA_MANIFESTO_GOODREADS",
-      "visualCue": "Cita Manifiesto (KineticCard) + Ficha oficial Goodreads con Mini-Portada + CtaEndCard con Cronómetro Hero y doble llamada a la acción (guardado psicológico + promesa de marca para conseguir seguidores).",
+      "visualCue": "Cita Manifiesto + Ficha oficial Goodreads con Mini-Portada + CtaEndCard limpia con anclaje de guardado y cronómetro Hero acoplado.",
       "cameraTarget": {
         "x": 560,
         "y": 3960,
@@ -387,22 +309,23 @@
       },
       "metrics": {
         "label": "VALORACIÓN",
-        "numericValue": 4.15,
+        "numericValue": 4.07,
         "unit": "★"
       },
       "bookVisualData": {
-        "identityQuote": "Ser rico es tener dinero; ser libre es que el dinero no te controle.",
+        "identityQuote": "Quien no domina sus emociones regala el control de su vida a los demás.",
         "highlightWords": [
-          "el dinero no te controle"
+          "domina sus emociones",
+          "control de su vida"
         ],
-        "ctaPrompt": "Para reflexionar tras guardar el resumen: ¿cuál es ese gasto que hiciste solo por aparentar y del que hoy te arrepientes?",
-        "ctaActionText": "GUARDA ESTE RESUMEN PARA CUANDO LA PRESIÓN SOCIAL TE EMPUJE A GASTAR",
+        "ctaPrompt": "Para reflexionar: ¿cuál de las 48 leyes del poder has visto cumplirse en tu propio entorno?",
+        "ctaActionText": "GUARDA ESTE RESUMEN PARA CUANDO SIENTAS QUE TE MANIPULAN",
         "brandPromise": "1 libro clave cada día en 60s",
         "showCommunityQuestion": true,
         "ctaHandle": "@en1minuto.es",
-        "verdictBadge": "NUEVO BESTSELLER · MORGAN HOUSEL",
-        "ctaHeadline": "GUARDA ESTE RESUMEN PARA CUANDO LA PRESIÓN SOCIAL TE EMPUJE A GASTAR",
-        "communityQuestion": "¿Qué gasto hiciste solo por aparentar y del que hoy te arrepientes?"
+        "verdictBadge": "CLÁSICO · ROBERT GREENE",
+        "ctaHeadline": "GUARDA ESTE RESUMEN PARA CUANDO SIENTAS QUE TE MANIPULAN",
+        "communityQuestion": "¿Qué ley del poder has visto cumplirse en tu entorno?"
       }
     }
   ],

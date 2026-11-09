@@ -24,8 +24,8 @@ export interface Scene4Props {
   wordTimestamps?: WordTimestamp[];
 }
 
-const CARD_H = 320;
-const GAP_H = 75;
+const CARD_H = 305;
+const GAP_H = 64;
 const ACCENTS = [BIG.accent, BIG.amber, BIG.green];
 
 /**

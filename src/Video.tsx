@@ -1,10 +1,8 @@
-﻿import React, { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import {
   AbsoluteFill,
   Audio,
   Sequence,
-  interpolate,
-  spring,
   staticFile,
   useCurrentFrame,
   useVideoConfig,
@@ -21,7 +19,7 @@ import type {
 } from './data/schema';
 import { CameraRig, type CameraKeyframe } from './components/CameraRig';
 import { DynamicCaptions } from './components/DynamicCaptions';
-import { OneMinuteStopwatch } from './components/OneMinuteStopwatch';
+import { LeoAvatar, type EmotionKeyframe } from './components/character';
 import { Scene1 } from './scenes/Scene1';
 import { Scene2 } from './scenes/Scene2';
 import { Scene3 } from './scenes/Scene3';
@@ -31,10 +29,9 @@ import {
   BLUEPRINT_THEMES,
   BRAND_CONFIG,
   type BlueprintModeId,
-  CLAMP_EXTRAPOLATION,
   SAFE_ZONE,
 } from './theme/motion';
-import { CTA_LAYOUT } from './components/big';
+import { HOST_LAYOUT } from './components/big';
 
 const manifest = audioManifestJson as AudioManifest;
 const scenesJson = scenesJsonRaw as unknown as ScenesFile;
@@ -56,7 +53,7 @@ export function computeSceneTimeline(
   audioManifest: AudioManifest
 ): ComputedSceneWindow[] {
   const overlap = audioManifest.crossDissolveFrames || 10;
-  // 12 fotogramas (400ms) de pre-roll inicial para evitar que se corte la primera sÃ­laba ("Â¿Por...")
+  // 12 fotogramas (400ms) de pre-roll inicial para evitar que se corte la primera sílaba
   let cursor = 12;
 
   return audioManifest.scenes.map((scene, index) => {
@@ -86,7 +83,7 @@ export const Video: React.FC<VideoProps> = ({
 
   /**
    * Stream unificado de palabras a nivel global (arquitectura Leo + @resultaaquee):
-   * evita cortes o solapamientos de subtÃ­tulos durante las transiciones entre escenas.
+   * evita cortes o solapamientos de subtítulos durante las transiciones entre escenas.
    */
   const globalWordTimestamps: WordTimestamp[] = useMemo(() => {
     const merged: WordTimestamp[] = [];
@@ -106,7 +103,24 @@ export const Video: React.FC<VideoProps> = ({
   }, [timeline, fps]);
 
   /**
-   * Keyframes de cÃ¡mara continua sincronizados al fotograma de inicio de cada escena en info.json
+   * Cronograma emocional C1 continuo para Leo sincronizado con las 5 escenas
+   */
+  const leoEmotionSchedule: EmotionKeyframe[] = useMemo(() => {
+    const emotions: Array<EmotionKeyframe['emotion']> = [
+      'curious',
+      'explaining',
+      'thinking',
+      'explaining',
+      'happy',
+    ];
+    return timeline.map((sceneWin, idx) => ({
+      startSec: idx === 0 ? 0 : sceneWin.from / fps,
+      emotion: emotions[idx] ?? 'explaining',
+    }));
+  }, [timeline, fps]);
+
+  /**
+   * Keyframes de cámara continua sincronizados al fotograma de inicio de cada escena en info.json
    */
   const cameraKeyframes: CameraKeyframe[] = useMemo(() => {
     const defaultCoords = [
@@ -135,7 +149,7 @@ export const Video: React.FC<VideoProps> = ({
   }, [timeline]);
 
   /**
-   * Modo de superficie editorial constante en todo el vÃ­deo (sin cambios de color de fondo)
+   * Modo de superficie editorial constante en todo el vídeo (sin cambios de color de fondo)
    */
   const activeBlueprintMode: BlueprintModeId = 'EDITORIAL_PAPER';
 
@@ -163,10 +177,10 @@ export const Video: React.FC<VideoProps> = ({
   }, [globalWordTimestamps]);
 
   /**
-   * Curva de Audio Ducking suave con fisica de ataque y descompresion:
+   * Curva de Audio Ducking suave con física de ataque y descompresión:
    * - Attack: 6 frames antes del inicio de la voz (bajada suave a duckedVolume)
-   * - Hold: duckedVolume constante durante la locucion continua
-   * - Release: 10 frames despues de concluir el bloque de voz (subida suave a volume)
+   * - Hold: duckedVolume constante durante la locución continua
+   * - Release: 10 frames después de concluir el bloque de voz (subida suave a volume)
    */
   const bgmVolume = useMemo(() => {
     const maxVol = scenesJson.music?.volume ?? 0.55;
@@ -191,6 +205,10 @@ export const Video: React.FC<VideoProps> = ({
     return maxVol;
   }, [speechIntervals, frame, scenesJson.music]);
 
+  const videoProgress =
+    totalDurationFrames > 1
+      ? Math.min(1, Math.max(0, frame / (totalDurationFrames - 1)))
+      : 0;
 
   return (
     <AbsoluteFill style={{ backgroundColor: surfaceColor }}>
@@ -229,7 +247,7 @@ export const Video: React.FC<VideoProps> = ({
         blueprintMode={activeBlueprintMode}
         rackFocusBlur={true}
       >
-        {/* Conectores de ingenierÃ­a editorial entre los 5 cuadrantes del lienzo continuo */}
+        {/* Conectores de ingeniería editorial entre los 5 cuadrantes del lienzo continuo */}
         <svg
           width={2400}
           height={6000}
@@ -372,7 +390,7 @@ export const Video: React.FC<VideoProps> = ({
             position: 'absolute',
             top: 0,
             left: 0,
-            width: `${Math.min(100, Math.max(0, (frame / (useVideoConfig().durationInFrames || 1677)) * 100))}%`,
+            width: `${videoProgress * 100}%`,
             height: BRAND_CONFIG.progressBarHeight,
             backgroundColor: BRAND_CONFIG.progressBarColor,
             zIndex: 100,
@@ -381,76 +399,7 @@ export const Video: React.FC<VideoProps> = ({
         />
       )}
 
-      {/* Reloj de 1 Minuto: Corre en el footer y asciende suave y tempranamente acoplÃ¡ndose a CtaEndCard */}
-      {(() => {
-        const scene5Start = timeline[4]?.from ?? 1508;
-        // Comienza la transiciÃ³n del reloj con anticipaciÃ³n suficiente (frame +170 de escena 5)
-        // para un vuelo ultra suave de 82 frames (~2.7 segundos) que concluye exactamente cuando
-        // entra la locuciÃ³n "Guarda este resumen" en frame +252.
-        const ctaFlightTrigger = scene5Start + 170;
-
-        // Suavizado cÃºbico continuo para mÃ¡xima fluidez orgÃ¡nica
-        const flightRaw = interpolate(
-          frame,
-          [ctaFlightTrigger, ctaFlightTrigger + 82],
-          [0, 1],
-          CLAMP_EXTRAPOLATION
-        );
-        const smoothFlight =
-          flightRaw < 0.5
-            ? 4 * flightRaw * flightRaw * flightRaw
-            : 1 - Math.pow(-2 * flightRaw + 2, 3) / 2;
-
-        // Coordenada Y: desde el footer (top: 1788px) hasta la ranura de CtaEndCard (top: 798px)
-        const clockY = interpolate(
-          smoothFlight,
-          [0, 1],
-          [1788, CTA_LAYOUT.clockTop],
-          CLAMP_EXTRAPOLATION
-        );
-
-        // TamaÃ±o del reloj: se expande con calma de 84px a 110px hero
-        const clockSize = interpolate(
-          smoothFlight,
-          [0, 1],
-          [84, CTA_LAYOUT.clockSize],
-          CLAMP_EXTRAPOLATION
-        );
-
-        // Modo: transiciona de 'header' a 'hero' cuando la animaciÃ³n supera el 35%
-        const clockMode = smoothFlight > 0.35 ? 'hero' : 'header';
-
-        return (
-          <div
-            style={{
-              position: 'absolute',
-              top: clockY,
-              left: 0,
-              right: 0,
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              zIndex: 100,
-              pointerEvents: 'none',
-            }}
-          >
-            <OneMinuteStopwatch
-              size={Math.round(clockSize)}
-              currentFrame={frame}
-              totalDurationInFrames={totalDurationFrames}
-              mode={clockMode}
-              style={{
-                filter:
-                  smoothFlight > 0.05
-                    ? 'drop-shadow(0 12px 28px rgba(217, 78, 52, 0.38))'
-                    : undefined,
-              }}
-            />
-          </div>
-        );
-      })()}
-
-      {/* SubtÃ­tulos en el tercio inferior para no interferir con titulares ni animaciones */}
+      {/* Subtítulos encima del círculo del avatar (Opción A: Y = 1305..1410px) */}
       {enableCaptions ? (
         <DynamicCaptions
           wordTimestamps={globalWordTimestamps}
@@ -461,7 +410,33 @@ export const Video: React.FC<VideoProps> = ({
         />
       ) : null}
 
-      {/* Pista opcional de mÃºsica de fondo con curva de audio ducking automÃ¡tica */}
+      {/* Anfitrión Leo con Perfil Temporizador Circular Estilo 1 (Chrono-Dot, Y = 1445..1685px) */}
+      <div
+        style={{
+          position: 'absolute',
+          top: HOST_LAYOUT.avatarTop,
+          left: 0,
+          right: 0,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 90,
+          pointerEvents: 'none',
+        }}
+      >
+        <LeoAvatar
+          frame={frame}
+          wordTimestamps={globalWordTimestamps}
+          emotionSchedule={leoEmotionSchedule}
+          size={HOST_LAYOUT.avatarSize}
+          variant="badge"
+          showProgressRing={true}
+          progress={videoProgress}
+          ringStyle="chrono-dot"
+        />
+      </div>
+
+      {/* Pista opcional de música de fondo con curva de audio ducking automática */}
       {enableBackgroundMusic && (manifest.backgroundMusicFile || scenesJson.music?.file || true) ? (
         <Audio
           src={staticFile(manifest.backgroundMusicFile || scenesJson.music?.file || 'audio/music/vibing-over-venus.mp3')}
@@ -469,7 +444,7 @@ export const Video: React.FC<VideoProps> = ({
         />
       ) : null}
 
-      {/* LÃ­nea guÃ­a sutil de Zona Segura Vertical (288px inferiores reservados para UI 9:16) */}
+      {/* Línea guía sutil de Zona Segura Vertical (288px inferiores reservados para UI 9:16) */}
       <div
         style={{
           position: 'absolute',

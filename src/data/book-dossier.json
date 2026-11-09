@@ -1,65 +1,84 @@
 {
-  "generatedAt": "2026-10-28T13:25:00.000Z",
-  "query": "El arte de gastar dinero",
-  "slug": "el-arte-de-gastar-dinero",
+  "generatedAt": "2026-11-09T12:57:53.746Z",
+  "query": "Las 48 leyes del poder",
+  "slug": "las-48-leyes-del-poder",
   "bookMetadata": {
-    "title": "El arte de gastar dinero",
-    "originalTitle": "The Art of Spending Money: Simple Choices for a Richer Life",
-    "author": "Morgan Housel",
-    "publishYear": 2025,
-    "pages": 256,
-    "readingTimeHours": 3.8,
-    "rating": 4.15,
-    "ratingsCount": "+45K",
-    "coverImage": "assets/books/el-arte-de-gastar-dinero-cover.jpg",
-    "fallbackCoverImage": "assets/books/el-arte-de-gastar-dinero-cover.svg",
-    "coverSource": "penguinrandomhouse-hd",
-    "categoryTag": "FINANZAS · PSICOLOGÍA",
-    "goodreadsUrl": "https://www.goodreads.com/book/show/231148075-the-art-of-spending-money"
+    "title": "Las 48 leyes del poder",
+    "originalTitle": "Las 48 leyes del poder",
+    "author": "Robert Greene",
+    "publishYear": 1998,
+    "pages": 452,
+    "readingTimeHours": 4.2,
+    "rating": 4.07,
+    "ratingsCount": "0.25M",
+    "coverImage": "assets/books/las-48-leyes-del-poder-cover.jpg",
+    "fallbackCoverImage": "assets/books/las-48-leyes-del-poder-cover.svg",
+    "coverSource": "goodreads-hd",
+    "categoryTag": "NO FICCIÓN · ENSAYO",
+    "goodreadsUrl": "https://www.goodreads.com/book/show/1303.The_48_Laws_of_Power?ref=rae_3"
   },
-  "synopsisCondensed": "Morgan Housel desmantela la obsesión exclusiva por acumular para abordar la gran paradoja financiera: ganar dinero es una habilidad técnica, pero gastarlo para conseguir verdadera felicidad, autonomía y serenidad es un arte psicológico que casi nadie domina.",
+  "synopsisCondensed": "El libro contiene 48 capítulos, uno dedicado a cada ley, y cada ley posee su propia transgresión, observación y regresión. Las 48 leyes del poder —título en inglés: The 48 Laws of Power— es el primer libro del escritor estadounidense Robert Greene, publicado originalmente en 1998. Las 48 leyes del poder fue un éxito comercial internacional, vendiendo 1.2 millones de copias en Estados Unidos y ha sido traducido a 24 idiomas. Some laws teach the need for prudence (“Law 1: Never Outshine the Master”), others teach the value of confidence (“Law 28: Enter Action with Boldness”), and many recommend absolute self-preservation (“Law 15: Crush Your Enemy Totally”).",
   "mythVsReality": {
     "mythLabel": "MITO",
     "realityLabel": "TESIS",
-    "mythExplanation": "Gastar en lujo visible demuestra éxito y genera satisfacción duradera.",
-    "realityExplanation": "El mayor dividendo del dinero es invisible: comprar tiempo, autonomía y paz mental."
+    "mythExplanation": "Enfoque tradicional basado en esfuerzo aislado",
+    "realityExplanation": "Sistema estructurado validado por el autor"
   },
   "mathematicalProof": {
     "dailyGainPct": 1,
     "annualMultiplier": 37.78,
     "declineMultiplier": 0.03,
-    "formulaLabel": "Autonomía > Estatus"
+    "formulaLabel": "1.01^365 = 37.78x"
   },
   "verifiedQuotes": [
-    "El mayor dividendo que paga el dinero es la capacidad de controlar tu propio tiempo.",
-    "Gastar dinero para impresionar a gente que no te importa es la forma más rápida de quedarte sin dinero."
+    {
+      "text": "Keep your friends for friendship, but work with the skilled and competent\" &#8213;",
+      "highlightPhrases": [
+        "Keep your friends for"
+      ],
+      "chapter": "Cita Verificada #1 · Goodreads"
+    },
+    {
+      "text": "Do not leave your reputation to chance or gossip; it is your life's artwork, and you must craft it, hone it, and display it with the care of an artist.\" &#8213;",
+      "highlightPhrases": [
+        "Do not leave your"
+      ],
+      "chapter": "Cita Verificada #2 · Goodreads"
+    },
+    {
+      "text": "Many a serious thinker has been produced in prisons, where we have nothing to do but think.\" &#8213;",
+      "highlightPhrases": [
+        "Many a serious thinker"
+      ],
+      "chapter": "Cita Verificada #3 · Goodreads"
+    }
   ],
   "actionableLaws": [
     {
-      "index": "LEY 01",
-      "title": "Marcador Interno",
-      "rule": "Gasta según lo que te aporta calma a ti, nunca para impresionar a los demás.",
-      "impactPct": 92,
+      "index": "REGLA 01",
+      "title": "Principio Estructural",
+      "rule": "Diseña el entorno para que la decisión correcta sea automática.",
+      "impactPct": 90,
       "highlight": true
     },
     {
-      "index": "LEY 02",
-      "title": "Compra de Tiempo",
-      "rule": "Usa tu dinero para eliminar tareas que odias y ganar horas de libertad.",
-      "impactPct": 95,
-      "highlight": true
-    },
-    {
-      "index": "LEY 03",
-      "title": "Freno a la Inflación de Vida",
-      "rule": "Protege los placeres simples antes de que el lujo se vuelva tu nueva obligación.",
-      "impactPct": 89,
+      "index": "REGLA 02",
+      "title": "Fricción Mínima",
+      "rule": "Reduce los pasos de activación a menos de dos minutos.",
+      "impactPct": 88,
       "highlight": false
+    },
+    {
+      "index": "REGLA 03",
+      "title": "Retroalimentación Inmediata",
+      "rule": "Registra cada ejecución para consolidar la identidad del hábito.",
+      "impactPct": 94,
+      "highlight": true
     }
   ],
   "tokenOptimizationStats": {
-    "rawScrapedTokensApprox": 8400,
-    "normalizedDossierTokens": 650,
-    "savingsPercentage": 92.3
+    "rawScrapedTokensApprox": 8636,
+    "normalizedDossierTokens": 840,
+    "savingsPercentage": 90.3
   }
 }

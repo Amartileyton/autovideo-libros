@@ -49,10 +49,14 @@ async function main() {
   const platformsArg = (params.platforms || 'yt,ig').toLowerCase();
   const targetPlatforms = platformsArg.split(',').map((p) => p.trim());
 
+  const dossierSlug = fs.existsSync(path.join(ROOT_DIR, 'src', 'data', 'book-dossier.json'))
+    ? JSON.parse(fs.readFileSync(path.join(ROOT_DIR, 'src', 'data', 'book-dossier.json'), 'utf8')).slug
+    : null;
+  const slugPath = dossierSlug ? path.join(ROOT_DIR, 'out', `${dossierSlug}.mp4`) : null;
   const videoPath =
     params.video ??
-    (fs.existsSync(path.join(ROOT_DIR, 'out', 'el-arte-de-gastar-dinero-big.mp4'))
-      ? path.join(ROOT_DIR, 'out', 'el-arte-de-gastar-dinero-big.mp4')
+    ((slugPath && fs.existsSync(slugPath))
+      ? slugPath
       : path.join(ROOT_DIR, 'out', 'video.mp4'));
 
   if (!fs.existsSync(videoPath)) {

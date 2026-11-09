@@ -176,14 +176,14 @@ export const DynamicCaptions: React.FC<DynamicCaptionsProps> = ({
         left: SAFE_ZONE.horizontalPaddingPx,
         right: SAFE_ZONE.horizontalPaddingPx,
         ...(placement === 'lower'
-          ? { bottom: 165 }
+          ? { top: 1305 }
           : {
               top:
                 placement === 'upper'
                   ? SAFE_ZONE.upperThirdCaptionY
                   : 1140,
             }),
-        minHeight: 110,
+        minHeight: 105,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',

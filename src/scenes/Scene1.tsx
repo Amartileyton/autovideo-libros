@@ -95,15 +95,21 @@ export const Scene1: React.FC<Scene1Props> = ({
     [wordTimestamps, visualData?.duelTagTrigger, duelBStart]
   );
 
-  // El gancho se compacta al terminar de hablarse (reflujo controlado, determinista)
+  // El gancho se compacta y sube a la cabecera al terminar de hablarse (reflujo controlado, determinista)
   const hookFont = interpolate(local, [hookEnd, hookEnd + 20], [FS.hero, FS.title], CLAMP_EXTRAPOLATION);
+  const hookTop = interpolate(
+    local,
+    [hookEnd - 2, hookEnd + 18],
+    [340, BIG.contentTop],
+    CLAMP_EXTRAPOLATION
+  );
 
   const coverExit = duelAStart - 6;
 
   return (
     <SceneFrame canvasOffsetX={canvasOffsetX} canvasOffsetY={canvasOffsetY}>
       {/* 1. GANCHO: visible desde el primer fotograma (tarjeta ya asentada, texto en karaoke) */}
-      <div style={{ position: 'absolute', top: BIG.contentTop, left: BIG.sideMargin, right: BIG.sideMargin }}>
+      <div style={{ position: 'absolute', top: hookTop, left: BIG.sideMargin, right: BIG.sideMargin }}>
         <PaleCard frame={local} enterFrame={-30} style={{ padding: '34px 40px' }}>
           <KineticWords
             tokens={hookTokens}
@@ -119,13 +125,13 @@ export const Scene1: React.FC<Scene1Props> = ({
       <div
         style={{
           position: 'absolute',
-          top: 450,
+          top: 370,
           left: BIG.sideMargin,
           right: BIG.sideMargin,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          gap: 20,
+          gap: 18,
           opacity: interpolate(local, [coverExit, coverExit + 10], [1, 0], CLAMP_EXTRAPOLATION),
         }}
       >
@@ -138,7 +144,7 @@ export const Scene1: React.FC<Scene1Props> = ({
           borderColor="transparent"
           style={{ padding: 0, boxShadow: 'none', borderRadius: 0 }}
         >
-          <BookCover bookMetadata={bookMetadata} width={380} height={560} borderRadius={18} variant="hero" />
+          <BookCover bookMetadata={bookMetadata} width={350} height={515} borderRadius={18} variant="hero" />
         </PaleCard>
         <BadgeStickers
           frame={local}
@@ -155,7 +161,7 @@ export const Scene1: React.FC<Scene1Props> = ({
       <div
         style={{
           position: 'absolute',
-          top: 470,
+          top: 430,
           left: BIG.sideMargin,
           right: BIG.sideMargin,
           display: 'flex',

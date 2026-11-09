@@ -64,11 +64,14 @@ export const Scene5: React.FC<Scene5Props> = ({
   const t = useMemo(() => {
     const f = (kw: string | string[], fb: number, min = 0) =>
       findKeywordFrameWindow(wordTimestamps, kw, fb, fb + 30, min).startFrame;
-    const bookT = Math.max(0, f(['arte'], 150, 100) - 8);
-    const ctaT = f(['guarda'], 250, bookT + 20);
-    const followT = f(['sigue'], 365, ctaT + 40);
-    const promiseT = f(['minuto'], 390, followT);
-    const questionT = f(['dominar'], 436, promiseT);
+    const bookT = Math.max(
+      0,
+      f(['cuarenta', 'leyes', 'poder', 'robert', 'greene', 'libro', 'arte'], 120, 90) - 8
+    );
+    const ctaT = f(['guarda', 'resumen'], 220, bookT + 20);
+    const followT = f(['sigue', 'cuenta'], 320, ctaT + 40);
+    const promiseT = f(['minuto'], 360, followT);
+    const questionT = f(['dominar', 'libro', 'clave'], 410, promiseT);
     return { bookT, ctaT, followT, promiseT, questionT };
   }, [wordTimestamps]);
 
@@ -96,22 +99,21 @@ export const Scene5: React.FC<Scene5Props> = ({
         </PaleCard>
       </div>
 
-      {/* 2. Ficha del libro (se retira al entrar el CTA para dar paso a Leo) */}
-      <div style={{ position: 'absolute', top: 330, left: BIG.sideMargin, right: BIG.sideMargin }}>
+      {/* 2. Ficha del libro (permanece visible encima del CTA) */}
+      <div style={{ position: 'absolute', top: 325, left: BIG.sideMargin, right: BIG.sideMargin }}>
         <PaleCard
           frame={local}
           enterFrame={t.bookT}
-          exitFrame={t.ctaT - 8}
           from="left"
-          style={{ padding: '24px 30px', display: 'flex', gap: 28, alignItems: 'center' }}
+          style={{ padding: '20px 28px', display: 'flex', gap: 26, alignItems: 'center' }}
         >
-          <BookCover bookMetadata={bookMetadata} width={220} height={330} borderRadius={14} variant="hero" />
+          <BookCover bookMetadata={bookMetadata} width={155} height={232} borderRadius={12} variant="hero" />
           <div style={{ flex: 1 }}>
             <div
               style={{
                 fontFamily: BIG.font,
                 fontWeight: 800,
-                fontSize: 48,
+                fontSize: 44,
                 lineHeight: 1.05,
                 letterSpacing: '-0.02em',
                 color: BIG.ink,
@@ -123,9 +125,9 @@ export const Scene5: React.FC<Scene5Props> = ({
               style={{
                 fontFamily: BIG.font,
                 fontWeight: 700,
-                fontSize: 34,
+                fontSize: 32,
                 color: BIG.muted,
-                marginTop: 10,
+                marginTop: 8,
               }}
             >
               {bookMetadata?.author}
@@ -136,14 +138,14 @@ export const Scene5: React.FC<Scene5Props> = ({
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: 8,
-                  marginTop: 18,
+                  marginTop: 14,
                   backgroundColor: BIG.ink,
                   color: BIG.card,
                   borderRadius: 14,
-                  padding: '6px 18px',
+                  padding: '5px 16px',
                   fontFamily: BIG.font,
                   fontWeight: 800,
-                  fontSize: 36,
+                  fontSize: 34,
                 }}
               >
                 <span style={{ color: '#F59E0B' }}>★</span>
@@ -154,7 +156,7 @@ export const Scene5: React.FC<Scene5Props> = ({
         </PaleCard>
       </div>
 
-      {/* 4. CTA con ranura de reloj acoplado */}
+      {/* 3. CTA limpio sin ranura ni vuelo de reloj */}
       <div
         style={{
           position: 'absolute',
@@ -170,16 +172,13 @@ export const Scene5: React.FC<Scene5Props> = ({
           borderColor={BIG.accent}
           style={{
             borderWidth: 5,
-            padding: '24px 32px 24px',
+            padding: '28px 34px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            gap: 16,
+            gap: 18,
           }}
         >
-          {/* Ranura del reloj (el reloj vuela aquí desde Video.tsx) */}
-          <div style={{ height: CTA_LAYOUT.clockSize + 6 }} />
-
           <KineticWords tokens={headTokens} frame={local} fontSize={44} lineHeight={1.08} />
 
           <div

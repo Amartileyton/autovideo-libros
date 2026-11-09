@@ -27,7 +27,7 @@ export const BIG = {
   sideMargin: 84,
   width: 912,
   contentTop: 80,
-  contentBottom: 1390,
+  contentBottom: 1280,
 } as const;
 
 /** Tamaños tipográficos calibrados (px sobre lienzo 1080) */
@@ -39,12 +39,19 @@ export const FS = {
 } as const;
 
 /**
- * Geometría compartida del CTA final: la tarjeta del CTA y el vuelo del reloj (Video.tsx)
- * leen las mismas constantes para que el reloj aterrice siempre en la ranura de la tarjeta.
+ * Geometría del anfitrión Leo con perfil temporizador circular (Estilo 1 Chrono-Dot)
+ * y subtítulos situados encima del círculo (Opción A), libres de la UI inferior de Reels.
+ */
+export const HOST_LAYOUT = {
+  avatarSize: 240,
+  avatarTop: 1445,
+  captionTop: 1305,
+} as const;
+
+/**
+ * Geometría de la tarjeta CTA final (sin ranura ni vuelo de reloj).
  */
 export const CTA_LAYOUT = {
-  cardTop: 600,
-  cardBottom: 1390,
-  clockTop: 636,
-  clockSize: 110,
+  cardTop: 625,
+  cardBottom: 1265,
 } as const;

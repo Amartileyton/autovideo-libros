@@ -106,8 +106,6 @@ export function buildDefaultCaption() {
     `📌 Guarda este vídeo para cuando lo necesites.`,
     `🔔 Sigue a @en1minuto.es para dominar un libro clave cada día.`,
     '',
-    `🎵 Audio: ${musicAttribution.split('\n')[0]}`,
-    '',
     `#libros #resumenes #desarrollopersonal #crecimientopersonal #educacion #en1minuto #reelslibros #aprender #mentalidad #librosrecomendados`,
   ].join('\n');
 
@@ -210,10 +208,14 @@ export async function checkInstagramAccount() {
 export async function uploadToInstagramReels(options = {}) {
   const { userId, accessToken } = getInstagramCredentials();
 
+  const dossierSlug = fs.existsSync(DOSSIER_PATH)
+    ? JSON.parse(fs.readFileSync(DOSSIER_PATH, 'utf8')).slug
+    : null;
+  const slugPath = dossierSlug ? path.join(ROOT_DIR, 'out', `${dossierSlug}.mp4`) : null;
   let rawVideoPath =
     options.video ??
-    (fs.existsSync(path.join(ROOT_DIR, 'out', 'el-arte-de-gastar-dinero-big.mp4'))
-      ? path.join(ROOT_DIR, 'out', 'el-arte-de-gastar-dinero-big.mp4')
+    ((slugPath && fs.existsSync(slugPath))
+      ? slugPath
       : path.join(ROOT_DIR, 'out', 'video.mp4'));
 
   if (!fs.existsSync(rawVideoPath)) {
@@ -276,13 +278,19 @@ export async function uploadToInstagramReels(options = {}) {
 
   // PASO 2: Subir archivo binario a rupload.facebook.com vía cURL nativo
   console.log('\n2️⃣ Enviando archivo de vídeo a Meta (rupload.facebook.com)...');
-  const curlCmd = `curl.exe -s -w "\\n%{http_code}" -X POST "${uploadUri}" -H "Authorization: OAuth ${accessToken}" -H "offset: 0" -H "file_size: ${fileSize}" --data-binary "@${videoPath}"`;
+  const safeVideoPath = videoPath.replace(/\\/g, '/');
+  const curlCmd = `curl.exe -s -S -w "\\nHTTP_STATUS:%{http_code}" -X POST "${uploadUri}" -H "Authorization: OAuth ${accessToken}" -H "offset: 0" -H "file_size: ${fileSize}" --data-binary "@${safeVideoPath}"`;
 
   try {
-    execSync(curlCmd, { encoding: 'utf8', maxBuffer: 100 * 1024 * 1024 });
+    const curlOutput = execSync(curlCmd, { encoding: 'utf8', maxBuffer: 100 * 1024 * 1024 });
+    const statusMatch = curlOutput.match(/HTTP_STATUS:(\d+)/);
+    const httpCode = statusMatch ? parseInt(statusMatch[1], 10) : 200;
+    if (httpCode !== 200) {
+      throw new Error(`HTTP ${httpCode} - ${curlOutput}`);
+    }
     console.log('   ✅ Bytes transferidos a los servidores de Meta.');
   } catch (curlErr) {
-    console.log('   ℹ️ Transferencia de bytes enviada.');
+    throw new Error(`Error en subida binaria a rupload: ${curlErr.message}`);
   }
 
   // PASO 3: Polling de procesamiento del vídeo

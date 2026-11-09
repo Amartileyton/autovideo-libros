@@ -100,9 +100,6 @@ export function buildDefaultMetadata() {
     '',
     '🔔 Suscríbete a @en1minuto.es para descubrir un libro imprescindible cada día.',
     '',
-    '🎵 Música de fondo:',
-    musicAttribution,
-    '',
     '#Shorts #libros #educacion #resumenes #finanzas #desarrollopersonal #en1minuto',
   ].join('\n');
 
@@ -123,10 +120,14 @@ export function buildDefaultMetadata() {
 export async function uploadToYoutube(options = {}) {
   const defaults = buildDefaultMetadata();
 
+  const dossierSlug = fs.existsSync(DOSSIER_PATH)
+    ? JSON.parse(fs.readFileSync(DOSSIER_PATH, 'utf8')).slug
+    : null;
+  const slugPath = dossierSlug ? path.join(ROOT_DIR, 'out', `${dossierSlug}.mp4`) : null;
   const videoPath =
     options.video ??
-    (fs.existsSync(path.join(ROOT_DIR, 'out', 'el-arte-de-gastar-dinero-big.mp4'))
-      ? path.join(ROOT_DIR, 'out', 'el-arte-de-gastar-dinero-big.mp4')
+    ((slugPath && fs.existsSync(slugPath))
+      ? slugPath
       : path.join(ROOT_DIR, 'out', 'video.mp4'));
 
   if (!fs.existsSync(videoPath)) {

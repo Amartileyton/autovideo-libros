@@ -46,6 +46,14 @@ export interface LeoAvatarProps {
   forcedTurnX?: number;
   /** Muestra la malla de triángulos de Delaunay superpuesta para diagnóstico técnico */
   showWireframe?: boolean;
+  /** Activa el perfil temporizador circular perimetral alrededor del medallón */
+  showProgressRing?: boolean;
+  /** Progreso normalizado (0.0 a 1.0) de la duración total del vídeo */
+  progress?: number;
+  /** Estilo visual del anillo temporizador ('chrono-dot' Estilo 1 por defecto) */
+  ringStyle?: 'chrono-dot' | 'minimal' | 'bezel-ticks';
+  /** Color activo del perfil temporizador (por defecto Terracota #D94E34) */
+  ringColor?: string;
   style?: React.CSSProperties;
 }
 
@@ -104,6 +112,10 @@ export const LeoAvatar: React.FC<LeoAvatarProps> = ({
   forcedBlink,
   forcedTurnX,
   showWireframe = false,
+  showProgressRing = false,
+  progress = 0,
+  ringStyle = 'chrono-dot',
+  ringColor = '#D94E34',
   style,
 }) => {
   const currentFrame = useCurrentFrame();
@@ -198,6 +210,15 @@ export const LeoAvatar: React.FC<LeoAvatarProps> = ({
     renderLeoMeshToCanvas(ctx, masterImg, rigState, variant, showWireframe);
   }, [masterImg, rigState, variant, showWireframe]);
 
+  const clampedProgress = Math.max(0, Math.min(1, progress));
+  // El bisel circular del medallón en leo-master.png ocupa de r=266 a r=291 (centro r=278.5, grosor 25px)
+  const ringRadius = 278.5;
+  const ringCircumference = 2 * Math.PI * ringRadius;
+  const ringDashLen = ringCircumference * clampedProgress;
+  const ringAngleRad = -Math.PI / 2 + clampedProgress * Math.PI * 2;
+  const dotX = 320 + ringRadius * Math.cos(ringAngleRad);
+  const dotY = 320 + ringRadius * Math.sin(ringAngleRad);
+
   return (
     <div
       style={{
@@ -225,6 +246,65 @@ export const LeoAvatar: React.FC<LeoAvatarProps> = ({
               : undefined,
         }}
       />
+      {showProgressRing && variant === 'badge' ? (
+        <svg
+          viewBox="0 0 640 640"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            width: size,
+            height: size,
+            pointerEvents: 'none',
+            overflow: 'visible',
+          }}
+        >
+          {/* Perfil temporizador activo directamente sobre el bisel que delimita al avatar (0° a 360°) */}
+          {clampedProgress > 0.001 ? (
+            <circle
+              cx={320}
+              cy={320}
+              r={ringRadius}
+              fill="none"
+              stroke={ringColor}
+              strokeWidth={24}
+              strokeLinecap="round"
+              strokeDasharray={`${ringDashLen} ${ringCircumference}`}
+              transform="rotate(-90 320 320)"
+            />
+          ) : null}
+          {/* Bordes interior y exterior nítidos que enmarcan el perfil temporizador */}
+          <circle
+            cx={320}
+            cy={320}
+            r={266}
+            fill="none"
+            stroke="#141413"
+            strokeWidth={4.5}
+          />
+          <circle
+            cx={320}
+            cy={320}
+            r={291}
+            fill="none"
+            stroke="#141413"
+            strokeWidth={5}
+          />
+          {/* Estilo 1: Punto Guía (Chrono-Dot) en la cabeza de avance del arco */}
+          {ringStyle === 'chrono-dot' ? (
+            <g>
+              <circle
+                cx={dotX}
+                cy={dotY}
+                r={15}
+                fill="#FFFBEB"
+                stroke="#141413"
+                strokeWidth={6}
+              />
+              <circle cx={dotX} cy={dotY} r={6} fill={ringColor} />
+            </g>
+          ) : null}
+        </svg>
+      ) : null}
     </div>
   );
 };

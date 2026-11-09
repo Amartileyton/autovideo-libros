@@ -64,18 +64,132 @@ export const Scene3: React.FC<Scene3Props> = ({
 
   const t = useMemo(() => {
     const f = (kw: string | string[] | undefined, fb: number, min = 0) =>
-      findKeywordFrameWindow(wordTimestamps, kw, fb, fb + 30, min).startFrame;
-    const fromT = f(visualData?.swapFromTrigger ?? nodes[0]?.triggerKeyword ?? 'marcador', 60);
-    const toT = f(visualData?.swapToTrigger ?? nodes[1]?.triggerKeyword ?? 'baremo', fromT + 30, fromT + 8);
-    const leadT = f(visualData?.payoffLeadTrigger ?? 'dividendo', toT + 60, toT + 20);
-    const oldT = f(visualData?.payoffOldTrigger ?? 'lujos', leadT + 50, leadT + 10);
-    const newT = f(visualData?.payoffNewTrigger ?? 'autonomia', oldT + 20, oldT + 5);
-    const tailT = f(visualData?.payoffTailTrigger ?? 'tiempo', newT + 30, newT + 5);
+      findKeywordFrameWindow(wordTimestamps, kw, fb, fb + 35, min).startFrame;
+
+    // Detectar ambos eventos de forma independiente
+    const leadT = f(visualData?.payoffLeadTrigger ?? ['regla', 'oro', 'dividendo'], 15, 0);
+    const oldT = f(visualData?.payoffOldTrigger ?? ['lujos', 'proyecto'], leadT + 20, leadT);
+    const newT = f(visualData?.payoffNewTrigger ?? ['autonomia', 'diez', 'veinte'], oldT + 15, oldT);
+    const tailT = f(visualData?.payoffTailTrigger ?? ['tiempo', 'diapositivas', 'puntos'], newT + 25, newT);
+
+    const fromT = f(visualData?.swapFromTrigger ?? nodes[0]?.triggerKeyword ?? ['rollo', 'marcador'], 60, 0);
+    const toT = f(visualData?.swapToTrigger ?? nodes[1]?.triggerKeyword ?? ['prototipos', 'baremo'], fromT + 25, fromT + 6);
+
     return { fromT, toT, leadT, oldT, newT, tailT };
   }, [wordTimestamps, visualData, nodes]);
 
-  const barFill = interpolate(local, [t.tailT - 20, t.tailT + 20], [0, 100], CLAMP_EXTRAPOLATION);
+  const isPayoffFirst = t.leadT < t.fromT;
+  const barFill = interpolate(local, [t.tailT - 15, t.tailT + 25], [0, 100], CLAMP_EXTRAPOLATION);
   const newVisible = local >= t.newT;
+
+  if (isPayoffFirst) {
+    // NARRATIVA A: La Regla de Oro / Fórmula se expone primero, luego el descarte / sustitución
+    return (
+      <SceneFrame canvasOffsetX={canvasOffsetX} canvasOffsetY={canvasOffsetY}>
+        {/* 1. HERO REGLA DE ORO / PAYOFF SUPERIOR */}
+        <div
+          style={{
+            position: 'absolute',
+            top: BIG.contentTop,
+            left: BIG.sideMargin,
+            right: BIG.sideMargin,
+          }}
+        >
+          <PaleCard
+            frame={local}
+            enterFrame={-4}
+            from="top"
+            borderColor={BIG.accent}
+            style={{ minHeight: 460, padding: '34px 40px', borderWidth: 4 }}
+          >
+            <div style={{ ...bigLabel, fontSize: 38, color: BIG.muted, textAlign: 'center' }}>
+              {payoffLead}
+            </div>
+
+            <div
+              style={{
+                ...bigLabel,
+                fontSize: 82,
+                textAlign: 'center',
+                marginTop: 14,
+                color: BIG.accent,
+                minHeight: 95,
+                transform: `scale(${interpolate(local, [t.newT - 4, t.newT + 8], [0.85, 1], CLAMP_EXTRAPOLATION)})`,
+              }}
+            >
+              {payoffNew}
+            </div>
+
+            {payoffTail ? (
+              <div
+                style={{
+                  ...bigLabel,
+                  fontSize: 42,
+                  textAlign: 'center',
+                  marginTop: 10,
+                  color: BIG.ink,
+                  opacity: local >= t.tailT - 15 ? 1 : 0.45,
+                }}
+              >
+                {payoffTail}
+              </div>
+            ) : null}
+
+            <div
+              style={{
+                marginTop: 26,
+                height: 28,
+                borderRadius: 14,
+                border: `3px solid ${BIG.ink}`,
+                backgroundColor: BIG.cream,
+                overflow: 'hidden',
+              }}
+            >
+              <div style={{ width: `${barFill}%`, height: '100%', backgroundColor: BIG.accent }} />
+            </div>
+          </PaleCard>
+        </div>
+
+        {/* 2. SUSTITUCIÓN DESCARTADA INFERIOR */}
+        <div
+          style={{
+            position: 'absolute',
+            top: 590,
+            left: BIG.sideMargin,
+            right: BIG.sideMargin,
+          }}
+        >
+          <PaleCard
+            frame={local}
+            enterFrame={t.fromT - 8}
+            from="left"
+            style={{ height: 165, padding: '0 36px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 20 }}
+          >
+            <div style={{ ...bigLabel, fontSize: 52, color: BIG.ink }}>
+              <Strike frame={local} strikeFrame={t.toT - 4} thickness={8}>
+                {swapFrom}
+              </Strike>
+            </div>
+            <div style={{ opacity: local >= t.toT - 4 ? 1 : 0 }}>
+              <DiscardStamp frame={local} strikeFrame={t.toT - 4} />
+            </div>
+          </PaleCard>
+
+          <TriangleConnector frame={local} enterFrame={t.toT - 8} height={70} />
+
+          <PaleCard
+            frame={local}
+            enterFrame={t.toT - 2}
+            from="right"
+            borderColor={BIG.accent}
+            style={{ height: 165, padding: '0 36px', display: 'flex', alignItems: 'center', borderWidth: 5 }}
+          >
+            <div style={{ ...bigLabel, fontSize: 56, color: BIG.accent }}>{swapTo}</div>
+          </PaleCard>
+        </div>
+      </SceneFrame>
+    );
+  }
 
   return (
     <SceneFrame canvasOffsetX={canvasOffsetX} canvasOffsetY={canvasOffsetY}>
@@ -121,12 +235,12 @@ export const Scene3: React.FC<Scene3Props> = ({
       <div
         style={{
           position: 'absolute',
-          top: 620,
+          top: 590,
           left: BIG.sideMargin,
           right: BIG.sideMargin,
         }}
       >
-        <PaleCard frame={local} enterFrame={t.leadT - 10} from="bottom" style={{ minHeight: 620, padding: '36px 40px' }}>
+        <PaleCard frame={local} enterFrame={t.leadT - 10} from="bottom" style={{ minHeight: 560, padding: '32px 40px' }}>
           <div style={{ ...bigLabel, fontSize: 44, color: BIG.muted, textAlign: 'center' }}>
             {payoffLead}
           </div>

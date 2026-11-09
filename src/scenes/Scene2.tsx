@@ -32,9 +32,9 @@ export interface Scene2Props {
   wordTimestamps?: WordTimestamp[];
 }
 
-const STATION_H = 175;
-const GAP_H = 64;
-const STACK_TOP = 340;
+const STATION_H = 166;
+const GAP_H = 54;
+const STACK_TOP = 325;
 
 /**
  * Scene 2 — TESIS / CIRCUITO (kit EDITORIAL PRO v4)
