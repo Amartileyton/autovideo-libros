@@ -180,6 +180,8 @@ export function preprocessForTts(text) {
   cleaned = cleanPauseMarkers(cleaned, true);
   cleaned = cleaned.replace(/\[[^\]]{1,60}\]/g, '');
   cleaned = cleaned.replace(/`+/g, '');
+  // Fusión fonética de marca: elimina la parada antinatural de falso punto ortográfico en "punto es"
+  cleaned = cleaned.replace(/\bpunto\s+es\b/gi, 'puntoes');
   cleaned = cleaned.replace(/\s+/g, ' ').trim();
   return cleaned;
 }
@@ -206,6 +208,33 @@ export function buildWordTimestamps(alignment, fps, trimOffsetMs = 0) {
   const ends = alignment.character_end_times_seconds;
 
   const words = [];
+  const pushWordItem = (w, sMs, eMs) => {
+    if (w.toLowerCase() === 'puntoes') {
+      const splitMs = Math.round(sMs + (eMs - sMs) * 0.65);
+      words.push({
+        word: 'punto',
+        startMs: sMs,
+        endMs: splitMs,
+        startFrame: Math.floor((sMs / 1000) * fps),
+        endFrame: Math.ceil((splitMs / 1000) * fps),
+      });
+      words.push({
+        word: 'es',
+        startMs: splitMs,
+        endMs: eMs,
+        startFrame: Math.floor((splitMs / 1000) * fps),
+        endFrame: Math.ceil((eMs / 1000) * fps),
+      });
+    } else {
+      words.push({
+        word: w,
+        startMs: sMs,
+        endMs: eMs,
+        startFrame: Math.floor((sMs / 1000) * fps),
+        endFrame: Math.ceil((eMs / 1000) * fps),
+      });
+    }
+  };
   let currentWord = '';
   let wordStartSec = null;
   let wordEndSec = null;
@@ -226,13 +255,7 @@ export function buildWordTimestamps(alignment, fps, trimOffsetMs = 0) {
           startMs + 25,
           Math.round(continuousEndSec * 1000 - trimOffsetMs)
         );
-        words.push({
-          word: currentWord,
-          startMs,
-          endMs,
-          startFrame: Math.floor((startMs / 1000) * fps),
-          endFrame: Math.ceil((endMs / 1000) * fps),
-        });
+        pushWordItem(currentWord, startMs, endMs);
         currentWord = '';
         wordStartSec = null;
         wordEndSec = null;
@@ -253,13 +276,7 @@ export function buildWordTimestamps(alignment, fps, trimOffsetMs = 0) {
   if (currentWord.length > 0 && wordStartSec !== null && wordEndSec !== null) {
     const startMs = Math.max(0, Math.round(wordStartSec * 1000 - trimOffsetMs));
     const endMs = Math.max(startMs + 25, Math.round(wordEndSec * 1000 - trimOffsetMs));
-    words.push({
-      word: currentWord,
-      startMs,
-      endMs,
-      startFrame: Math.floor((startMs / 1000) * fps),
-      endFrame: Math.ceil((endMs / 1000) * fps),
-    });
+    pushWordItem(currentWord, startMs, endMs);
   }
 
   const leadingSilenceMs =

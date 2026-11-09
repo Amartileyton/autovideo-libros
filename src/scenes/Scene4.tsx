@@ -6,7 +6,7 @@ import type {
   SceneLayoutPreset,
   WordTimestamp,
 } from '../data/schema';
-import { BIG, PaleCard, SceneFrame, TriangleConnector } from '../components/big';
+import { BIG, FS, PaleCard, SceneFrame, TriangleConnector } from '../components/big';
 import { CLAMP_EXTRAPOLATION, SPRING_SNAPPY } from '../theme/motion';
 import { findKeywordFrameWindow } from '../utils/wordTimingBinder';
 
@@ -24,14 +24,14 @@ export interface Scene4Props {
   wordTimestamps?: WordTimestamp[];
 }
 
-const CARD_H = 360;
-const GAP_H = 120;
+const CARD_H = 320;
+const GAP_H = 75;
 const ACCENTS = [BIG.accent, BIG.amber, BIG.green];
 
 /**
- * Scene 4 — 3 LEYES (kit BIG v3)
- * Cascada vertical de 3 tarjetas de 360px con numeral gigante, título de 2-3 palabras y regla de ≤ 6 palabras.
- * Conectores triangulares sin texto (regla 11). Cada ley "se enciende" cuando la voz la nombra.
+ * Scene 4 — 3 LEYES ACCIONABLES (kit EDITORIAL PRO v4)
+ * Cascada vertical de 3 tarjetas de 320px con numeral destacado, título conciso y regla de ≤ 6 palabras.
+ * Conectores triangulares puros sin texto. Cada ley se enciende sincronizada a la locución.
  */
 export const Scene4: React.FC<Scene4Props> = ({
   canvasOffsetX = 0,
@@ -51,7 +51,7 @@ export const Scene4: React.FC<Scene4Props> = ({
       const fb = 100 + i * 110;
       const min = i === 0 ? 0 : result[i - 1] + 20;
       const raw = findKeywordFrameWindow(wordTimestamps, law.triggerKeyword ?? law.title, fb, fb + 40, min).startFrame;
-      // La tarjeta entra ~14 fotogramas antes de la palabra clave para que "llegue" con la voz
+      // La tarjeta entra ~14 fotogramas antes de la palabra clave para que llegue con la voz
       result.push(Math.max(min, raw - 14));
     });
     return result;
@@ -67,7 +67,7 @@ export const Scene4: React.FC<Scene4Props> = ({
           const isActive = lit && local < nextT;
           const p = spring({ frame: Math.max(0, local - t), fps, config: SPRING_SNAPPY });
           const accent = ACCENTS[i % ACCENTS.length];
-          const numScale = isActive ? interpolate(p, [0, 1], [1.35, 1], CLAMP_EXTRAPOLATION) : 1;
+          const numScale = isActive ? interpolate(p, [0, 1], [1.25, 1], CLAMP_EXTRAPOLATION) : 1;
 
           return (
             <React.Fragment key={law.index}>
@@ -80,20 +80,20 @@ export const Scene4: React.FC<Scene4Props> = ({
                 restScale={isActive ? 1.02 : 1}
                 style={{
                   height: CARD_H,
-                  padding: '0 40px',
+                  padding: '0 32px',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: 34,
-                  borderWidth: isActive ? 6 : 3,
+                  gap: 28,
+                  borderWidth: isActive ? 5 : 3,
                   opacity: lit ? 1 : 0.45,
                 }}
               >
                 <div
                   style={{
                     flexShrink: 0,
-                    width: 170,
-                    height: 170,
-                    borderRadius: 85,
+                    width: 130,
+                    height: 130,
+                    borderRadius: 65,
                     backgroundColor: lit ? accent : 'transparent',
                     border: `4px solid ${lit ? BIG.ink : 'rgba(20,20,19,0.35)'}`,
                     color: lit ? BIG.cream : 'rgba(20,20,19,0.4)',
@@ -102,7 +102,7 @@ export const Scene4: React.FC<Scene4Props> = ({
                     justifyContent: 'center',
                     fontFamily: BIG.font,
                     fontWeight: 800,
-                    fontSize: 112,
+                    fontSize: 80,
                     transform: `scale(${numScale})`,
                   }}
                 >
@@ -113,8 +113,8 @@ export const Scene4: React.FC<Scene4Props> = ({
                     style={{
                       fontFamily: BIG.font,
                       fontWeight: 800,
-                      fontSize: 68,
-                      lineHeight: 1.03,
+                      fontSize: 54,
+                      lineHeight: 1.04,
                       letterSpacing: '-0.02em',
                       color: BIG.ink,
                     }}
@@ -125,10 +125,10 @@ export const Scene4: React.FC<Scene4Props> = ({
                     style={{
                       fontFamily: BIG.font,
                       fontWeight: 700,
-                      fontSize: 42,
+                      fontSize: 32,
                       lineHeight: 1.18,
                       color: BIG.muted,
-                      marginTop: 14,
+                      marginTop: 10,
                     }}
                   >
                     {law.shortRule ?? law.rule}

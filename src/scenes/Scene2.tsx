@@ -8,6 +8,7 @@ import type {
 } from '../data/schema';
 import {
   BIG,
+  FS,
   KineticWords,
   PaleCard,
   SceneFrame,
@@ -31,14 +32,14 @@ export interface Scene2Props {
   wordTimestamps?: WordTimestamp[];
 }
 
-const STATION_H = 190;
-const GAP_H = 72;
-const STACK_TOP = 360;
+const STATION_H = 175;
+const GAP_H = 64;
+const STACK_TOP = 340;
 
 /**
- * Scene 2 — TESIS / CIRCUITO (kit BIG v3)
- * Titular corto en tarjeta + 4 estaciones GRANDES que se encienden al ritmo de la voz,
- * unidas por conectores triangulares. Sin subtítulos internos: solo la palabra clave de cada fase.
+ * Scene 2 — TESIS / CIRCUITO (kit EDITORIAL PRO v4)
+ * Titular corto en tarjeta + 4 estaciones que se encienden al ritmo de la voz,
+ * unidas por conectores triangulares limpios. Sin subtítulos internos.
  */
 export const Scene2: React.FC<Scene2Props> = ({
   canvasOffsetX = 0,
@@ -75,8 +76,8 @@ export const Scene2: React.FC<Scene2Props> = ({
   return (
     <SceneFrame canvasOffsetX={canvasOffsetX} canvasOffsetY={canvasOffsetY}>
       <div style={{ position: 'absolute', top: BIG.contentTop, left: BIG.sideMargin, right: BIG.sideMargin }}>
-        <PaleCard frame={local} enterFrame={-4} from="top" style={{ padding: '30px 44px' }}>
-          <KineticWords tokens={headTokens} frame={local} fontSize={84} lineHeight={1.06} />
+        <PaleCard frame={local} enterFrame={-4} from="top" style={{ padding: '26px 40px' }}>
+          <KineticWords tokens={headTokens} frame={local} fontSize={FS.title} lineHeight={1.06} />
         </PaleCard>
       </div>
 
@@ -92,7 +93,7 @@ export const Scene2: React.FC<Scene2Props> = ({
 
           const fill = isActive ? (isLast ? BIG.ink : BIG.accent) : lit ? BIG.card : BIG.cream;
           const textColor = isActive ? BIG.cream : lit ? BIG.ink : 'rgba(20, 20, 19, 0.42)';
-          const scale = isActive ? interpolate(p, [0, 1], [1, 1.035], CLAMP_EXTRAPOLATION) : 1;
+          const scale = isActive ? interpolate(p, [0, 1], [1, 1.03], CLAMP_EXTRAPOLATION) : 1;
 
           return (
             <React.Fragment key={n.id}>
@@ -106,18 +107,18 @@ export const Scene2: React.FC<Scene2Props> = ({
                 restScale={scale}
                 style={{
                   height: STATION_H,
-                  padding: '0 36px',
+                  padding: '0 32px',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: 30,
+                  gap: 26,
                 }}
               >
                 <div
                   style={{
                     flexShrink: 0,
-                    width: 108,
-                    height: 108,
-                    borderRadius: 54,
+                    width: 92,
+                    height: 92,
+                    borderRadius: 46,
                     border: `3px solid ${isActive ? BIG.cream : lit ? BIG.ink : 'rgba(20,20,19,0.35)'}`,
                     backgroundColor: isActive ? 'rgba(255,251,235,0.16)' : isDone ? BIG.ink : 'transparent',
                     color: isDone ? BIG.card : textColor,
@@ -126,7 +127,7 @@ export const Scene2: React.FC<Scene2Props> = ({
                     justifyContent: 'center',
                     fontFamily: BIG.font,
                     fontWeight: 800,
-                    fontSize: 54,
+                    fontSize: 44,
                   }}
                 >
                   {isDone ? '✓' : n.num}
@@ -135,8 +136,8 @@ export const Scene2: React.FC<Scene2Props> = ({
                   style={{
                     fontFamily: BIG.font,
                     fontWeight: 800,
-                    fontSize: 64,
-                    lineHeight: 1.04,
+                    fontSize: 52,
+                    lineHeight: 1.05,
                     letterSpacing: '-0.02em',
                     color: textColor,
                   }}

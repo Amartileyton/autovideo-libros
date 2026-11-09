@@ -5,6 +5,7 @@ import scenesJson from './data/scenes.json';
 import { VideoPropsSchema, type AudioManifest } from './data/schema';
 import { BLUEPRINT_THEMES, VIDEO_CONFIG } from './theme/motion';
 import { Video } from './Video';
+import { LeoShowcase } from './scenes/LeoShowcase';
 
 const manifest = audioManifestJson as AudioManifest;
 
@@ -50,6 +51,16 @@ export const RemotionRoot: React.FC = () => {
           enableCaptions: true,
           enableBackgroundMusic: true,
         }}
+      />
+
+      {/* Composición de Auditoría y Verificación de la Mascota Humana "Leo" */}
+      <Composition
+        id="LeoShowcase"
+        component={LeoShowcase}
+        durationInFrames={330}
+        fps={fps}
+        width={VIDEO_CONFIG.width}
+        height={VIDEO_CONFIG.height}
       />
     </>
   );

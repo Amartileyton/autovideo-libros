@@ -1,11 +1,14 @@
 /**
  * src/components/big/tokens.ts
- * Kit "BIG" v3 — tokens de diseño para tarjetas grandes, pocas palabras y mucha animación.
+ * Kit "EDITORIAL PRO" v4 — tokens de diseño con Safe Zone Instagram/Reels
+ * y escala tipográfica armónica con presencia de la mascota Leo.
  *
- * Reglas del kit (auditoría v2, Sección 3.2):
- * - Texto mínimo legible en móvil: lienzo 1080px se ve a ~x0.36 → cuerpo >= 38px, secundario >= 30px.
- * - Zona de contenido: top 70px → bottom 1390px (los subtítulos viven en top 1442px).
- * - Tarjetas a ancho completo útil (972px = 1080 - 2 * 54px).
+ * Mejoras aplicadas:
+ * - Margen lateral aumentado de 54px a 84px (ancho útil 912px): protección total frente
+ *   a los botones nativos de Instagram Reels a la derecha (Like, Comentarios, Compartir).
+ * - Tipografía recalibrada (FS.hero: 78, FS.title: 62): elimina la saturación visual,
+ *   evita saltos de línea antiestéticos y deja respirar los diagramas.
+ * - Coordenadas CTA_LAYOUT calibradas para acomodar a Leo en la escena final.
  */
 
 export const BIG = {
@@ -20,19 +23,19 @@ export const BIG = {
   muted: '#575550',
   dim: 'rgba(20, 20, 19, 0.28)',
   font: "'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif",
-  /** Márgenes y zona útil del lienzo 1080x1920 */
-  sideMargin: 54,
-  width: 972,
-  contentTop: 70,
+  /** Márgenes y zona útil del lienzo 1080x1920 (Safe Zone Instagram/TikTok/Shorts) */
+  sideMargin: 84,
+  width: 912,
+  contentTop: 80,
   contentBottom: 1390,
 } as const;
 
-/** Tamaños tipográficos mínimos (px sobre lienzo 1080) */
+/** Tamaños tipográficos calibrados (px sobre lienzo 1080) */
 export const FS = {
-  hero: 104,
-  title: 72,
-  body: 44,
-  small: 34,
+  hero: 78,
+  title: 62,
+  body: 38,
+  small: 30,
 } as const;
 
 /**

@@ -374,7 +374,7 @@
     {
       "id": "scene-5",
       "title": "EL MANIFIESTO",
-      "text": "Ser rico es tener dinero; ser libre es que el dinero no te controle. [PAUSA 0.4s] El arte de gastar dinero, de Morgan Housel. [PAUSA 0.4s] Guarda este resumen para cuando la presión social te empuje a gastar, y sigue a en un minuto punto es para dominar un libro clave cada día.",
+      "text": "Ser rico es tener dinero; ser libre es que el dinero no te controle. [PAUSA 0.4s] El arte de gastar dinero, de Morgan Housel. [PAUSA 0.4s] Guarda este resumen para cuando la presión social te empuje a gastar y sigue la cuenta de en un minuto para dominar un libro clave cada día.",
       "characterPreset": "conversational",
       "blueprintMode": "EDITORIAL_PAPER",
       "layoutPreset": "CTA_MANIFESTO_GOODREADS",
@@ -412,7 +412,7 @@
     "artist": "Kevin MacLeod",
     "license": "CC BY 4.0",
     "attribution": "\"Vibing Over Venus\" Kevin MacLeod (incompetech.com) Licensed under CC BY 4.0",
-    "volume": 0.16,
-    "duckedVolume": 0.06
+    "volume": 0.55,
+    "duckedVolume": 0.28
   }
 }

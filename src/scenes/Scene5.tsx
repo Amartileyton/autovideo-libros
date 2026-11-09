@@ -10,6 +10,7 @@ import { BookCover } from '../components/BookCover';
 import {
   BIG,
   CTA_LAYOUT,
+  FS,
   KineticWords,
   PaleCard,
   SceneFrame,
@@ -33,11 +34,11 @@ export interface Scene5Props {
 }
 
 /**
- * Scene 5 — MANIFIESTO + CTA (kit BIG v3)
- *  Arriba: cita manifiesto en tipografía cinética grande (se queda toda la escena).
- *  Medio (hasta el CTA): ficha del libro grande; al entrar el CTA se retira.
- *  Abajo: tarjeta CTA con ranura para el reloj hero (CTA_LAYOUT.clockTop, volado desde Video.tsx).
- *  Fórmula CTA: anclaje de guardado + promesa de marca + una sola pregunta comunitaria corta.
+ * Scene 5 — MANIFIESTO + Leo Host + CTA (kit EDITORIAL PRO v4)
+ *  Arriba: cita manifiesto en tipografía cinética (se mantiene visible).
+ *  Medio (hasta el CTA): ficha del libro; al entrar el CTA se retira dando paso a Leo Avatar.
+ *  Abajo: tarjeta CTA con ranura para el reloj hero (volado desde Video.tsx).
+ *  Fórmula CTA: anclaje de guardado + promesa de marca + pregunta comunitaria concisa.
  */
 export const Scene5: React.FC<Scene5Props> = ({
   canvasOffsetX = 0,
@@ -88,30 +89,30 @@ export const Scene5: React.FC<Scene5Props> = ({
 
   return (
     <SceneFrame canvasOffsetX={canvasOffsetX} canvasOffsetY={canvasOffsetY}>
-      {/* Manifiesto */}
+      {/* 1. Manifiesto superior */}
       <div style={{ position: 'absolute', top: BIG.contentTop, left: BIG.sideMargin, right: BIG.sideMargin }}>
-        <PaleCard frame={local} enterFrame={-4} from="top" style={{ padding: '38px 44px' }}>
-          <KineticWords tokens={quoteTokens} frame={local} fontSize={74} lineHeight={1.1} />
+        <PaleCard frame={local} enterFrame={-4} from="top" style={{ padding: '28px 36px' }}>
+          <KineticWords tokens={quoteTokens} frame={local} fontSize={54} lineHeight={1.12} />
         </PaleCard>
       </div>
 
-      {/* Ficha del libro (se retira al entrar el CTA) */}
-      <div style={{ position: 'absolute', top: 610, left: BIG.sideMargin, right: BIG.sideMargin }}>
+      {/* 2. Ficha del libro (se retira al entrar el CTA para dar paso a Leo) */}
+      <div style={{ position: 'absolute', top: 330, left: BIG.sideMargin, right: BIG.sideMargin }}>
         <PaleCard
           frame={local}
           enterFrame={t.bookT}
-          exitFrame={t.ctaT - 6}
+          exitFrame={t.ctaT - 8}
           from="left"
-          style={{ padding: '30px 36px', display: 'flex', gap: 34, alignItems: 'center' }}
+          style={{ padding: '24px 30px', display: 'flex', gap: 28, alignItems: 'center' }}
         >
-          <BookCover bookMetadata={bookMetadata} width={250} height={370} borderRadius={14} variant="hero" />
+          <BookCover bookMetadata={bookMetadata} width={220} height={330} borderRadius={14} variant="hero" />
           <div style={{ flex: 1 }}>
             <div
               style={{
                 fontFamily: BIG.font,
                 fontWeight: 800,
-                fontSize: 62,
-                lineHeight: 1.04,
+                fontSize: 48,
+                lineHeight: 1.05,
                 letterSpacing: '-0.02em',
                 color: BIG.ink,
               }}
@@ -122,9 +123,9 @@ export const Scene5: React.FC<Scene5Props> = ({
               style={{
                 fontFamily: BIG.font,
                 fontWeight: 700,
-                fontSize: 44,
+                fontSize: 34,
                 color: BIG.muted,
-                marginTop: 14,
+                marginTop: 10,
               }}
             >
               {bookMetadata?.author}
@@ -134,15 +135,15 @@ export const Scene5: React.FC<Scene5Props> = ({
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: 10,
-                  marginTop: 22,
+                  gap: 8,
+                  marginTop: 18,
                   backgroundColor: BIG.ink,
                   color: BIG.card,
-                  borderRadius: 16,
-                  padding: '6px 22px',
+                  borderRadius: 14,
+                  padding: '6px 18px',
                   fontFamily: BIG.font,
                   fontWeight: 800,
-                  fontSize: 46,
+                  fontSize: 36,
                 }}
               >
                 <span style={{ color: '#F59E0B' }}>★</span>
@@ -153,7 +154,7 @@ export const Scene5: React.FC<Scene5Props> = ({
         </PaleCard>
       </div>
 
-      {/* CTA con ranura de reloj */}
+      {/* 4. CTA con ranura de reloj acoplado */}
       <div
         style={{
           position: 'absolute',
@@ -169,17 +170,17 @@ export const Scene5: React.FC<Scene5Props> = ({
           borderColor={BIG.accent}
           style={{
             borderWidth: 5,
-            padding: '30px 40px 28px',
+            padding: '24px 32px 24px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            gap: 18,
+            gap: 16,
           }}
         >
           {/* Ranura del reloj (el reloj vuela aquí desde Video.tsx) */}
           <div style={{ height: CTA_LAYOUT.clockSize + 6 }} />
 
-          <KineticWords tokens={headTokens} frame={local} fontSize={56} lineHeight={1.08} />
+          <KineticWords tokens={headTokens} frame={local} fontSize={44} lineHeight={1.08} />
 
           <div
             style={{
@@ -187,12 +188,12 @@ export const Scene5: React.FC<Scene5Props> = ({
               transform: `scale(${interpolate(saveP, [0, 1], [0.8, 1], CLAMP_EXTRAPOLATION)})`,
               fontFamily: BIG.font,
               fontWeight: 800,
-              fontSize: 38,
+              fontSize: 32,
               color: BIG.ink,
               backgroundColor: BIG.cream,
               border: `3px solid ${BIG.ink}`,
               borderRadius: 999,
-              padding: '8px 30px',
+              padding: '6px 26px',
             }}
           >
             🔖 GUARDA EL RESUMEN
@@ -204,13 +205,13 @@ export const Scene5: React.FC<Scene5Props> = ({
               transform: `scale(${interpolate(followP, [0, 1], [0.8, 1], CLAMP_EXTRAPOLATION)})`,
               fontFamily: BIG.font,
               fontWeight: 800,
-              fontSize: 48,
+              fontSize: 40,
               color: BIG.cream,
               backgroundColor: BIG.accent,
               border: `3px solid ${BIG.ink}`,
-              borderRadius: 28,
-              padding: '20px 36px',
-              boxShadow: '0 14px 30px rgba(217, 78, 52, 0.35)',
+              borderRadius: 24,
+              padding: '16px 32px',
+              boxShadow: '0 12px 26px rgba(217, 78, 52, 0.35)',
               whiteSpace: 'nowrap',
             }}
           >
@@ -222,7 +223,7 @@ export const Scene5: React.FC<Scene5Props> = ({
               opacity: Math.min(1, promiseP * 1.6),
               fontFamily: BIG.font,
               fontWeight: 800,
-              fontSize: 38,
+              fontSize: 32,
               color: BIG.ink,
             }}
           >
@@ -233,10 +234,10 @@ export const Scene5: React.FC<Scene5Props> = ({
             <div
               style={{
                 opacity: Math.min(1, questionP * 1.6),
-                transform: `translateY(${(1 - questionP) * 20}px)`,
+                transform: `translateY(${(1 - questionP) * 16}px)`,
                 fontFamily: BIG.font,
                 fontWeight: 700,
-                fontSize: 36,
+                fontSize: 28,
                 color: BIG.muted,
                 textAlign: 'center',
               }}

@@ -8,6 +8,7 @@ import type {
 } from '../data/schema';
 import {
   BIG,
+  FS,
   DiscardStamp,
   PaleCard,
   SceneFrame,
@@ -39,7 +40,7 @@ const bigLabel: React.CSSProperties = {
 };
 
 /**
- * Scene 3 — REGLA DE ORO (kit BIG v3)
+ * Scene 3 — REGLA DE ORO / SUSTITUCIÓN (kit EDITORIAL PRO v4)
  * Mitad superior: sustitución A → B (A se tacha SOLO cuando la voz dice la palabra de descarte).
  * Mitad inferior: remate "EL MAYOR DIVIDENDO → ~~LUJOS~~ → AUTONOMÍA" con barra que se llena.
  */
@@ -75,7 +76,6 @@ export const Scene3: React.FC<Scene3Props> = ({
 
   const barFill = interpolate(local, [t.tailT - 20, t.tailT + 20], [0, 100], CLAMP_EXTRAPOLATION);
   const newVisible = local >= t.newT;
-  const oldStruck = local >= t.oldT;
 
   return (
     <SceneFrame canvasOffsetX={canvasOffsetX} canvasOffsetY={canvasOffsetY}>
@@ -88,9 +88,14 @@ export const Scene3: React.FC<Scene3Props> = ({
           right: BIG.sideMargin,
         }}
       >
-        <PaleCard frame={local} enterFrame={-4} from="left" style={{ height: 210, padding: '0 44px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 20 }}>
-          <div style={{ ...bigLabel, fontSize: 72, color: BIG.ink }}>
-            <Strike frame={local} strikeFrame={t.toT - 4} thickness={9}>
+        <PaleCard
+          frame={local}
+          enterFrame={-4}
+          from="left"
+          style={{ height: 180, padding: '0 38px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 20 }}
+        >
+          <div style={{ ...bigLabel, fontSize: 58, color: BIG.ink }}>
+            <Strike frame={local} strikeFrame={t.toT - 4} thickness={8}>
               {swapFrom}
             </Strike>
           </div>
@@ -99,16 +104,16 @@ export const Scene3: React.FC<Scene3Props> = ({
           </div>
         </PaleCard>
 
-        <TriangleConnector frame={local} enterFrame={t.toT - 8} height={96} />
+        <TriangleConnector frame={local} enterFrame={t.toT - 8} height={80} />
 
         <PaleCard
           frame={local}
           enterFrame={t.toT - 2}
           from="right"
           borderColor={BIG.accent}
-          style={{ height: 210, padding: '0 44px', display: 'flex', alignItems: 'center', borderWidth: 5 }}
+          style={{ height: 180, padding: '0 38px', display: 'flex', alignItems: 'center', borderWidth: 5 }}
         >
-          <div style={{ ...bigLabel, fontSize: 80, color: BIG.accent }}>{swapTo}</div>
+          <div style={{ ...bigLabel, fontSize: 64, color: BIG.accent }}>{swapTo}</div>
         </PaleCard>
       </div>
 
@@ -116,19 +121,19 @@ export const Scene3: React.FC<Scene3Props> = ({
       <div
         style={{
           position: 'absolute',
-          top: 700,
+          top: 620,
           left: BIG.sideMargin,
           right: BIG.sideMargin,
         }}
       >
-        <PaleCard frame={local} enterFrame={t.leadT - 10} from="bottom" style={{ minHeight: 680, padding: '40px 44px' }}>
-          <div style={{ ...bigLabel, fontSize: 56, color: BIG.muted, textAlign: 'center' }}>
+        <PaleCard frame={local} enterFrame={t.leadT - 10} from="bottom" style={{ minHeight: 620, padding: '36px 40px' }}>
+          <div style={{ ...bigLabel, fontSize: 44, color: BIG.muted, textAlign: 'center' }}>
             {payoffLead}
           </div>
 
-          <div style={{ ...bigLabel, fontSize: 124, textAlign: 'center', marginTop: 26, color: BIG.ink, minHeight: 130 }}>
+          <div style={{ ...bigLabel, fontSize: 92, textAlign: 'center', marginTop: 22, color: BIG.ink, minHeight: 105 }}>
             <span style={{ opacity: local >= t.oldT - 30 ? 1 : 0 }}>
-              <Strike frame={local} strikeFrame={t.oldT} thickness={11}>
+              <Strike frame={local} strikeFrame={t.oldT} thickness={10}>
                 {payoffOld}
               </Strike>
             </span>
@@ -137,13 +142,13 @@ export const Scene3: React.FC<Scene3Props> = ({
           <div
             style={{
               ...bigLabel,
-              fontSize: 118,
+              fontSize: 88,
               textAlign: 'center',
-              marginTop: 20,
+              marginTop: 16,
               color: BIG.accent,
-              minHeight: 128,
+              minHeight: 100,
               opacity: newVisible ? 1 : 0,
-              transform: `scale(${interpolate(local, [t.newT, t.newT + 8], [0.7, 1], CLAMP_EXTRAPOLATION)})`,
+              transform: `scale(${interpolate(local, [t.newT, t.newT + 8], [0.75, 1], CLAMP_EXTRAPOLATION)})`,
             }}
           >
             {payoffNew}
@@ -153,7 +158,7 @@ export const Scene3: React.FC<Scene3Props> = ({
             <div
               style={{
                 ...bigLabel,
-                fontSize: 52,
+                fontSize: 40,
                 textAlign: 'center',
                 marginTop: 14,
                 color: BIG.ink,
@@ -166,9 +171,9 @@ export const Scene3: React.FC<Scene3Props> = ({
 
           <div
             style={{
-              marginTop: 34,
-              height: 36,
-              borderRadius: 18,
+              marginTop: 30,
+              height: 32,
+              borderRadius: 16,
               border: `3px solid ${BIG.ink}`,
               backgroundColor: BIG.cream,
               overflow: 'hidden',

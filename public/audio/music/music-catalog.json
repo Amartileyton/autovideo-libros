@@ -9,8 +9,8 @@
       "file": "audio/music/vibing-over-venus.mp3",
       "genre": "Calming, Grooving, Relaxed (Vibraphone, Piano, Bass)",
       "bpm": 94,
-      "recommendedVolume": 0.16,
-      "recommendedDuckedVolume": 0.06,
+      "recommendedVolume": 0.55,
+      "recommendedDuckedVolume": 0.28,
       "attributionText": "\"Vibing Over Venus\" Kevin MacLeod (incompetech.com)\nLicensed under Creative Commons: By Attribution 4.0 License\nhttp://creativecommons.org/licenses/by/4.0/",
       "notes": "Vibráfono cálido, ritmo constante no invasivo. Ideal para resúmenes de psicología, finanzas y hábitos."
     }
@@ -18,6 +18,6 @@
   "recommendations": {
     "youtube": "Pegar el bloque attributionText en la descripción del vídeo. No requiere licencia de pago.",
     "instagram": "Colocar mención breve en la descripción / pie de foto si se sube con audio original.",
-    "duckingRule": "Bajar automáticamente a 0.06 durante los fragmentos con locución activa (globalWordTimestamps)."
+    "duckingRule": "Bajar automǭticamente a 0.28 durante los fragmentos con locucin activa (globalWordTimestamps) y subir a 0.55 en pausas e intros."
   }
 }

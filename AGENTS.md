@@ -97,10 +97,11 @@ Estas mejoras visuales están integradas en el núcleo del proyecto y **NUNCA** 
    - **Cero CTAs genéricos o pasivos**: Queda terminantemente prohibido usar cierres débiles como *"Guarda este resumen y empieza hoy mismo"* o peticiones aisladas como *"Síguenos en..."* sin incentivo egoísta directo para el espectador.
    - **Fórmula de Locución de Cierre Obligatoria (Escena 5 en ElevenLabs)**: Toda locución final debe componerse estrictamente de dos partes coordinadas:
      1. **Anclaje Psicológico de Guardado (Opción 2)**: *"Guarda este resumen para cuando [anclaje de necesidad futura o momento de duda/caos/pereza],..."*
-     2. **Promesa de Marca de Alto Valor (Opción 1)**: *"...y sigue a en un minuto punto es para dominar un libro clave cada día."*
-     - *Ejemplo (12 Reglas para Vivir)*: *"Guarda este resumen para cuando el caos apriete, y sigue a en un minuto punto es para dominar un libro clave cada día."*
-     - *Ejemplo (Hábitos Atómicos)*: *"Guarda este resumen para cuando la pereza aparezca, y sigue a en un minuto punto es para dominar un libro clave cada día."*
-     - *Ejemplo (Psicología del Dinero)*: *"Guarda este resumen para cuando la tentación de gastar te ciegue, y sigue a en un minuto punto es para dominar un libro clave cada día."*
+     2. **Promesa de Marca de Alto Valor (Opción 1)**: *"...y sigue la cuenta de En Un Minuto punto es para dominar un libro clave cada día."*
+     - *Ejemplo (12 Reglas para Vivir)*: *"Guarda este resumen para cuando el caos apriete y sigue la cuenta de En Un Minuto punto es para dominar un libro clave cada día."*
+     - *Ejemplo (Hábitos Atómicos)*: *"Guarda este resumen para cuando la pereza aparezca y sigue la cuenta de En Un Minuto punto es para dominar un libro clave cada día."*
+     - *Ejemplo (Psicología del Dinero)*: *"Guarda este resumen para cuando la tentación de gastar te ciegue y sigue la cuenta de En Un Minuto punto es para dominar un libro clave cada día."
+     - **Normalización Fonética Automática en `elevenlabs-sync.mjs`**: En `preprocessForTts()`, toda mención de `punto es` se fusiona fonéticamente como `puntoes` antes de llamar a ElevenLabs para eliminar la parada antinatural de falso punto ortográfico (0 ms de pausa entre "punto" y "es"), mientras que `buildWordTimestamps()` restaura el desglose en subtítulos.*
    - **Composición Visual Obligatoria de `CtaEndCard` (Coherencia Narrativa 1:1)**:
      - **Titular Hero H3**: Anclaje directo del beneficio o promesa: `GUARDA ESTE RESUMEN PARA CUANDO EL CAOS APRIETE` (o `UN LIBRO CLAVE CADA DÍA EN 60 SEGUNDOS`).
      - **Botón Primario de Seguimiento con Pulso Terracota (`#D94E34`)**: Despliega `🔔 SÍGUENOS EN @EN1MINUTO.ES` acompañado siempre de la propuesta de valor clara: `1 LIBRO CLAVE CADA DÍA EN 60 SEGUNDOS`.
@@ -203,4 +204,58 @@ Importadas exclusivamente desde `src/theme/motion.ts`:
 | **SLOT 3** | `self` (*Builder Impar*) | `share` | Programa exclusivamente las escenas impares usando tarjetas en amarillo pálido `#FEF9C3` y los componentes elegidos en el cuestionario. | `src/scenes/Scene1.tsx`<br>`src/scenes/Scene3.tsx`<br>`src/scenes/Scene5.tsx`<br>`src/components/RoughCard.tsx` |
 | **SLOT 4** | `self` (*Builder Par*) | `share` | Programa exclusivamente las escenas pares, el aparejo de cámara continua y los subtítulos dinámicos. | `src/scenes/Scene2.tsx`<br>`src/scenes/Scene4.tsx`<br>`src/components/CameraRig.tsx`<br>`src/components/DynamicCaptions.tsx`<br>`src/components/blueprints/ResultaaqueeBlueprints.tsx` |
 | **SLOT 5** | `browser` | `/browser` | Abre `http://localhost:3000` o inspecciona fotogramas con `remotion still`, audita los 16 puntos de calidad y ejecuta el **Critic Gate** ($\ge 8.0$ por dimensión, $\ge 8.5$ de media antes de emitir `DELIVERY AUTHORIZED`). | `references/LESSONS.md`<br>Artefactos de QA / Capturas |
+
+---
+
+## 3. Protocolo Oficial del Motor de Animación de Personajes (`src/engine/characterAnimationEngine.ts`) y Presentador "Leo"
+
+> [!IMPORTANT]
+> **REGLA DE ORO DEL MOTOR DE ANIMACIÓN DE PERSONAJES (CERO IA, CERO BORDES, CEJAS RÍGIDAS Y PELO FIRME)**:
+> Toda la animación de **Leo** (`src/engine/characterAnimationEngine.ts`, `src/components/character/leoMeshEngine.ts`, `LeoAvatar.tsx` y `LeoHostBadge.tsx`) se ejecuta **100% mediante código matemático determinista en Remotion** (`useCurrentFrame()` + librería open-source **`d3-delaunay`** + HTML5 `<canvas>` *Piecewise Affine Texture Mapping*).
+> - **Prohibido** usar IA generativa de vídeo o APIs externas de lipsync neuronal.
+> - **Prohibido** trocear la cara en recortes PNG separados (*cutout layers*) que generen bordes visibles en estático o muevan la boca como una caja rígida.
+> Manual completo de referencia: `docs/MANUAL-ANIMACION-LEO.md`.
+
+### 3.1 Arquitectura del Motor (`src/engine/characterAnimationEngine.ts` + `leoMeshEngine.ts`)
+- **Textura Maestra Sin Cortes**: `public/assets/character/leo-v2/leo-master.png` (`640×640`) y `leo-master-cutout.png` (variante sin medallón). En reposo (`openNorm = 0`), la imagen presenta **0 bordes y 0 costuras**.
+- **Grafo Anatómico de 158 Nodos y 306 Triángulos (`LEO_CHARACTER_MESH_DEF`)**:
+  1. **Aislamiento Frente-Pelo (`forehead_buffer` a `v = 185..188` + Pelo Solidario `zDepth = 0.85`)**: Bloquea al 100% cualquier tirón de las cejas hacia el nacimiento del pelo y elimina el rebote vertical del cabello al hablar.
+  2. **Cejas de Espesor Rígido (`brow_left` y `brow_right` de doble fila)**: Los 4 nodos superiores y los 4 nodos inferiores de cada ceja reciben idéntico desplazamiento vertical `dy` y `zDepth = 0.92`, garantizando determinante `1.0` dentro de la ceja (**0.0% de ensanchamiento**) y desacoplamiento total respecto a `openNorm`.
+  3. **Continuidad Temporal $C^1$ (`computeContinuousSpeechEnvelope` + `evaluateSmoothEmotionBrowPose`)**: Funde palabras consecutivas o solapadas con rampas *smoothstep* de 3 fotogramas e interpola cambios de emoción con ventana coseno de `0.75s` (`22.5 fotogramas`), eliminando cualquier parpadeo de 1 fotograma.
+  4. **Piel Elástica Continua y Parpadeo de 2 Bandas**: Los labios (`lip_seam_up/low`), comisuras, mejillas, mentón y cuello se deforman como una sola piel continua alrededor del shader 3D de cavidad oral; los párpados (`lid_up`) estiran la piel tarsal real al parpadear.
+
+### 3.2 Receta Directa para Modelos Menos Potentes (Flash / Flash-Lite)
+Para animar a Leo en cualquier escena o composición sin tocar las matrices afines de `characterAnimationEngine.ts`, los modelos deben importar `<LeoAvatar />` o `<LeoHostBadge />` y pasarle los `wordTimestamps` y opcionalmente `emotionSchedule`:
+
+```tsx
+import { LeoAvatar, LeoHostBadge, type EmotionKeyframe } from '../components/character';
+
+const EMOTION_TIMELINE: EmotionKeyframe[] = [
+  { startSec: 0.0, emotion: 'curious' },
+  { startSec: 3.0, emotion: 'explaining' },
+  { startSec: 6.0, emotion: 'thinking' },
+  { startSec: 8.5, emotion: 'happy' },
+];
+
+// 1. Busto animado con malla continua d3-delaunay (158 nodos / 306 triángulos):
+<LeoAvatar
+  frame={localFrame}
+  wordTimestamps={wordTimestamps}
+  emotionSchedule={EMOTION_TIMELINE}
+  size={260}
+  variant="badge"       // 'badge' (con medallón marfil) | 'cutout' (busto recortado libre)
+  showWireframe={false} // true para visualizar en vivo los 306 triángulos de d3-delaunay
+/>
+
+// 2. Pastilla de anfitrión para cabeceras:
+<LeoHostBadge
+  frame={localFrame}
+  isSpeaking={isSpeaking}
+  emotionSchedule={EMOTION_TIMELINE}
+  size={72}
+  label="LEO"
+  sublabel="@en1minuto.es"
+/>
+```
+
 

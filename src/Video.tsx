@@ -140,20 +140,57 @@ export const Video: React.FC<VideoProps> = ({
   const activeBlueprintMode: BlueprintModeId = 'EDITORIAL_PAPER';
 
   /**
-   * Curva de Audio Ducking automÃ¡tica para la pista opcional de mÃºsica de fondo
+   * Intervalos de voz continua (agrupando palabras separadas por menos de 10 fotogramas / 0.33s).
+   * Evita el efecto "bombeo" (pumping) indeseado en la música entre palabras de una misma frase.
    */
-  const isVoiceSpeaking = useMemo(() => {
-    return globalWordTimestamps.some(
-      (w) => frame >= w.startFrame - 3 && frame <= w.endFrame + 4
-    );
-  }, [globalWordTimestamps, frame]);
+  const speechIntervals = useMemo(() => {
+    if (!globalWordTimestamps || globalWordTimestamps.length === 0) return [];
+    const sorted = [...globalWordTimestamps].sort((a, b) => a.startFrame - b.startFrame);
+    const intervals: Array<{ startFrame: number; endFrame: number }> = [];
 
-  const bgmVolume = interpolate(
-    isVoiceSpeaking ? 1 : 0,
-    [0, 1],
-    [scenesJson.music?.volume ?? 0.16, scenesJson.music?.duckedVolume ?? 0.06],
-    CLAMP_EXTRAPOLATION
-  );
+    let current = { startFrame: sorted[0].startFrame, endFrame: sorted[0].endFrame };
+    for (let i = 1; i < sorted.length; i++) {
+      const next = sorted[i];
+      if (next.startFrame - current.endFrame <= 10) {
+        current.endFrame = Math.max(current.endFrame, next.endFrame);
+      } else {
+        intervals.push(current);
+        current = { startFrame: next.startFrame, endFrame: next.endFrame };
+      }
+    }
+    intervals.push(current);
+    return intervals;
+  }, [globalWordTimestamps]);
+
+  /**
+   * Curva de Audio Ducking suave con fisica de ataque y descompresion:
+   * - Attack: 6 frames antes del inicio de la voz (bajada suave a duckedVolume)
+   * - Hold: duckedVolume constante durante la locucion continua
+   * - Release: 10 frames despues de concluir el bloque de voz (subida suave a volume)
+   */
+  const bgmVolume = useMemo(() => {
+    const maxVol = scenesJson.music?.volume ?? 0.55;
+    const duckedVol = scenesJson.music?.duckedVolume ?? 0.28;
+
+    if (speechIntervals.length === 0) return maxVol;
+
+    for (const block of speechIntervals) {
+      if (frame >= block.startFrame && frame <= block.endFrame) {
+        return duckedVol;
+      }
+      if (frame >= block.startFrame - 6 && frame < block.startFrame) {
+        const progress = (frame - (block.startFrame - 6)) / 6;
+        return maxVol - progress * (maxVol - duckedVol);
+      }
+      if (frame > block.endFrame && frame <= block.endFrame + 10) {
+        const progress = (frame - block.endFrame) / 10;
+        return duckedVol + progress * (maxVol - duckedVol);
+      }
+    }
+
+    return maxVol;
+  }, [speechIntervals, frame, scenesJson.music]);
+
 
   return (
     <AbsoluteFill style={{ backgroundColor: surfaceColor }}>

@@ -293,9 +293,9 @@ export const ScenesFileSchema = z.object({
       license: z.string(),
       attribution: z.string(),
       /** Volumen base (0-1) cuando NO habla la voz */
-      volume: z.number().default(0.16),
+      volume: z.number().default(0.55),
       /** Volumen bajo la voz (ducking) */
-      duckedVolume: z.number().default(0.07),
+      duckedVolume: z.number().default(0.28),
     })
     .optional(),
   scenes: z.array(SceneInputSchema),
